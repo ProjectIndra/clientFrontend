@@ -1,0 +1,139 @@
+.providers{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.providers-filter{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    border-right: 2px solid #ccc;
+    padding: 20px;
+}
+
+.providers-list-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.providers-list-search{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.providers-list-search-input{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.providers-list-search-button{
+    padding: 10px;
+    background-color: #ff3d00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.providers-list-search-button:hover{
+    background-color: #ff3d00;
+    color: white;
+}
+
+.providers-list-main{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 10px;
+}
+
+.providers-list-card{
+    display: flex;
+    flex-direction:row;
+    justify-content: center;
+    align-items: center;
+    width:400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+}
+
+.providers-list-card img{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    margin-right: 20px;
+}
+
+.providers-list-card-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 10px;
+    width: 100%;
+}
+
+.providers-list-card-header{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.providers-list-card-name{
+    font-size: 20px;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+}
+
+.providers-list-card-indicator-online{
+    width: 10px;
+    height: 10px;
+    background-color: green;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.providers-list-card-indicator-offline{
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.providers-list-card-tel{
+    display: flex;
+    flex-direction:column;
+    font-size: 14px;
+    color: #666;
+    width: 100%;
+    align-items:flex-start;
+    height: 90px;
+}
+
+.providers-list-card-details{
+   margin-top: 10px;
+}

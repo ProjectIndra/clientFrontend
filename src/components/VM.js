@@ -53,7 +53,7 @@ const VM = () => {
                     </label>
 
                     <button className="vm-component-button" onClick={handleConnectionInitiate}>
-                        Connection Initiate
+                        Request VM
                     </button>
                 </div>
 
@@ -62,10 +62,13 @@ const VM = () => {
 
                 {/* Right Side - VM Information */}
                 <div className="vm-component-info">
-                    <p className="vm-component-text"><strong>Wiregaurd Public Key:</strong> {publicKey}</p>
-                    <p className="vm-component-text"><strong>Wiregaurd IP Address:</strong> {ipAddress}</p>
-                    <p className="vm-component-text"><strong>SSH Username:</strong> {username}</p>
-                    <p className="vm-component-text"><strong>SSH Password:</strong> {password}</p>
+                    <p className="vm-component-text"><strong>VM Wiregaurd Public Key:</strong> {publicKey}</p>
+                    <p className="vm-component-text"><strong>VM Wiregaurd IP Address:</strong> {ipAddress}</p>
+                    <p className="vm-component-text"><strong>VM SSH Username:</strong> {username}</p>
+                    <p className="vm-component-text"><strong>VM SSH Password:</strong> {password}</p>
+                    <button className="vm-component-button" onClick={handleConnectionInitiate}>
+                        Initaite Connection
+                    </button>
                 </div>
             </div>
         </div>

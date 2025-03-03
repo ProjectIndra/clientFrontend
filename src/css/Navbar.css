@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap');
 *{
   margin: 0;
   padding: 0;
   outline: none;
   box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 body{
-  background: #f2f2f2;
+  background: #ffffff;
 }
 nav{
-  background: #171c24;
+  background: #ffffff;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -34,7 +34,7 @@ nav .nav-items li{
   padding: 0 15px;
 }
 nav .nav-items li a{
-  color: #fff;
+  /* color: #fff; */
   font-size: 18px;
   font-weight: 500;
   text-decoration: none;
@@ -80,14 +80,14 @@ nav .search-icon{
   text-align: center;
   margin: 0 50px;
   font-size: 18px;
-  color: #fff;
+  /* color: #fff; */
   cursor: pointer;
-  display: none;
+  /* display: none; */
 }
 nav .menu-icon span,
 nav .cancel-icon,
 nav .search-icon{
-  display: none;
+  /* display: none; */
 }
 @media (max-width: 1245px) {
   nav{
@@ -172,7 +172,7 @@ nav .search-icon{
   }
   nav .menu-icon span.hide,
   nav .search-icon.hide{
-    display: none;
+    /* display: none; */
   }
   nav .cancel-icon.show{
     display: block;

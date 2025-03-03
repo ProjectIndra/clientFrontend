@@ -1,0 +1,33 @@
+.welcome{
+	margin: 20px 0px;
+}
+.h21{
+	border-right: 1px solid black;
+	margin-left: 20px;
+	padding-right: 20px;
+}
+.h22{
+	margin: 0px 20px;
+}
+.home-container{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	height: 70vh;
+	width: 80vw;
+    justify-self: center;
+}
+.home-container .p21, .p22{
+	font-size: 40px;
+	justify-content: center;
+	/* font-weight: 600; */
+}
+.p21{
+	margin-right: 20px;
+	text-align: left;
+}
+.p22{
+	margin-left: 10px;
+	text-align: right;
+}

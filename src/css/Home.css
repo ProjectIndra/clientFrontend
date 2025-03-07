@@ -14,7 +14,7 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	height: 70vh;
+	height: 100vh;
 	width: 80vw;
     justify-self: center;
 }
@@ -30,4 +30,77 @@
 .p22{
 	margin-left: 10px;
 	text-align: right;
+}
+.home-container2{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+}
+.boxes{
+	display: flex;
+	flex-wrap: wrap;
+	width: 50%;
+	justify-content: flex-end;
+
+}
+.box{
+	border:3px solid;
+	border-radius: 5px;
+	width: 240px;
+	height: 200px;
+	margin: 15px;
+	display: flex;
+	flex-direction: column;
+	justify-content: end;
+}
+.box img{
+	margin: 20px;
+}
+.box p{
+	padding: 0px 20px 20px;
+}
+.home-container2 .heading{
+	width: 50%;
+	margin-left: 20px;
+}
+.home-container2 .h2 , .home-container3 p{
+	margin: 10px;
+	font-size: 40px;
+}
+.home-container3 p{margin-bottom: 30px;}
+.home-container3{
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.home-container3 img{
+	width: 20px;
+	height: 20px;
+}
+.home-container3 button{
+    margin: 0px 0px;
+    padding: 10px;
+    font-size: 20px;
+    border: 1px solid;
+    border-radius: 0px 10px 10px 0px;
+    border-left: none;
+	display: flex;
+}
+.bash {
+	background-color: #DFF0F8;
+	height: 30px;
+	align-items: center;
+	display: flex;
+	padding: 20px;
+	border: 1px dashed;
+	border-radius: 10px 0px 0px 10px;
+}
+.code-copy{
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }

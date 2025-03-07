@@ -16,6 +16,37 @@ function Home() {
 
                 </div>
             </div>
+            <div className="home-container2">
+                <div className="boxes">
+                    <div className="box">
+                        <img src="/img/deployvm.png"></img>
+                        <p><strong>Deploy VMs</strong> on Any Hardware – Utilize laptops and underutilized systems</p>
+                    </div>
+                    <div className="box">
+                        <img src="/img/autovm.png"></img>
+                        <p><strong>Auto VM </strong>provisioning with secure access and scaling on demand</p>
+                    </div>
+                    <div className="box">
+                        <img src="/img/money.png"></img>
+                        <p><strong>Cut costs</strong> by utilizing idle laptops and underused hardware for VMs</p>
+                    </div>
+                    <div className="box">
+                        <img src="/img/optimized.png"></img>
+                        <p><strong> Optimized </strong>CPU, RAM, and storage allocation</p>
+                    </div>
+                </div>
+                <div className="heading">
+                    <p className="h2">Relax while we</p>
+                    <p className="h2"><strong>maximize your hardware's potential</strong></p>
+                </div>
+            </div>
+            <div className="home-container3">
+                <p>Start <strong>providing services</strong> with one bash script...</p>
+                <div className="code-copy">
+                    <div className="bash"><span>/bin/bash -c "$(curl -fsSL https://github.com/avinash84319/providerServer/install.sh)"</span></div>
+                    <button><img src="/img/copy.png"></img></button>
+                </div>
+            </div>
         </div>
     );
 }

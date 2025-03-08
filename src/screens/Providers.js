@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from "../components/Navbar";
 import Provider from '../components/Provider';
 import '../css/Providers.css';
@@ -35,6 +35,25 @@ const Providers = () => {
         }
     ];
 
+    const [formData, setFormData] = useState({
+        vcpu: '',
+        ram: '',
+        image: '',
+        remarks: ''
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+    };
 
     return (
         <div className='providersPage'>
@@ -59,24 +78,44 @@ const Providers = () => {
                     </div>
                 </div>
                 <div className='c3'>
-                    <div className='c3-header'>
-                        <h3>Provider 2</h3>
-                        <button className='provider-specs-sheet'>specs sheet</button>
-                    </div>
-                    <div className='setup-provider'>
-                        <input placeholder='name your vm on provider 2'></input>
+                    <h3 className='c3-header'>Provider 2</h3>
+                    <div className='provider-specs-sheet'>
                         <div className='inputs-selected'>
-                            <input placeholder='select num of vCPUs'></input>
-                            <input placeholder='select RAM'></input>
+                            <div className='select-container'>
+                                <label>Select number of vCPUs</label>
+                                <select name='vcpu' placeholder='select num of vCPUs' value={formData.vcpu} onChange={handleChange}>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                          <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div className='select-container'>
+                                <label>Select RAM</label>
+                                <select name='ram' placeholder='select RAM' value={formData.ram} onChange={handleChange}>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
                         </div>
-                        <input placeholder='select image'></input>
-                        <div className='provider-input-btns'>
-                            <button className='query- btn'>Query VM</button>
-                            <button className='request- btn'>Request VM</button>
-                        </div>
-
-                        <input placeholder='remarks?'></input>
                     </div>
+                    <div className='select-container1'>
+                        <label>Select image</label>
+                        <select name='image' placeholder='select Image' value={formData.image} onChange={handleChange}>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+
+                    <div className='provider-input-btns'>
+                        <button className='query-btn' onClick={handleSubmit}>Query VM</button>
+                        <button className='request-btn' onClick={handleSubmit}>Request VM</button>
+                    </div>
+                    <input name='remarks' placeholder='remarks?' className='' value={formData.remarks} onChange={handleChange}></input>
                 </div>
             </div>
         </div>

@@ -11,3 +11,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+button:hover{
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}

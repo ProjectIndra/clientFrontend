@@ -1,7 +1,7 @@
 .providersPage h2 {
     margin-top: 60px;
-    text-align: center;
-    padding: 20px;
+    /* text-align: center; */
+    padding: 20px 90px;
     border: 1px solid;
 }
 
@@ -74,9 +74,13 @@
     border: 1px solid black;
     display: flex;
     align-items: center;
-    /* justify-content: space-around; */
     border-radius: 10px;
-    /* background-color: #79E193; */
+    cursor: pointer;
+}
+.provider:hover{
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+    background-color: #DFF0F8;
 }
 .provider img {
     margin: 0 10px;
@@ -102,22 +106,21 @@ margin-bottom: 15px;
 font-size: 14px;
 }
 
-/* Right Sidebar */
 .c3 {
     width: 30%;
     padding: 20px;
     text-align: center;
-    /* border-left: 1px solid black; */
 }
 .setup-provider{
     display: flex;
     flex-direction: column;
 }
-.c3  input{
+.c3  input, select{
     padding: 10px;
-    margin: 10px;
+    margin: 10px 0px;
     border-radius: 5px;
     border: 1px solid;
+    width: 100%;
 }
 .c3-header{
     display: flex;
@@ -135,9 +138,20 @@ font-size: 14px;
 
 .inputs-selected{
     display: flex;
+    margin-top: 20px;
 }
-.inputs-selected input{
+.select-container{
     width: 50%;
+}.select-container1{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.inputs-selected select{
+    width: 90%;
 }
 .provider-input-btns{
     display: flex;
@@ -152,21 +166,4 @@ font-size: 14px;
     border: none;
     cursor: pointer;
 
-}
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .provider-main-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .c1, .c3 {
-        width: 100%;
-    }
-
-    .c2 {
-        width: 100%;
-    }
 }

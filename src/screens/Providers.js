@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from "../components/Navbar";
 import Provider from '../components/Provider';
 import '../css/Providers.css';
+import axios from 'axios';
+
+async function run(formData) {
+    await axios.post('https://globally-above-fowl.ngrok-free.app/requestvm', formData)
+            .then((response) => {
+                console.log(response); 
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+}
 
 const Providers = () => {
-
+    const vcpus = [1, 2, 4, 8, 16, 32, 64];
+    const rams = [2048, 4096, 8192, 16384, 32768, 65536];
+    const images = ['linux', 'windows', 'FreeBSD'];
     const providers = [
         {
             id: 1,
@@ -36,23 +49,31 @@ const Providers = () => {
     ];
 
     const [formData, setFormData] = useState({
-        vcpu: '',
+        vcpus: '',
         ram: '',
-        image: '',
-        remarks: ''
+        vm_image: '',
+        remarks: '',
+        provider_id: '1',
+        vm_name: '',
+        client_id: '1',
     });
+    useEffect(() => {
+        console.log("read form",formData);
+    }, [formData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log("handle change", name, value);
         setFormData({
             ...formData,
             [name]: value
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
-        console.log(formData);
+        console.log("submit-handle form", formData);
+        run(formData);
     };
 
     return (
@@ -70,7 +91,6 @@ const Providers = () => {
                     </div>
                     <div className='listall-provider'>
                         {providers.map((provider, idx) => {
-                            console.log(provider);
                             return (
                                 <Provider key={idx} details={provider} />
                             )
@@ -78,44 +98,55 @@ const Providers = () => {
                     </div>
                 </div>
                 <div className='c3'>
-                    <h3 className='c3-header'>Provider 2</h3>
-                    <div className='provider-specs-sheet'>
+
+                    <div className='c3-header'>
+                        <h3>Provider 2</h3>
+                        <button className='provider-specs-sheet'>specs sheet</button>
+                    </div>
+                    <div className='setup-provider'>
+                        <input name='vm_name' placeholder='vm_name' className='' value={formData.vm_name} onChange={handleChange}></input>
                         <div className='inputs-selected'>
                             <div className='select-container'>
                                 <label>Select number of vCPUs</label>
-                                <select name='vcpu' placeholder='select num of vCPUs' value={formData.vcpu} onChange={handleChange}>
+                                <select name='vcpus' placeholder='select num of vCPUs' value={formData.vcpus} onChange={handleChange}>
                                     <option value="">Select</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                          <option value="3">3</option>
+                                    {vcpus.map((cpu, idx) => {
+                                        return (
+                                            <option key={idx} value={cpu}>{cpu}</option>
+                                        )
+                                    })}
                                 </select>
                             </div>
                             <div className='select-container'>
                                 <label>Select RAM</label>
                                 <select name='ram' placeholder='select RAM' value={formData.ram} onChange={handleChange}>
                                     <option value="">Select</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
+                                    {rams.map((ram, idx) => {
+                                        return (
+                                            <option key={idx} value={ram}>{ram}</option>
+                                        )
+                                    })}
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div className='select-container1'>
-                        <label>Select image</label>
-                        <select name='image' placeholder='select Image' value={formData.image} onChange={handleChange}>
-                            <option value="">Select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
-                    </div>
 
-                    <div className='provider-input-btns'>
-                        <button className='query-btn' onClick={handleSubmit}>Query VM</button>
-                        <button className='request-btn' onClick={handleSubmit}>Request VM</button>
+                        <div className='select-container1'>
+                            <label>Select image</label>
+                            <select name='vm_image' placeholder='select Image' value={formData.image} onChange={handleChange}>
+                                <option value="">Select</option>
+                                {images.map((image, idx) => {
+                                    return (
+                                        <option key={idx} value={image}>{image}</option>
+                                    )
+                                })}
+                            </select>
+                        </div>
+                        <div className='provider-input-btns'>
+                            <button className='btn' onClick={handleSubmit}>Query VM</button>
+                            <button className='btn' onClick={handleSubmit}>Request VM</button>
+                        </div>
+                        <input name='remarks' placeholder='remarks?' className='' value={formData.remarks} onChange={handleChange}></input>
                     </div>
-                    <input name='remarks' placeholder='remarks?' className='' value={formData.remarks} onChange={handleChange}></input>
                 </div>
             </div>
         </div>

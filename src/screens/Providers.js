@@ -38,10 +38,6 @@ const Providers = () => {
     return (
         <div className='providersPage'>
             <Navbar />
-            {/* <div className='providers'>
-                <ProvidersFilter />
-                <ProvidersList providers={providers} />
-            </div> */}
             <h2>Providers</h2>
             <div className='provider-main-container'>
                 <div className='c1'>hello</div>
@@ -77,23 +73,145 @@ const Providers = () => {
                                     </div>
                             </div>
                         </div>
+                        <div className='provider'>
+                            <img src='/img/computer.png'></img>
+                            <div className='provider-details-container'>
+                                <h3>Provider Name</h3>
+                                <div className='provider-details'>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max vCPUs</p>
+                                        <p className='pval'>16</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max RAM</p>
+                                        <p className='pval'>4 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max Storage</p>
+                                        <p className='pval'>20 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Rating</p>
+                                        <p className='pval'>4</p>
+                                    </div>  
+                                    </div>
+                            </div>
+                        </div>
+                        <div className='provider'>
+                            <img src='/img/computer.png'></img>
+                            <div className='provider-details-container'>
+                                <h3>Provider Name</h3>
+                                <div className='provider-details'>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max vCPUs</p>
+                                        <p className='pval'>16</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max RAM</p>
+                                        <p className='pval'>4 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max Storage</p>
+                                        <p className='pval'>20 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Rating</p>
+                                        <p className='pval'>4</p>
+                                    </div>  
+                                    </div>
+                            </div>
+                        </div>
+                        <div className='provider'>
+                            <img src='/img/computer.png'></img>
+                            <div className='provider-details-container'>
+                                <h3>Provider Name</h3>
+                                <div className='provider-details'>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max vCPUs</p>
+                                        <p className='pval'>16</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max RAM</p>
+                                        <p className='pval'>4 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max Storage</p>
+                                        <p className='pval'>20 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Rating</p>
+                                        <p className='pval'>4</p>
+                                    </div>  
+                                    </div>
+                            </div>
+                        </div>
+                        <div className='provider'>
+                            <img src='/img/computer.png'></img>
+                            <div className='provider-details-container'>
+                                <h3>Provider Name</h3>
+                                <div className='provider-details'>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max vCPUs</p>
+                                        <p className='pval'>16</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max RAM</p>
+                                        <p className='pval'>4 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max Storage</p>
+                                        <p className='pval'>20 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Rating</p>
+                                        <p className='pval'>4</p>
+                                    </div>  
+                                    </div>
+                            </div>
+                        </div>
+                        <div className='provider'>
+                            <img src='/img/computer.png'></img>
+                            <div className='provider-details-container'>
+                                <h3>Provider Name</h3>
+                                <div className='provider-details'>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max vCPUs</p>
+                                        <p className='pval'>16</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max RAM</p>
+                                        <p className='pval'>4 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Max Storage</p>
+                                        <p className='pval'>20 GB</p>
+                                    </div>
+                                    <div className='provider-detail'>
+                                        <p className='pkey'>Rating</p>
+                                        <p className='pval'>4</p>
+                                    </div>  
+                                    </div>
+                            </div>
+                        </div>
                         
                     </div>
                 </div>
                 <div className='c3'>
-                    <div>
+                    <div className='c3-header'>
                         <h3>Provider 2</h3>
-                        <button>specs sheet</button>
+                        <button className='provider-specs-sheet'>specs sheet</button>
                     </div>
                     <div className='setup-provider'>
                         <input placeholder='name your vm on provider 2'></input>
                         <div className='inputs-selected'>
                         <input placeholder='select num of vCPUs'></input>
-                        <input placeholder='seelct amt of RAM'></input>
-                        <input placeholder='select image'></input>
+                        <input placeholder='select RAM'></input>
                         </div>
-                        <div className='provider-input-btns'><button className='deploy-btn'>deploy</button>
-                        <button className='cancel-btn'>cancel</button></div>
+                        <input placeholder='select image'></input>
+                        <div className='provider-input-btns'>
+                            <button className='query- btn'>Query VM</button>
+                            <button className='request- btn'>Request VM</button>
+                        </div>
                         
                         <input placeholder='remarks?'></input>
                     </div>

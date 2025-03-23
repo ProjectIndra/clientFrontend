@@ -1,3 +1,82 @@
-.Profile-Content{
+.Profile-Content {
 	display: flex;
+}
+.profile-details {
+	/* width: 100%; */
+	display: flex;
+	margin: 10px;
+	border: 1px solid #ccc;
+	height: 170px;
+	align-items: center;
+	border-radius: 10px;
+}
+.profile-img {
+	width: 30%;
+	cursor: pointer;
+}
+.profile-img img {
+	width: 130px;
+	height: 130px;
+	/* margin: 10px; */
+}
+.profile-details-r {
+	width: 70%;
+}
+.profile-acc {
+	display: flex;
+	/* width: 100%; */
+	justify-content: space-between;
+	margin: 10px 15px;
+}
+.profile-acc img{
+    width: 20px;
+    height: 20px;
+	cursor: pointer;
+}
+.profile-ids{
+    margin: 15px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+.profile-ids p{
+	padding: 5px;
+}
+.profile-providers{
+	display: flex;
+	/* align-items: center; */
+}
+.profile-l{
+	width: 50%;
+    margin: 10px;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+.profile-l-btns{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0px 33px;
+}
+.profile-l button{
+width: 50%;
+margin: 10px;
+padding: 10px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+.wg-accs{
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	padding: 20px;
+}
+.wg-accs img{
+width: 20px;
+height: 20px;
+cursor: 10px;
 }

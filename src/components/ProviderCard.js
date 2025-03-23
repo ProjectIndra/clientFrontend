@@ -1,21 +1,62 @@
-import React from 'react';
+import '../css/providerCard.css';
+import { useState } from "react";
+
 const ProviderCard = ({ provider }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+
     return (
-        <div key={provider.id} className="providers-list-card">
-            <img className="providers-list-card-img" src={provider.image} alt={provider.name} />
-            <div className="providers-list-card-info">
-                <div className='providers-list-card-header'>
-                    <h3 className='providers-list-card-name'>{provider.name}</h3>
-                    <div className={`providers-list-card-indicator-${provider.online ? 'online' : 'offline'}`}>
-                        {provider.online ? '' : ''}
+        <div
+            className="provider"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                backgroundColor: !provider.edit && isHovered  ? "#DFF0F8":"white" ,
+                transform: !provider.edit && isHovered ? "scale(1.05)" : "scale(1)",
+                transition: "transform 0.3s ease-in-out, background-color 0.3s ease-in-out",
+                cursor: !provider.edit && isHovered ? "pointer" : "default"
+            }}
+        >
+            <div className='provider-icon'>
+                <img src='/img/computer.png'></img>
+            </div>
+            <div className='provider-details-container'>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <h3>{provider.name}</h3>
+                    {provider.edit && <img src='/img/edit.png' style={{ height: "20px", width: "20px", cursor: "pointer" }}></img>}
+                </div>
+
+                <div className='provider-details'>
+                    <div className='provider-detail'>
+                        <p className='pkey'>Max vCPUs</p>
+                        <p className='pval'>{provider.vcpu}</p>
+                    </div>
+                    <div className='provider-detail'>
+                        <p className='pkey'>Max RAM</p>
+                        <p className='pval'>{provider.ram}</p>
+                    </div>
+                    <div className='provider-detail'>
+                        <p className='pkey'>Max Storage</p>
+                        <p className='pval'>{provider.storage}</p>
+                    </div>
+                    <div className='provider-detail'>
+                        <p className='pkey'>Rating</p>
+                        <p className='pval'>{provider.rating}</p>
                     </div>
                 </div>
-                <div className='providers-list-card-tel'>
-                    <p className='providers-list-card-details'>{provider.vcpu} Vcpu's</p>
-                    <p className='providers-list-card-details'>{provider.ram} GB Ram</p>
-                    <p className='providers-list-card-details'>1 TB Max Storage</p>
-                </div>
             </div>
+            {provider.online ?
+                <div style={{ width: "15%", backgroundColor: "#79E193", borderRadius: " 0px 10px 10px 0px", height: "100%" }}></div>
+                :
+                <div style={{ width: "15%", backgroundColor: "#E17984", borderRadius: " 0px 10px 10px 0px", height: "100%" }}></div>}
         </div>
     );
 };

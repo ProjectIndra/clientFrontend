@@ -26,7 +26,7 @@ function Navbar() {
                <input type="search" className="search-data" placeholder="Search for providers, services and more" required />
                <button type="submit">Search</button>
             </form>
-            <div className="profile-details">
+            <div className="profile-pics">
                <img src='/img/user.png' alt='profilePic'></img>
             </div>
          </nav>

@@ -1,6 +1,5 @@
 .providersPage h2 {
     margin-top: 60px;
-    /* text-align: center; */
     padding: 20px 90px;
     border: 1px solid;
 }
@@ -14,16 +13,13 @@
     height: 73vh;
 }
 
-/* Left Sidebar */
 .c1 {
     width: 10%;
-    /* min-width: 150px; */
     padding: 10px;
     text-align: center;
     border-right: 1px solid black;
 }
 
-/* Middle Container */
 .c2 {
     width: 60%;
     text-align: center;
@@ -32,8 +28,7 @@
 }
 
 .search-provider form {
-    /* display: flex; */
-    /* justify-content: center; */
+
     gap: 10px;
     margin-bottom: 20px;
 }
@@ -59,7 +54,6 @@
     background-color: #83838376;
 }
 
-/* Providers List */
 .listall-provider {
     display: flex;
     flex-wrap: wrap;
@@ -67,45 +61,7 @@
     gap: 20px;
     justify-content: center;
 }
-
-.provider {
-    height: 150px;
-    width: 300px;
-    border: 1px solid black;
-    display: flex;
-    align-items: center;
-    border-radius: 10px;
-    cursor: pointer;
-}
-.provider:hover{
-    transform: scale(1.05);
-    transition: transform 0.3s ease-in-out;
-    background-color: #DFF0F8;
-}
-.provider img {
-    margin: 0 10px;
-}
-.provider-details-container{
-    width: 70%;
-    padding: 10px;
-    height: 100%;
-}
-.provider-details-container h3{
-margin-bottom: 15px;
-}
-.provider-details{
-    display: flex;
-    flex-direction: column;
-}
-.provider-detail{
-    display: flex;
-    justify-content: space-between;
-    padding: 3px;
-}
-.provider-detail p{
-font-size: 14px;
-}
-
+/* ------------------------------------- */
 .c3 {
     width: 30%;
     padding: 20px;

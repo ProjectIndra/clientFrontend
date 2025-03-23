@@ -1,17 +1,18 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Navbar from "../components/Navbar";
-import Provider from '../components/Provider';
+import ProviderCard from '../components/ProviderCard';
 import '../css/Providers.css';
-import axios from 'axios';
+
 
 async function run(formData) {
     await axios.post('https://globally-above-fowl.ngrok-free.app/requestvm', formData)
-            .then((response) => {
-                console.log(response); 
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    .then((response) => {
+        console.log(response); 
+    })
+    .catch((error) => {
+        console.log(error);
+    });
 }
 
 const Providers = () => {
@@ -26,7 +27,8 @@ const Providers = () => {
             vcpu: 16,
             ram: 64,
             online: true,
-            rating: 4.5
+            rating: 4.5,
+            edit:false
         },
         {
             id: 2,
@@ -35,7 +37,8 @@ const Providers = () => {
             vcpu: 16,
             ram: 64,
             online: false,
-            rating: 4.5
+            rating: 4.5,
+            edit:false
         },
         {
             id: 3,
@@ -44,7 +47,8 @@ const Providers = () => {
             vcpu: 16,
             ram: 64,
             online: true,
-            rating: 4.5
+            rating: 4.5,
+            edit:false
         }
     ];
 
@@ -92,7 +96,8 @@ const Providers = () => {
                     <div className='listall-provider'>
                         {providers.map((provider, idx) => {
                             return (
-                                <Provider key={idx} details={provider} />
+                                // <Provider key={idx} details={provider} />
+                                <ProviderCard key={idx} provider={provider} />
                             )
                         })}
                     </div>

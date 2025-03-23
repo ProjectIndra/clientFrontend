@@ -1,28 +1,26 @@
 import { Link } from "react-router-dom";
 import '../css/Register.css';
 import axios from 'axios';
-
+const MG_SERVER = process.env.REACT_APP_MG_SERVER;
 
 function Register() {
 
     const handlesubmit = (e) => {
         e.preventDefault();
-        
-        if (e.target[1].value === e.target[2].value) {
-
-            axios.post('http://localhost:5000/api/register', {
-                username: e.target[0].value,
-                password: e.target[1].value
+        if (e.target[3].value === e.target[2].value) {
+            axios.post(`${MG_SERVER}/register`, {
+                email: e.target[0].value,
+                username: e.target[1].value,
+                password: e.target[2].value
             }).then((res) => {
                 console.log(res);
                 // save the token in local storage
-                window.sessionStorage.setItem("username", e.target[0].value);
+                window.sessionStorage.setItem("username", e.target[1].value);
                 localStorage.setItem('token', res.data.token);
-                window.location.href = '/home';
+                window.location.href = '/login';
             }).catch((err) => {
-                alert(err.response.data);
+                console.log(err.response);
             });
-
         }
         else {
             alert('Passwords do not match');
@@ -31,20 +29,21 @@ function Register() {
 
     return (
         <div>
-            <div class="registration-page">
-                <div class="form">
-                    <div class="registration">
-                        <div class="registration-header">
+            <div className="registration-page">
+                <div className="form">
+                    <div className="registration">
+                        <div className="registration-header">
                             <h3>REGISTER</h3>
                             <p>Create your account by entering a username and password.</p>
                         </div>
                     </div>
-                    <form class="registration-form" onSubmit={handlesubmit}>
+                    <form className="registration-form" onSubmit={handlesubmit}>
+                        <input type="email" placeholder="email" />
                         <input type="text" placeholder="username" />
                         <input type="password" placeholder="password" />
                         <input type="password" placeholder="confirm password" />
                         <button type="submit">register</button>
-                        <p class="message">Already registered? <Link to='/'>Login here</Link></p>
+                        <p className="message">Already registered? <Link to='/login'>Login here</Link></p>
                     </form>
                 </div>
             </div>

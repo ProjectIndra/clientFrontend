@@ -1,64 +1,51 @@
 import '../css/Login.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+const MG_SERVER = process.env.REACT_APP_MG_SERVER;
 
 function Login() {
 
+
   const handlesubmit = (e) => {
     e.preventDefault();
-    
-    axios.post('http://localhost:5000/api/login', {
 
-      username: e.target[0].value,
+    axios.post(`${MG_SERVER}/login`, {
+      username_or_email: e.target[0].value,
       password: e.target[1].value
-    }).then((res) => {
-      console.log(res);
-      // save the token in local storage
-      localStorage.setItem('token', res.data.token);
-      window.sessionStorage.setItem("username", e.target[0].value);
-      window.location.href = '/home';
-    }).catch((err) => {
-      alert(err.response.data);
-    }
-    );
+    }, { withCredentials: true })  // Important: Ensures cookies are included
+      .then((res) => {
+        console.log("Login successful:", res.data);
+        window.location.href = "/home";  // Redirect after successful login
+      })
+      .catch((err) => {
+        console.error("Login failed:", err.response?.data?.error || "Unknown error");
+        alert(err.response?.data?.error || "Login failed. Please try again.");
+      });
+  };
 
-    // getting the user image
 
-    axios.post('http://localhost:5000/api/getimage', {
-
-      username: window.sessionStorage.getItem("username")
-    }).then((res) => {
-      console.log(res);
-      window.sessionStorage.setItem("image", res.data);
-    }
-    ).catch((err) => {
-      alert(err.response.data);
-    }
-    );
-    
-  }
 
   return (
     <div>
-      <div class="login-page">
-      <div class="form">
-        <div class="login">
-          <div class="login-header">
-            <h3>LOGIN</h3>
-            <p>Please enter your credentials to login.</p>
+      <div className="login-page">
+        <div className="form">
+          <div className="login">
+            <div className="login-header">
+              <h3>LOGIN</h3>
+              <p>Please enter your credentials to login.</p>
+            </div>
           </div>
+          <form className="login-form" onSubmit={handlesubmit}>
+            <input type="text" placeholder="username" />
+            <input type="password" placeholder="password" />
+            <button>login</button>
+            <p className="message">Not registered? <Link to='/register'>Create an account</Link></p>
+          </form>
         </div>
-        <form class="login-form" onSubmit={handlesubmit}>
-          <input type="text" placeholder="username"/>
-          <input type="password" placeholder="password"/>
-          <button>login</button>
-          <p class="message">Not registered? <Link to='/register'>Create an account</Link></p>
-        </form>
       </div>
     </div>
-    </div>
   )
-}   
+}
 
 
 export default Login;

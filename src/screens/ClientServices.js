@@ -187,8 +187,8 @@ const ClientServices = () => {
                                 <div className='vm-btns'>
                                     <button className='vm-btn' onClick={activateVM}>Activate VM</button>
                                     <button className='vm-btn' onClick={initiateConnection}>Initiate Connection</button>
-                                    <button className='vm-btn' onClick={deleteVM}>Delete VM</button>
-                                    <button className='delete-btn' onClick={deactivateVM}>Deactivate</button>
+                                    <button className='vm-btn' onClick={deactivateVM}>Deactivate </button>
+                                    <button className='delete-btn' onClick={deleteVM}>Delete VM</button>
                                 </div>
                             </>
                         ) : (

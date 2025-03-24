@@ -1,26 +1,24 @@
-import '../css/Login.css';
+import { apiCall } from '../Api';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import '../css/Login.css';
 const MG_SERVER = process.env.REACT_APP_MG_SERVER;
+
 
 function Login() {
 
-
-  const handlesubmit = (e) => {
+  const handlesubmit = async (e) => {
     e.preventDefault();
-
-    axios.post(`${MG_SERVER}/login`, {
-      username_or_email: e.target[0].value,
-      password: e.target[1].value
-    }, { withCredentials: true })  // Important: Ensures cookies are included
-      .then((res) => {
-        console.log("Login successful:", res.data);
-        window.location.href = "/home";  // Redirect after successful login
-      })
-      .catch((err) => {
-        console.error("Login failed:", err.response?.data?.error || "Unknown error");
-        alert(err.response?.data?.error || "Login failed. Please try again.");
-      });
+    const usernameOrEmail = e.target[0].value;
+    const password = e.target[1].value;
+    try {
+      const res = await apiCall( "post",`/login`,{username_or_email:usernameOrEmail, password:password});
+      console.log("Login successful:", res.token);
+      console.log(res)
+      sessionStorage.setItem('token', res.token);
+      window.location.href = "/home";  
+    } catch (error) { 
+      alert(error);
+    }
   };
 
 

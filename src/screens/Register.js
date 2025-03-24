@@ -1,26 +1,24 @@
 import { Link } from "react-router-dom";
+import { api, apiCall } from "../Api";
 import '../css/Register.css';
-import axios from 'axios';
 const MG_SERVER = process.env.REACT_APP_MG_SERVER;
 
 function Register() {
 
-    const handlesubmit = (e) => {
+    const handlesubmit = async(e) => {
         e.preventDefault();
         if (e.target[3].value === e.target[2].value) {
-            axios.post(`${MG_SERVER}/register`, {
-                email: e.target[0].value,
-                username: e.target[1].value,
-                password: e.target[2].value
-            }).then((res) => {
-                console.log(res);
-                // save the token in local storage
-                window.sessionStorage.setItem("username", e.target[1].value);
-                localStorage.setItem('token', res.data.token);
-                window.location.href = '/login';
-            }).catch((err) => {
-                console.log(err.response);
-            });
+            const email = e.target[0].value;
+            const username = e.target[1].value;
+            const password = e.target[2].value;
+            try {
+                await apiCall("post", "/register", { email: email, username: username, password: password }).then((res) => {
+                    console.log(res);
+                    window.location.href = '/login';
+                })
+            } catch (error) {
+                alert(error);
+            }
         }
         else {
             alert('Passwords do not match');

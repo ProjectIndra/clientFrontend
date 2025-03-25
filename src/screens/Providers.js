@@ -3,67 +3,81 @@ import React, { useEffect, useState } from 'react';
 import Navbar from "../components/Navbar";
 import ProviderCard from '../components/ProviderCard';
 import '../css/Providers.css';
+import { apiCall } from '../Api';
 
+async function runQuery(formData) {
+    apiCall("get", "/providers/query?provider_id=" + formData.provider_id
+                                    + "&vcpu=" + formData.vcpus
+                                    + "&ram=" + formData.ram
+                                    + "&storage=" + formData.storage
+                                    + "&vm_image_type=" + formData.vm_image
+        ).then((data) => {
+            console.log(data);
+            alert("Can Create VM: " + data.can_create);
+        })
+        .catch((error) => {
+            console.log(error);
+            alert("Error: " + error);
+        });
+}
 
-async function run(formData) {
-    await axios.post('https://globally-above-fowl.ngrok-free.app/requestvm', formData)
-    .then((response) => {
-        console.log(response); 
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+async function runRequest(formData) {
+    apiCall("post", "/vms/launch", formData)
+        .then((data) => {
+            console.log(data);
+            alert(data.message);
+        })
+        .catch((error) => {
+            console.log(error);
+            alert("Error: " + error);
+        });
 }
 
 const Providers = () => {
     const vcpus = [1, 2, 4, 8, 16, 32, 64];
     const rams = [2048, 4096, 8192, 16384, 32768, 65536];
     const images = ['linux', 'windows', 'FreeBSD'];
-    const providers = [
-        {
-            id: 1,
-            name: 'AWS',
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg',
-            vcpu: 16,
-            ram: 64,
-            online: true,
-            rating: 4.5,
-            edit:false
-        },
-        {
-            id: 2,
-            name: 'Azure',
-            image: 'https://th.bing.com/th/id/OIP.O6tukd3TiPvTiaItQBEF2QHaEK?rs=1&pid=ImgDetMain',
-            vcpu: 16,
-            ram: 64,
-            online: false,
-            rating: 4.5,
-            edit:false
-        },
-        {
-            id: 3,
-            name: 'GCP',
-            image: 'https://th.bing.com/th/id/OIP.w-w1ReD3Lf6LTQXTcvcrIwHaEK?w=322&h=181&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-            vcpu: 16,
-            ram: 64,
-            online: true,
-            rating: 4.5,
-            edit:false
-        }
-    ];
+
+    const [providers, setProviders] = useState([]);
+    const [selectedProvider, setSelectedProvider] = useState(null); // Store selected provider
+
+    useEffect(() => {
+        apiCall("get", "/providers/lists")
+            .then((data) => {
+                console.log(data);
+                if (data.all_providers && Array.isArray(data.all_providers)) {
+                    setProviders(data.all_providers);
+                } else throw new Error("all_providers key not present in response data");
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("Error: " + error);
+            });
+    }, []);
 
     const [formData, setFormData] = useState({
         vcpus: '',
         ram: '',
         vm_image: '',
         remarks: '',
-        provider_id: '1',
+        provider_id: '',  // No default provider selected
         vm_name: '',
         client_id: '1',
     });
+
     useEffect(() => {
-        console.log("read form",formData);
+        console.log("Updated formData:", formData);
     }, [formData]);
+
+    // Handle provider selection
+    const handleProviderSelect = (provider) => {
+        console.log("Selected Provider:", provider);
+        setSelectedProvider(provider);
+        setFormData((prev) => ({
+            ...prev,
+            provider_id: provider.provider_id.toString() // Ensure it's a string
+        }));
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -74,11 +88,17 @@ const Providers = () => {
         });
     };
 
-    const handleSubmit = async(e) => {
+    const handleSubmitQuery = async (e) => {
         e.preventDefault();
-        console.log("submit-handle form", formData);
-        run(formData);
+        console.log("Submitting form with data:", formData);
+        await runQuery(formData);
     };
+
+    const handleSubmitRequest = async (e) => {
+        e.preventDefault();
+        console.log("Submitting form with data:", formData);
+        await runRequest(formData);
+    }
 
     return (
         <div className='providersPage'>
@@ -94,64 +114,74 @@ const Providers = () => {
                         </form>
                     </div>
                     <div className='listall-provider'>
-                        {providers.map((provider, idx) => {
-                            return (
-                                // <Provider key={idx} details={provider} />
-                                <ProviderCard key={idx} provider={provider} />
-                            )
-                        })}
+                        {providers.map((provider, idx) => (
+                            <div key={idx} onClick={() => handleProviderSelect(provider)}>
+                                <ProviderCard provider={provider} />
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className='c3'>
-
-                    <div className='c3-header'>
-                        <h3>Provider 2</h3>
-                        <button className='provider-specs-sheet'>specs sheet</button>
-                    </div>
-                    <div className='setup-provider'>
-                        <input name='vm_name' placeholder='vm_name' className='' value={formData.vm_name} onChange={handleChange}></input>
-                        <div className='inputs-selected'>
-                            <div className='select-container'>
-                                <label>Select number of vCPUs</label>
-                                <select name='vcpus' placeholder='select num of vCPUs' value={formData.vcpus} onChange={handleChange}>
-                                    <option value="">Select</option>
-                                    {vcpus.map((cpu, idx) => {
-                                        return (
-                                            <option key={idx} value={cpu}>{cpu}</option>
-                                        )
-                                    })}
-                                </select>
+                    {selectedProvider ? (
+                        <>
+                            <div className='c3-header'>
+                                <h3>{selectedProvider.provider_name}</h3>
+                                <button className='provider-specs-sheet'>Specs Sheet</button>
                             </div>
-                            <div className='select-container'>
-                                <label>Select RAM</label>
-                                <select name='ram' placeholder='select RAM' value={formData.ram} onChange={handleChange}>
-                                    <option value="">Select</option>
-                                    {rams.map((ram, idx) => {
-                                        return (
-                                            <option key={idx} value={ram}>{ram}</option>
-                                        )
-                                    })}
-                                </select>
-                            </div>
-                        </div>
+                            <div className='setup-provider'>
+                                <input name='vm_name' placeholder='VM Name' value={formData.vm_name} onChange={handleChange} />
+                                
+                                <div className='inputs-selected'>
+                                    <div className='select-container'>
+                                        <label>Select vCPUs</label>
+                                        <select name='vcpus' value={formData.vcpus} onChange={handleChange}>
+                                            <option value="">Select</option>
+                                            {vcpus.map((cpu, idx) => (
+                                                <option key={idx} value={cpu}>{cpu}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className='select-container'>
+                                        <label>Select RAM</label>
+                                        <select name='ram' value={formData.ram} onChange={handleChange}>
+                                            <option value="">Select</option>
+                                            {rams.map((ram, idx) => (
+                                                <option key={idx} value={ram}>{ram}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className='select-container'>
+                                        <label>Select Storage</label>
+                                        <select name='storage' value={formData.storage} onChange={handleChange}>
+                                            <option value="">Select</option>
+                                            {rams.map((storage, idx) => (
+                                                <option key={idx} value={storage}>{storage}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
 
-                        <div className='select-container1'>
-                            <label>Select image</label>
-                            <select name='vm_image' placeholder='select Image' value={formData.image} onChange={handleChange}>
-                                <option value="">Select</option>
-                                {images.map((image, idx) => {
-                                    return (
-                                        <option key={idx} value={image}>{image}</option>
-                                    )
-                                })}
-                            </select>
-                        </div>
-                        <div className='provider-input-btns'>
-                            <button className='btn' onClick={handleSubmit}>Query VM</button>
-                            <button className='btn' onClick={handleSubmit}>Request VM</button>
-                        </div>
-                        <input name='remarks' placeholder='remarks?' className='' value={formData.remarks} onChange={handleChange}></input>
-                    </div>
+                                <div className='select-container1'>
+                                    <label>Select Image</label>
+                                    <select name='vm_image' value={formData.vm_image} onChange={handleChange}>
+                                        <option value="">Select</option>
+                                        {images.map((image, idx) => (
+                                            <option key={idx} value={image}>{image}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                
+                                <div className='provider-input-btns'>
+                                    <button className='btn' onClick={handleSubmitQuery}>Query VM</button>
+                                    <button className='btn' onClick={handleSubmitRequest}>Request VM</button>
+                                </div>
+                                
+                                <input name='remarks' placeholder='Remarks?' value={formData.remarks} onChange={handleChange} />
+                            </div>
+                        </>
+                    ) : (
+                        <p>Please select a provider.</p>
+                    )}
                 </div>
             </div>
         </div>

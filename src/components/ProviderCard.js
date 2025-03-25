@@ -30,30 +30,30 @@ const ProviderCard = ({ provider }) => {
             </div>
             <div className='provider-details-container'>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <h3>{provider.name}</h3>
+                    <h3>{provider.provider_name}</h3>
                     {provider.edit && <img src='/img/edit.png' style={{ height: "20px", width: "20px", cursor: "pointer" }}></img>}
                 </div>
 
                 <div className='provider-details'>
                     <div className='provider-detail'>
                         <p className='pkey'>Max vCPUs</p>
-                        <p className='pval'>{provider.vcpu}</p>
+                        <p className='pval'>{provider.provider_max_vcpu}</p>
                     </div>
                     <div className='provider-detail'>
                         <p className='pkey'>Max RAM</p>
-                        <p className='pval'>{provider.ram}</p>
+                        <p className='pval'>{provider.provider_max_ram}</p>
                     </div>
                     <div className='provider-detail'>
                         <p className='pkey'>Max Storage</p>
-                        <p className='pval'>{provider.storage}</p>
+                        <p className='pval'>{provider.provider_max_storage}</p>
                     </div>
                     <div className='provider-detail'>
                         <p className='pkey'>Rating</p>
-                        <p className='pval'>{provider.rating}</p>
+                        <p className='pval'>{provider.provider_rating}</p>
                     </div>
                 </div>
             </div>
-            {provider.online ?
+            {provider.provider_status ?
                 <div style={{ width: "15%", backgroundColor: "#79E193", borderRadius: " 0px 10px 10px 0px", height: "100%" }}></div>
                 :
                 <div style={{ width: "15%", backgroundColor: "#E17984", borderRadius: " 0px 10px 10px 0px", height: "100%" }}></div>}

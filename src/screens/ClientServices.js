@@ -20,23 +20,6 @@ const ClientServices = () => {
                 console.log(error);
                 // alert(error);
             });
-        
-        const fetchVms = async () => {
-            try {
-                const data = await apiCall("get", "/vms/allVms");
-                console.log(data);
-
-                if (data.all_vms) {
-                    setVms(data.all_vms);
-                } else {
-                    throw new Error("all_vms not present in response");
-                }
-            } catch (error) {
-                console.error("Error fetching VMs:", error);
-                alert(error || "Something went wrong");
-                setVms([]);
-            }
-        };
 
         // fetchVms();
     }, [])
@@ -51,7 +34,7 @@ const ClientServices = () => {
         if (selectedVM) {
             alert(`Activating VM: ${selectedVM.vm_name}`);
 
-            apiCall("get", "/vms/start?vm_id=" + selectedVM.vm_id,
+            apiCall("get", "/vms/start?vm_id=" + selectedVM.vm_id
                                       + "&provider_id=" + selectedVM.provider_id
             ).then((data) => {
                 alert(data.message);
@@ -62,11 +45,10 @@ const ClientServices = () => {
     };
 
     const deleteVM = () => {
-        deactivateVM()
         if (selectedVM) {
             alert(`Deleting VM: ${selectedVM.vm_name}`);
         }
-        apiCall("get", "/vms/remove?vm_id=" + selectedVM.vm_id,
+        apiCall("get", "/vms/remove?vm_id=" + selectedVM.vm_id
                                       + "&provider_id=" + selectedVM.provider_id
         ).then((data) => {
                 alert(data.message);
@@ -79,8 +61,8 @@ const ClientServices = () => {
         if (selectedVM) {
             alert(`Deactivating VM: ${selectedVM.vm_name}`);
         }
-        apiCall("get", "/vms/stop?vm_id=" + selectedVM.vm_id,
-                                      + "&provider_id=" + selectedVM.provider_id
+        apiCall("get", "/vms/stop?vm_id=" + selectedVM.vm_id
+                                        + "&provider_id=" + selectedVM.provider_id
         ).then((data) => {
                 alert(data.message);
         }).catch((error) => {
@@ -95,7 +77,7 @@ const ClientServices = () => {
                 <h2 className='vm-instances-heading'>VM Instances</h2>
                 <div className='ClientServices-Content'>
                     <div className='vm-filters-cont'>
-                        hello
+                        Filters
                     </div>
                     <div className='vm-container'>
                         <div className='vm-search'>

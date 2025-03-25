@@ -4,6 +4,10 @@ import { useState } from 'react';
 
 function Navbar() {
    const [dropdown, setDropdown] = useState(false);
+
+   const handleClick = () => {
+      window.location.href = '/profile';
+   }
    return (
       <div className='navbar'>
          <nav>
@@ -27,7 +31,7 @@ function Navbar() {
                <button type="submit">Search</button>
             </form>
             <div className="profile-pics">
-               <img src='/img/user.png' alt='profilePic'></img>
+               <img src='/img/user.png' alt='profilePic' onClick={handleClick}></img>
             </div>
          </nav>
          {dropdown &&

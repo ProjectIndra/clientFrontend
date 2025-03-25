@@ -36,7 +36,7 @@ function Navbar() {
                onMouseLeave={() => setDropdown(false)}>
                <ul className="nav-items">
                   <li><Link to="/home">Home</Link></li>
-                  <li><Link to="/client/services">My Services</Link></li>
+                  <li><Link to="/client/services">Compute-Engine</Link></li>
                   <li><Link to="/providersList">Providers</Link></li>
                </ul>
             </div>}

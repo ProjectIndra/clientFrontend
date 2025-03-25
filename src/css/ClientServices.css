@@ -114,9 +114,21 @@
 .vm-btn{
     background-color: #79E193;
 }
+
+.vm-btn:disabled{
+    background-color: #83838376;
+    cursor: not-allowed;
+}
+
 .delete-btn{
     background-color: #E17984;
 }
+
+.delete-btn:disabled{
+    background-color: #83838376;
+    cursor: not-allowed;
+}
+
 .vm-filters-cont{
     background-color: aqua;
     border-right: 1px solid #000;

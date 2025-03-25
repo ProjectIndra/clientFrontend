@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { apiCall } from '../Api';
 import Navbar from '../components/Navbar';
 import '../css/ClientServices.css';
-import axios from 'axios';
-const MG_SERVER = process.env.REACT_APP_MG_SERVER;
 
 
 const ClientServices = () => {
@@ -52,30 +50,15 @@ const ClientServices = () => {
     const activateVM = () => {
         if (selectedVM) {
             alert(`Activating VM: ${selectedVM.vm_name}`);
-            axios.post(`${MG_SERVER}/vm/activate`, {
-                provider_id: selectedVM.provider_id,
-                vm_name: selectedVM.vm_name,
-            }).then((response) => {
-                console.log(response);
+
+            apiCall("get", "/vms/start?vm_id=" + selectedVM.vm_id,
+                                      + "&provider_id=" + selectedVM.provider_id
+            ).then((data) => {
+                alert(data.message);
             }).catch((error) => {
-                console.error(error);
-            })
+                alert("Error: "+error);
+            });
         }
-    };
-
-    const initiateConnection = () => {
-        if (selectedVM) {
-            alert(`Initiating connection to: ${selectedVM.vm_name}`);
-        }
-        axios.post('http://localhost:5000/activate-vm', {
-            vm_id: selectedVM.provider_id,
-            provider: selectedVM.provider
-
-        }).then((response) => {
-            console.log(response);
-        }).catch((error) => {
-            console.error(error);
-        })
     };
 
     const deleteVM = () => {
@@ -83,29 +66,26 @@ const ClientServices = () => {
         if (selectedVM) {
             alert(`Deleting VM: ${selectedVM.vm_name}`);
         }
-        axios.post(`${MG_SERVER}/vm/delete`, {
-            provider_id: selectedVM.provider_id,
-            vm_name: selectedVM.vm_name
-
-        }).then((response) => {
-            console.log(response);
+        apiCall("get", "/vms/remove?vm_id=" + selectedVM.vm_id,
+                                      + "&provider_id=" + selectedVM.provider_id
+        ).then((data) => {
+                alert(data.message);
         }).catch((error) => {
-            console.error(error);
-        })
+                alert("Error: "+error);
+        });
     };
 
     const deactivateVM = () => {
         if (selectedVM) {
             alert(`Deactivating VM: ${selectedVM.vm_name}`);
         }
-        axios.post(`${MG_SERVER}/vm/deactivate`, {
-            provider_id: selectedVM.provider_id,
-            vm_name: selectedVM.vm_name
-        }).then((response) => {
-            console.log(response);
+        apiCall("get", "/vms/stop?vm_id=" + selectedVM.vm_id,
+                                      + "&provider_id=" + selectedVM.provider_id
+        ).then((data) => {
+                alert(data.message);
         }).catch((error) => {
-            console.error(error);
-        })
+                alert("Error: "+error);
+        });
     };
 
     return (
@@ -166,10 +146,9 @@ const ClientServices = () => {
                                     <p><span>Wireguard Endpoint: </span><span>{selectedVM.wireguard_endpoint}</span></p>
                                 </div>
                                 <div className='vm-btns'>
-                                    <button className='vm-btn' onClick={activateVM}>Activate VM</button>
-                                    <button className='vm-btn' onClick={initiateConnection}>Initiate Connection</button>
-                                    <button className='vm-btn' onClick={deactivateVM}>Deactivate </button>
-                                    <button className='delete-btn' onClick={deleteVM}>Delete VM</button>
+                                    <button className='vm-btn' onClick={activateVM} disabled={selectedVM.status === "active"}>Start VM</button>
+                                    <button className='vm-btn' onClick={deactivateVM} disabled={selectedVM.status === "inactive"}>Stop VM </button>
+                                    <button className='delete-btn' onClick={deleteVM} disabled={selectedVM.status === "active"}>Delete VM</button>
                                 </div>
                             </>
                         ) : (

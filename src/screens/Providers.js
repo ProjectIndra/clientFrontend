@@ -105,7 +105,6 @@ const Providers = () => {
             <Navbar />
             <h2>Providers</h2>
             <div className='provider-main-container'>
-                <div className='c1'>hello</div>
                 <div className='c2'>
                     <div className='search-provider'>
                         <form action="#">

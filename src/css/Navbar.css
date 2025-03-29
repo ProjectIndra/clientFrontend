@@ -6,19 +6,18 @@
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
 }
-body{
-  background: #ffffff;
-}
+
 nav{
-  background: #ffffff;
+  background:rgb(36, 37, 51);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
   height: 60px;
 }
+
 nav .logo{
-  color: #000000;
+  color: white;
   font-style: italic;
   font-size: 30px;
   font-weight: 600;
@@ -27,19 +26,34 @@ nav .logo{
 nav .logo a{
   text-decoration: none;
   font-style: italic;
-  color: black;
+  color: white;
 }
 .dropdown{
   position: fixed;
   width: 100%;
   background-color: #DFF0F8;
   padding: 15px;
+  position:absolute;
+  z-index:2;
 }
  .nav-items{
   display: flex;
   flex: 1;
   padding: 0 0 0 60px;
 }
+
+.navbar-items-main-h1{
+  font-size: 25px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.navbar-items-h1{
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
 .nav-items li{
   list-style: none;
   padding: 0 15px;

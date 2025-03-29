@@ -3,23 +3,24 @@ import '../css/Navbar.css';
 import { useState } from 'react';
 
 function Navbar() {
+
    const [dropdown, setDropdown] = useState(false);
 
    const handleClick = () => {
       window.location.href = '/profile';
    }
+   
    return (
       <div className='navbar'>
          <nav>
-            <div className="menu-icon"
-               onMouseEnter={() => setDropdown(true)}>
-               <img src='/img/menu.png' alt='menuIcon'>
-               </img>
-            </div>
             <div className="logo">
                <Link to="/home">
-                  Indra
+               <h1 className='navbar-items-main-h1'>Indra</h1>
                </Link>
+            </div>
+            <div className="menu-icon"
+               onMouseEnter={() => setDropdown(true)}>
+               <h1 className='navbar-items-h1'>Services</h1>
             </div>
             {/* <div className="nav-items">
                <li><Link to="/home">Home</Link></li>
@@ -39,7 +40,6 @@ function Navbar() {
                onMouseEnter={() => setDropdown(true)}
                onMouseLeave={() => setDropdown(false)}>
                <ul className="nav-items">
-                  <li><Link to="/home">Home</Link></li>
                   <li><Link to="/client/services">Compute-Engine</Link></li>
                   <li><Link to="/providersList">Providers</Link></li>
                </ul>

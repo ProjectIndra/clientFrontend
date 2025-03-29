@@ -76,9 +76,6 @@ const ClientServices = () => {
             <div className='ClientServices'>
                 <h2 className='vm-instances-heading'>VM Instances</h2>
                 <div className='ClientServices-Content'>
-                    <div className='vm-filters-cont'>
-                        Filters
-                    </div>
                     <div className='vm-container'>
                         <div className='vm-search'>
                             <input type="search" className="vm-input" placeholder="Search by Name, vCPU, RAM..." required />

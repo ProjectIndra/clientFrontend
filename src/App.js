@@ -7,6 +7,7 @@ import ProvidersList from "./screens/Providers";
 import ProviderServices from "./screens/ProviderServices";
 import ClientServices from "./screens/ClientServices";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ManageProviders from "./screens/ManageProviders";
 
 function App() {
   return (
@@ -23,7 +24,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/providersList" element={<ProvidersList />} />
             {/* <Route path="/provider/:id" element={<ProviderServices />} /> */}
-            <Route path="/client/services" element={<ClientServices />} />
+          <Route path="/client/services" element={<ClientServices />} />
+          <Route path="/manage/providers" element={<ManageProviders />} />
           {/* </Route> */}
         </Routes>
       </BrowserRouter>

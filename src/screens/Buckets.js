@@ -1,32 +1,3 @@
-// import React from "react";
-// import Navbar from "../components/Navbar";
-
-// function Buckets() {
-// 	const [bucket, setBucket] = useState([]);
-// 	const path = "/buckets";
-// 	// send req to backend. send the path to the backend.
-// 	// respone -> list of folders and files with thier paths respectively
-
-// 	// when user clicks on any folder, send path to backend, go to line 7
-// 	// when user clicks on any file, download the file
-// 	return <>
-// 		<Navbar />
-// 		<div className="buckets-comp">
-// 		<h2>My Buckets</h2>
-// 		<p>Here you can manage your buckets.</p>
-// 		<ul>
-// 			<li>Bucket 1</li>
-// 			<li>Bucket 2</li>
-// 			<li>Bucket 3</li>
-// 			</ul>
-// 		</div>
-// 		<div></div>
-//   </>
-// }
-
-// export default Buckets;
-
-// -------------------------------------------------------------------------------------
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "../css/Buckets.css";
@@ -92,16 +63,7 @@ const Buckets = () => {
 	useEffect(() => {
 		fetchDirectory(path);
 	}, [path]);
-
-	const fetchDirectory1 = async (currentPath) => {
-		try {
-			const response = await axios.get(`/api/list`, { params: { path: currentPath } });
-			setEntries(response.data);
-			setSelectedItems([]);
-		} catch (err) {
-			console.error("Error fetching directory:", err);
-		}
-	};
+	
 	const fetchDirectory = async (currentPath) => {
 		try {
 			// Simulating API response delay

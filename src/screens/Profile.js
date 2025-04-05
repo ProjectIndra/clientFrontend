@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import '../css/Profile.css';
 import ProviderCard from "../components/ProviderCard";
+import { apiCall } from "../Api";
 
 function Profile() {
 	const [providers, setProviders] = useState([
@@ -22,76 +23,74 @@ function Profile() {
 	const [token, setToken] = useState("requesting...");
 
 	useEffect(() => {
-		fetchProviders();
-		fetchWireguardDetails();
 		fetchAccountDetails();
+
+		// fetchProviders();
+		// fetchWireguardDetails();
 	}, []);
 
 	const fetchProviders = async () => {
-		try {
-			const response = await fetch('/api/providers');
-			const data = await response.json();
-			setProviders(data);
-		} catch (error) {
-			console.log("Error fetching providers:", error);
-		}
+
 	};
 
 	const fetchWireguardDetails = async () => {
-		try {
-			const response = await fetch('/api/wireguard');
-			const data = await response.json();
-			setWg(data);
-		} catch (error) {
-			console.log("Error fetching Wireguard details:", error);
-		}
+		// try {
+		// 	const response = await fetch('/api/wireguard');
+		// 	const data = await response.json();
+		// 	setWg(data);
+		// } catch (error) {
+		// 	console.log("Error fetching Wireguard details:", error);
+		// }
 	};
 
 	const fetchAccountDetails = async () => {
-		try {
-			const response = await fetch('/api/account');
-			const data = await response.json();
-			setAccount(data);
-		} catch (error) {
-			console.log("Error fetching account details:", error);
+		await apiCall("get", "/ui/profile/getUserDetails").then((data) => {
+			console.log("acc:",data);
+			
+			setAccount((prev) => {
+				return {
+					...prev,
+					img: data.profile_image,
+					username: data.username,
+					account_name: data.profile_name,
+					email: data.email
+				}
+			})
 		}
+		).catch((error) => {
+			console.log(error);
+			alert("Error: " + error);
+		});
 	};
+	const updateAccountDetails = async (updatedData) => { 
+		await apiCall("post", "/ui/profile/updateUserDetails", {
+			profile_name: updatedData.profile_name,
+			profile_image: updatedData.profile_image,
+		}).then((data) => { console.log(data); setAccount(data) })
+			.catch((error) => { console.log(error); alert("Error: " + error); });
+	}
 
 	const handleEdit = (data) => {
 		setEditData(data);
 	};
 
-	const handleSave = async (updatedData) => {
-		try {
-			await fetch(`/api/update`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(updatedData)
-			});
-			setEditData(null);
-			fetchProviders();
-			fetchWireguardDetails();
-			fetchAccountDetails();
-		} catch (error) {
-			console.log("Error updating data:", error);
-		}
-	};
+	// const handleSave = async (updatedData) => {
+	// 	try {
+	// 		await fetch(`/api/update`, {
+	// 			method: 'POST',
+	// 			headers: { 'Content-Type': 'application/json' },
+	// 			body: JSON.stringify(updatedData)
+	// 		});
+	// 		setEditData(null);
+	// 		fetchProviders();
+	// 		fetchWireguardDetails();
+	// 		fetchAccountDetails();
+	// 	} catch (error) {
+	// 		console.log("Error updating data:", error);
+	// 	}
 
-	useEffect(() => {
-
-		const requestToken = async () => {
-			try {
-				const response = await fetch('/api/request-token', { method: 'POST' });
-				const data = await response.json();
-				setToken(data.token);
-			} catch (error) {
-				console.log("Error requesting token:", error);
-			}
-		};
-
-		requestToken();
-
-	}, []);
+		
+	// };
 
 	return (
 		<div>
@@ -116,12 +115,12 @@ function Profile() {
 						<span className="setup-head">Cli Client Setup</span>
 						<div className="code-copy">
 							<div className="bash"><span>indra auth {token}</span></div>
-							<img className="copy-img" src="/img/copy.png"  alt="image"></img>
+							<img className="copy-img" src="/img/copy.png"  alt="copy_img"></img>
 						</div>
 						<span className="setup-head">Provider Server Setup</span>
 						<div className="code-copy">
 							<div className="bash"><span>/bin/bash -c "$(curl -fsSL https://github.com/avinash84319/providerServer/install.sh)"</span></div>
-							<img className="copy-img" src="/img/copy.png" alt="image"></img>
+							<img className="copy-img" src="/img/copy.png" alt="cp_img"></img>
 						</div>
 					</div>
 					<div className="profile-providers">
@@ -150,35 +149,55 @@ function Profile() {
 					</div>
 				</div>
 				<div className="c3">
-					{editData && <EditScreen data={editData} onSave={handleSave} onCancel={() => setEditData(null)} />}
+					{editData && <EditScreen data={editData} onSave={updateAccountDetails} onCancel={() => setEditData(null)} />}
 				</div>
 			</div>
 		</div>
 	);
 }
 
+
 function EditScreen({ data, onSave, onCancel }) {
 	const [formData, setFormData] = useState(data);
+	useEffect(() => {
+		console.log("Form Data:", formData);
+	},[formData])
 
 	const handleChange = (e) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+		const { name, value, files, type } = e.target;
+
+		if (type === "file") {
+			setFormData({ ...formData, [name]: files[0] }); // store the actual File object
+		} else {
+			setFormData({ ...formData, [name]: value });
+		}
 	};
 
 	return (
 		<div className="edit-screen">
 			<h3>Edit Account Details</h3>
 			<div>
-				<label>Name</label>
-				<input name="account_name" value={formData.account_name || ''} onChange={handleChange} />
+				<label>Update Profile Name</label>
+				<input
+					name="profile_name"
+					value={formData.profile_name || ''}
+					onChange={handleChange}
+				/>
 			</div>
 			<div>
-				<label>Email</label>
-				<input name="email" value={formData.email || ''} onChange={handleChange} />
+				<label>Update Profile Image</label>
+				<input
+					name="profile_image"
+					onChange={handleChange}
+					type="file"
+					accept="image/*"
+				/>
 			</div>
 			<button onClick={() => onSave(formData)}>Save</button>
 			<button onClick={onCancel}>Cancel</button>
 		</div>
 	);
 }
+
 
 export default Profile;

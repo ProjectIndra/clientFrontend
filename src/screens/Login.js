@@ -1,7 +1,6 @@
 import { apiCall } from '../Api';
 import { Link } from 'react-router-dom';
 import '../css/Login.css';
-const MG_SERVER = process.env.REACT_APP_MG_SERVER;
 
 
 function Login() {

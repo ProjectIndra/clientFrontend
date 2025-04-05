@@ -26,12 +26,12 @@ const ProviderCard = ({ provider }) => {
             }}
         >
             <div className='provider-icon'>
-                <img src='/img/computer.png'></img>
+                <img src='/img/computer.png' alt='icon_img'></img>
             </div>
             <div className='provider-details-container'>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <h3>{provider.provider_name}</h3>
-                    {provider.edit && <img src='/img/edit.png' style={{ height: "20px", width: "20px", cursor: "pointer" }}></img>}
+                    {provider.edit && <img src='/img/edit.png' style={{ height: "20px", width: "20px", cursor: "pointer" }} alt='icon_img'></img>}
                 </div>
 
                 <div className='provider-details'>

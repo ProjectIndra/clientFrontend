@@ -23,8 +23,6 @@ export default function ManageProviders() {
 	const storage = [10, 20, 50, 100, 200, 500];
 	const networks = [1, 2, 3, 4, 5, 6];
 	const vms = [1, 2, 3, 4, 5, 6];
-	const apiUrl = process.env.REACT_APP_API_URL;
-
 
 	// Handle provider selection
 	const handleProviderSelect = (provider) => {

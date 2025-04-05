@@ -37,15 +37,15 @@ const ProviderCard = ({ provider }) => {
                 <div className='provider-details'>
                     <div className='provider-detail'>
                         <p className='pkey'>Max vCPUs</p>
-                        <p className='pval'>{provider.provider_max_vcpu}</p>
+                        <p className='pval'>{provider.provider_allowed_vcpu}</p>
                     </div>
                     <div className='provider-detail'>
                         <p className='pkey'>Max RAM</p>
-                        <p className='pval'>{provider.provider_max_ram}</p>
+                        <p className='pval'>{provider.provider_allowed_ram}</p>
                     </div>
                     <div className='provider-detail'>
                         <p className='pkey'>Max Storage</p>
-                        <p className='pval'>{provider.provider_max_storage}</p>
+                        <p className='pval'>{provider.provider_allowed_storage}</p>
                     </div>
                     <div className='provider-detail'>
                         <p className='pkey'>Rating</p>

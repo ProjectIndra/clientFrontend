@@ -1,0 +1,95 @@
+.buckets-comp h2{    padding: 20px 90px;
+    border: 1px solid;
+}
+.hdfs-container {
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.path-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.path-input {
+  flex-grow: 1;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.back-btn {
+  background: #ddd;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.action-btn, .upload-btn, .delete-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.upload-btn {
+  position: relative;
+  cursor: pointer;
+}
+
+.upload-btn input {
+  position: absolute;
+  left: 0;
+  opacity: 0;
+}
+
+.delete-btn {
+  background: #dc3545;
+}
+
+.hdfs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hdfs-table th, .hdfs-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.hdfs-table th {
+  background-color: #f4f4f4;
+}
+
+.table-row:hover {
+  background-color: #f1f1f1;
+}
+
+.entry-name {
+  color: blue;
+  cursor: pointer;
+}
+
+.folder {
+  font-weight: bold;
+}
+
+.file {
+  color: black;
+}

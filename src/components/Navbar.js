@@ -111,6 +111,10 @@ function Navbar() {
 
             <div className="profile-pics">
                <img src='/img/user.png' alt='profilePic' onClick={handleClick}></img>
+               <button className="logout-button" onClick={() => {
+                  window.location.href = '/login'
+                  sessionStorage.removeItem('token');
+               }}>Logout</button>
             </div>
          </nav>
          {activeDropdown === "services" && (
@@ -120,6 +124,7 @@ function Navbar() {
                <ul className="nav-items">
                   <li><Link to="/client/services">Compute-Engine</Link></li>
                   <li><Link to="/providersList">Providers</Link></li>
+                  <li><Link to="/buckets">Buckets</Link></li>
                </ul>
             </div>
          )}

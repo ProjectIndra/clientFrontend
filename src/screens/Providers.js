@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Navbar from "../components/Navbar";
 import ProviderCard from '../components/ProviderCard';

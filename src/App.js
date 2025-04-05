@@ -4,10 +4,10 @@ import Register from "./screens/Register";
 import Home from "./screens/Home";
 import Profile from "./screens/Profile";
 import ProvidersList from "./screens/Providers";
-import ProviderServices from "./screens/ProviderServices";
 import ClientServices from "./screens/ClientServices";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ManageProviders from "./screens/ManageProviders";
+import Buckets from "./screens/Buckets";
 
 function App() {
   return (
@@ -19,14 +19,14 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           {/* Protected Routes */}
-          {/* <Route element={<ProtectedRoute />}> */}
+          <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/providersList" element={<ProvidersList />} />
-            {/* <Route path="/provider/:id" element={<ProviderServices />} /> */}
-          <Route path="/client/services" element={<ClientServices />} />
-          <Route path="/manage/providers" element={<ManageProviders />} />
-          {/* </Route> */}
+            <Route path="/client/services" element={<ClientServices />} />
+            <Route path="/manage/providers" element={<ManageProviders />} />
+            <Route path="/buckets" element={<Buckets />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import { api, apiCall } from "../Api";
+import { apiCall } from "../Api";
 import '../css/Register.css';
-const MG_SERVER = process.env.REACT_APP_MG_SERVER;
 
 function Register() {
 

@@ -33,7 +33,7 @@ function Profile() {
 			const data = await response.json();
 			setProviders(data);
 		} catch (error) {
-			console.error("Error fetching providers:", error);
+			console.log("Error fetching providers:", error);
 		}
 	};
 
@@ -43,7 +43,7 @@ function Profile() {
 			const data = await response.json();
 			setWg(data);
 		} catch (error) {
-			console.error("Error fetching Wireguard details:", error);
+			console.log("Error fetching Wireguard details:", error);
 		}
 	};
 
@@ -53,7 +53,7 @@ function Profile() {
 			const data = await response.json();
 			setAccount(data);
 		} catch (error) {
-			console.error("Error fetching account details:", error);
+			console.log("Error fetching account details:", error);
 		}
 	};
 
@@ -73,7 +73,7 @@ function Profile() {
 			fetchWireguardDetails();
 			fetchAccountDetails();
 		} catch (error) {
-			console.error("Error updating data:", error);
+			console.log("Error updating data:", error);
 		}
 	};
 
@@ -85,7 +85,7 @@ function Profile() {
 				const data = await response.json();
 				setToken(data.token);
 			} catch (error) {
-				console.error("Error requesting token:", error);
+				console.log("Error requesting token:", error);
 			}
 		};
 
@@ -116,12 +116,12 @@ function Profile() {
 						<span className="setup-head">Cli Client Setup</span>
 						<div className="code-copy">
 							<div className="bash"><span>indra auth {token}</span></div>
-							<img className="copy-img" src="/img/copy.png"></img>
+							<img className="copy-img" src="/img/copy.png"  alt="image"></img>
 						</div>
 						<span className="setup-head">Provider Server Setup</span>
 						<div className="code-copy">
 							<div className="bash"><span>/bin/bash -c "$(curl -fsSL https://github.com/avinash84319/providerServer/install.sh)"</span></div>
-							<img className="copy-img" src="/img/copy.png"></img>
+							<img className="copy-img" src="/img/copy.png" alt="image"></img>
 						</div>
 					</div>
 					<div className="profile-providers">

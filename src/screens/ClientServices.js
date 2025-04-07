@@ -38,6 +38,7 @@ const ClientServices = () => {
                                       + "&provider_id=" + selectedVM.provider_id
             ).then((data) => {
                 alert(data.message);
+                window.location.reload();
             }).catch((error) => {
                 alert("Error: "+error);
             });
@@ -51,7 +52,8 @@ const ClientServices = () => {
         apiCall("get", "/vms/remove?vm_id=" + selectedVM.vm_id
                                       + "&provider_id=" + selectedVM.provider_id
         ).then((data) => {
-                alert(data.message);
+            alert(data.message);
+            window.location.reload();
         }).catch((error) => {
                 alert("Error: "+error);
         });
@@ -64,7 +66,8 @@ const ClientServices = () => {
         apiCall("get", "/vms/stop?vm_id=" + selectedVM.vm_id
                                         + "&provider_id=" + selectedVM.provider_id
         ).then((data) => {
-                alert(data.message);
+            alert(data.message);
+            window.location.reload();
         }).catch((error) => {
                 alert("Error: "+error);
         });

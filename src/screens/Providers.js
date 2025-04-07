@@ -4,13 +4,22 @@ import ProviderCard from '../components/ProviderCard';
 import '../css/Providers.css';
 import { apiCall } from '../Api';
 
-async function runQuery(formData) {
-    apiCall("get", "/providers/query?provider_id=" + formData.provider_id
-                                    + "&vcpu=" + formData.vcpus
-                                    + "&ram=" + formData.ram
-                                    + "&storage=" + formData.storage
-                                    + "&vm_image_type=" + formData.vm_image
-        ).then((data) => {
+async function runQuery(formData, selectedProvider) {
+    // apiCall("get", "/providers/query?provider_id=" + formData.provider_id
+    //                                 + "&vcpu=" + formData.vcpus
+    //                                 + "&ram=" + formData.ram
+    //                                 + "&storage=" + formData.storage
+    //                                 + "&vm_image_type=" + formData.vm_image
+    //     ).then((data) => {
+    //         console.log(data);
+    //         alert("Can Create VM: " + data.can_create);
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //         alert("Error: " + error);
+    //     });
+    apiCall("post", "/providers/query", {vcpus:formData.vcpus, ram:formData.ram, storage:formData.storage, vm_image:formData.vm_image, provider_id:formData.provider_id, provider_user_id:selectedProvider.user_id})
+        .then((data) => {
             console.log(data);
             alert("Can Create VM: " + data.can_create);
         })
@@ -20,11 +29,12 @@ async function runQuery(formData) {
         });
 }
 
-async function runRequest(formData) {
-    apiCall("post", "/vms/launch", formData)
+async function runRequest(formData, selectedProvider) {
+    apiCall("post", "/vms/launch", { vcpus: formData.vcpus, ram: formData.ram, storage: formData.storage, vm_image: formData.vm_image, provider_id: formData.provider_id, provider_user_id: selectedProvider.user_id, vm_name: formData.vm_name, provider_name: selectedProvider.provider_name})
         .then((data) => {
             console.log(data);
             alert(data.message);
+            
         })
         .catch((error) => {
             console.log(error);
@@ -90,13 +100,13 @@ const Providers = () => {
     const handleSubmitQuery = async (e) => {
         e.preventDefault();
         console.log("Submitting form with data:", formData);
-        await runQuery(formData);
+        await runQuery(formData, selectedProvider);
     };
 
     const handleSubmitRequest = async (e) => {
         e.preventDefault();
         console.log("Submitting form with data:", formData);
-        await runRequest(formData);
+        await runRequest(formData,selectedProvider);
     }
 
     return (

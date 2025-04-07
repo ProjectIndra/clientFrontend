@@ -11,7 +11,7 @@ function Home() {
       <section className="w-full bg-white max-w-7xl ml-auto mt-16 px-6 md:px-12 py-16 flex flex-col-reverse md:flex-row items-center justify-between gap-10">
         {/* Left Content */}
         <div className="w-full md:w-1/2">
-          <h1 className="text-3xl md:text-5xl font-bold text-blue-900 mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-[#0D0D0D] mb-4">
             Turn your idle computer <br /> into a cloud provider
           </h1>
           <p className="text-gray-600 mb-6">
@@ -21,10 +21,10 @@ function Home() {
 
           {/* Buttons */}
           <div className="flex gap-4 mb-10">
-            <button className="bg-orange-400 text-white px-6 py-2 rounded-md font-medium hover:bg-orange-500 transition">
+            <button className="bg-lime-300 font-medium text-[#0D0D0D] px-6 py-2 rounded-md hover: transition">
               Get Started
             </button>
-            <button className="text-orange-500 font-medium hover:underline">
+            <button className="text-[#0D0D0D] font-medium hover:underline">
               See Demo →
             </button>
           </div>

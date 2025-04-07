@@ -175,8 +175,8 @@ export default function LockBoxLanding() {
       {/* Footer */}
       <footer className="bg-[#0D1A33] text-white px-4 py-6 flex flex-col md:flex-row justify-between items-center">
         <div>
-          <p className="font-bold text-lg">LockBox</p>
-          <p className="text-xs mt-1">©2024. Lockbox. All Rights Reserved.</p>
+          <p className="font-bold text-lg">Indra</p>
+          <p className="text-xs mt-1">©2025. Indra. All Rights Reserved.</p>
         </div>
         <ul className="flex gap-4 mt-4 md:mt-0 text-sm">
           <li>Home</li>

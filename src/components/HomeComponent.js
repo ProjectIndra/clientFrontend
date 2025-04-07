@@ -37,7 +37,7 @@ export default function LockBoxLanding() {
   return (
     <div className="font-sans text-[#0D0D0D] bg-white w-full overflow-x-hidden">
       {/* Header Section */}
-      <section className="text-center py-12 bg-[#f8f7fe] px-4 md:px-10">
+      <section className="text-center py-12 bg-[#f8f7fe] px-4 md:px-10"      >
         <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-[#0D0D0D]">
           Our Benefit for You
         </span>
@@ -46,18 +46,16 @@ export default function LockBoxLanding() {
         </h2>
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6">
           <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
-            <h3 className="text-xl font-semibold mb-2">For Individuals</h3>
+            <h3 className="text-xl font-semibold mb-2">For Resource Providers</h3>
             <p className="text-sm text-gray-600">
-              Streamline your data organization and access with our intuitive
-              management tools...
+            Monetize your idle machines by securely sharing compute and storage resources with our cloud network. Join with minimal setup, stay in full control, and earn passive income—while powering a new wave of decentralized infrastructure....
             </p>
             <button className="text-blue-500 text-sm mt-3">Learn More</button>
           </div>
           <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
-            <h3 className="text-xl font-semibold mb-2">For Teams</h3>
+            <h3 className="text-xl font-semibold mb-2">For Resource Consumers</h3>
             <p className="text-sm text-gray-600">
-              Streamline your data organization and access with our intuitive
-              management tools...
+            Leverage a scalable, distributed infrastructure that spans across multiple providers and locations. Run workloads seamlessly across clusters, migrate between nodes, and utilize the same application on different machines — all without managing the complexity.
             </p>
             <button className="text-blue-500 text-sm mt-3">Learn More</button>
           </div>
@@ -70,44 +68,44 @@ export default function LockBoxLanding() {
           Our Key Features
         </span>
         <h2 className="text-2xl md:text-4xl font-semibold mt-4">
-          Discover our diverse range of services.
+        Discover how enterprises can simplify infrastructure at scale.
         </h2>
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6">
           <div className="bg-[#0D1A33] text-white rounded-xl p-6 md:w-1/4">
             <h3 className="text-lg font-bold mb-2">
-              Advanced Security Features
+            🏢 Centralized Server Ownership
             </h3>
             <p className="text-sm">
-              Protect your data with our robust security measures...
+            Corporates can deploy powerful servers in a single data-rich location and provide lightweight thin clients to employees. Assign isolated virtual machines to staff while minimizing hardware maintenance and IT overhead.
             </p>
             <button className="text-white text-sm mt-3">Learn More</button>
           </div>
           <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4">
             <h3 className="text-lg font-bold mb-2">
-              Active Collaboration Space
+            👨‍💻 Simplified Workforce Access
             </h3>
             <p className="text-sm">
-              Collaborate with your team in real time...
+            Give every employee access to a secure, always-on virtual environment from any location. VMs can be created, updated, and managed centrally—reducing downtime and support issues across the company.
             </p>
             <button className="text-blue-500 text-sm mt-3">Learn More</button>
           </div>
           <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4">
             <h3 className="text-lg font-bold mb-2">
-              Holistic Information Management
+            💸 Monetize Spare Compute
             </h3>
-            <p className="text-sm">Improve your information organization...</p>
+            <p className="text-sm">Unused server capacity? No problem. Sell excess compute and storage to the public cloud network, generating passive revenue from infrastructure that's already in place.</p>
             <button className="text-blue-500 text-sm mt-3">Learn More</button>
           </div>
         </div>
       </section>
 
       {/* Device Security Section */}
-      <section className="py-12 px-4 md:px-10 text-center">
+      <section className="py-12 px-4 md:px-10 bg-[#f8f7fe] text-center">
         <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-[#0D0D0D]">
-          Our Benefit for You
+        Why We Do This
         </span>
         <h2 className="text-2xl md:text-4xl font-semibold mt-4">
-          Why You’ll Love This
+        We see potential everywhere.
         </h2>
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6 items-center">
           <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
@@ -115,17 +113,17 @@ export default function LockBoxLanding() {
               Integrate Seamlessly with Favorite Apps
             </h3>
             <p className="text-sm text-gray-600">
-              Easily navigate through your apps...
+            Laptops in sleep mode. Servers running at half capacity. Power that’s waiting to be used. At the same time, people are held back by limits—budget, access, geography. We’re here to change that.
+
             </p>
           </div>
           <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
             <h3 className="text-xl font-semibold mb-2">
-              Take Control of Your Device’s Security
+            Our mission is simple
             </h3>
             <p className="text-sm text-gray-600">
-              Make informed decisions and keep your devices secure...
+            Connect unused compute with those who need it. No waste. No barriers. Just possibilities.
             </p>
-            <button className="text-blue-500 text-sm mt-3">Learn More</button>
           </div>
         </div>
       </section>

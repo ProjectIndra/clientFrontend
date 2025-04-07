@@ -37,7 +37,7 @@ export default function LockBoxLanding() {
   return (
     <div className="font-sans text-[#0D0D0D] bg-white w-full overflow-x-hidden">
       {/* Header Section */}
-      <section className="text-center py-12 px-4 md:px-10">
+      <section className="text-center py-12 bg-[#f8f7fe] px-4 md:px-10">
         <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-[#0D0D0D]">
           Our Benefit for You
         </span>

@@ -80,7 +80,7 @@ function Register() {
           {/* Right - Image (hidden on mobile) */}
           <div className="w-1/2 hidden md:flex bg-gradient-to-br from-emeraldMid via-emeraldSemi to-primary items-center justify-center relative">
             <img
-              src="https://img.freepik.com/free-vector/computer-cloud-network-technology_53876-100678.jpg?t=st=1743873831~exp=1743877431~hmac=7b429fe9ed8ffb2932e0ca729b4e423fab7ba82d865e75ce1a5faaee65f5691f&w=826"
+              src="https://img.freepik.com/free-vector/computer-cloud-network-technology_53876-100678.jpg"
               alt="Register"
               className="h-full w-full object-cover rounded-tr-2xl rounded-br-2xl shadow-md"
             />

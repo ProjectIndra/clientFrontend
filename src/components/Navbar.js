@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [activePopup, setActivePopup] = useState(null);
@@ -18,7 +19,6 @@ const Navbar = () => {
   const togglePopup = (popupName) => {
     setActivePopup((prev) => (prev === popupName ? null : popupName));
   };
-
 
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -44,17 +44,22 @@ const Navbar = () => {
   }, [lastScrollY]);
 
   return (
-    <header  ref={navRef}
-    className={`w-full px-6 md:px-12 py-4 bg-white flex flex-col md:flex-row justify-between items-start md:items-center fixed top-0 z-50 transition-transform duration-300 ${
-      showNavbar ? "translate-y-0" : "-translate-y-full"
-    }`}>
+    <header
+      ref={navRef}
+      className={`w-full px-6 md:px-12 py-4 bg-white flex flex-col md:flex-row justify-between items-start md:items-center fixed top-0 z-50 transition-transform duration-300 ${
+        showNavbar ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       {/* Left section: Logo + Nav Items */}
       <div className="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0">
         {/* Logo + Hamburger */}
         <div className="w-full flex justify-between items-center md:mr-10">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#0a1d39]">
+          <Link
+            className="text-2xl md:text-3xl font-bold text-[#0a1d39]"
+            to="/home"
+          >
             Indra
-          </h1>
+          </Link>
           <button
             className="md:hidden text-[#0a1d39] focus:outline-none"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -104,9 +109,27 @@ const Navbar = () => {
             >
               Services
             </button>
-            {activePopup === "services" && (
-              <div className="absolute top-full left-0 mt-2 w-56 p-4 bg-white rounded-lg shadow-md z-50">
-                <p className="text-sm">Services popup related to Services</p>
+            {activePopup === "services" && showNavbar && (
+              <div className="absolute top-full left-0 mt-2 w-56 p-4 bg-white rounded-lg shadow-md z-50 flex flex-col">
+                <Link
+                  className="text-sm text-left w-full hover:bg-gray-100 px-2 py-1 rounded"
+                  to="/client/services"
+                >
+                  Compute-Engine
+                </Link>
+                <Link
+                  className="text-sm text-left w-full hover:bg-gray-100 px-2 py-1 rounded"
+                  to="/providersList"
+                >
+                  Providers
+                </Link>
+
+                <Link
+                  className="text-sm text-left w-full hover:bg-gray-100 px-2 py-1 rounded"
+                  to="/buckets"
+                >
+                  Buckets
+                </Link>
               </div>
             )}
           </div>
@@ -123,9 +146,27 @@ const Navbar = () => {
             >
               Manage
             </button>
-            {activePopup === "manage" && (
-              <div className="absolute top-full left-0 mt-2 w-56 p-4 bg-white rounded-lg shadow-md z-50">
-                <p className="text-sm">Manage popup related to Manage</p>
+            {activePopup === "manage" && showNavbar && (
+              <div className="absolute top-full left-0 mt-2 w-56 p-4 bg-white rounded-lg shadow-md z-50 flex flex-col">
+                <Link
+                  className="text-sm text-left w-full hover:bg-gray-100 px-2 py-1 rounded"
+                  to="/client/services"
+                >
+                  Setup
+                </Link>
+
+                <Link
+                  className="text-sm text-left w-full hover:bg-gray-100 px-2 py-1 rounded"
+                  to="/manage/providers"
+                >
+                  Manage Providers
+                </Link>
+                <Link
+                  className="text-sm text-left w-full hover:bg-gray-100 px-2 py-1 rounded"
+                  to="/client/services"
+                >
+                  Manage Clients
+                </Link>
               </div>
             )}
           </div>
@@ -209,7 +250,13 @@ const Navbar = () => {
                 </svg>
                 Settings
               </button>
-              <button className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+              <button
+                className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                onClick={() => {
+                  window.location.href = "/login";
+                  sessionStorage.removeItem("token");
+                }}
+              >
                 <svg
                   className="w-4 h-4 mr-2"
                   fill="none"

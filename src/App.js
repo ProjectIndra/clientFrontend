@@ -19,14 +19,14 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
+          {/* <Route element={<ProtectedRoute />}> */}
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/providersList" element={<ProvidersList />} />
             <Route path="/client/services" element={<ClientServices />} />
             <Route path="/manage/providers" element={<ManageProviders />} />
             <Route path="/buckets" element={<Buckets />} />
-          </Route>
+          {/* </Route> */}
         </Routes>
       </BrowserRouter>
     </div>

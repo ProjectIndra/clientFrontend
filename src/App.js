@@ -8,6 +8,7 @@ import ClientServices from "./screens/ClientServices";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ManageProviders from "./screens/ManageProviders";
 import Buckets from "./screens/Buckets";
+import PageWrapper from "./components/PageWrapper";
 
 function App() {
   return (
@@ -20,12 +21,12 @@ function App() {
 
           {/* Protected Routes */}
           {/* <Route element={<ProtectedRoute />}> */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/providersList" element={<ProvidersList />} />
-            <Route path="/client/services" element={<ClientServices />} />
-            <Route path="/manage/providers" element={<ManageProviders />} />
-            <Route path="/buckets" element={<Buckets />} />
+          <Route path="/home" element={<PageWrapper><Home /></PageWrapper>} />
+          <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+          <Route path="/providersList" element={<PageWrapper><ProvidersList /></PageWrapper>} />
+          <Route path="/client/services" element={<PageWrapper><ClientServices /></PageWrapper>} />
+          <Route path="/manage/providers" element={<PageWrapper><ManageProviders /></PageWrapper>} />
+          <Route path="/buckets" element={<PageWrapper><Buckets /></PageWrapper>} />
           {/* </Route> */}
         </Routes>
       </BrowserRouter>

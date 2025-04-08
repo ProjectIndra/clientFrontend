@@ -101,7 +101,6 @@ const Providers = () => {
 
     return (
         <div className='providersPage'>
-            <Navbar />
             <h2>Providers</h2>
             <div className='provider-main-container'>
                 <div className='c2'>

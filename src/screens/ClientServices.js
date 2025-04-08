@@ -98,33 +98,40 @@ const ClientServices = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left Side - VM List */}
           <div className="flex-1 min-w-[400px]">
-            <CustomSearch/>
+            <CustomSearch />
 
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
-              <div className="grid grid-cols-5 px-4 py-3 bg-gray-100 font-medium text-gray-700">
-                <p>Select</p>
-                <p>Provider Name</p>
-                <p>VM Name</p>
-                <p>Wireguard IP</p>
-                <p>Status</p>
-              </div>
-
-              {vms.map((vm, index) => (
-                <div
-                  className="grid grid-cols-5 items-center px-4 py-3 border-t border-gray-100 hover:bg-gray-50"
-                  key={index}
-                >
-                  <input
-                    type="radio"
-                    name="selectedVM"
-                    onChange={() => handleSelectVM(vm)}
-                  />
-                  <p>{vm.provider_name}</p>
-                  <p>{vm.vm_name}</p>
-                  <p>{vm.wireguard_ip}</p>
-                  <p>{vm.status === "active" ? "✅" : "❌"}</p>
-                </div>
-              ))}
+              <table className="w-full text-left">
+                <thead className="bg-gray-100 text-gray-700 font-medium">
+                  <tr>
+                    <th className="px-4 py-3">Select</th>
+                    <th className="px-4 py-3">Provider Name</th>
+                    <th className="px-4 py-3">VM Name</th>
+                    <th className="px-4 py-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {vms.map((vm, index) => (
+                    <tr
+                      key={index}
+                      className="border-t border-gray-100 hover:bg-gray-50"
+                    >
+                      <td className="px-4 py-3">
+                        <input
+                          type="radio"
+                          name="selectedVM"
+                          onChange={() => handleSelectVM(vm)}
+                        />
+                      </td>
+                      <td className="px-4 py-3">{vm.provider_name}</td>
+                      <td className="px-4 py-3">{vm.vm_name}</td>
+                      <td className="px-4 py-3">
+                        {vm.status === "active" ? "✅" : "❌"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 

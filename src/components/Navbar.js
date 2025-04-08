@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const [activePopup, setActivePopup] = useState(null);
+  const [activePopup, setActivePopup] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navRef = useRef();
 
@@ -95,8 +95,24 @@ const Navbar = () => {
           ref={navRef}
           className={`${
             mobileMenuOpen ? "flex" : "hidden"
-          } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6 text-sm mt-4 md:mt-0`}
+          } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6 text-sm mt-4 md:mt-0 ml-12`}
         >
+          <button
+            onClick={() => {
+              if (window.location.pathname !== "/home" && activePopup !== "home") {
+                window.location.href = "/home";
+                togglePopup("home")
+              }
+              togglePopup("home")
+            }}
+            className={`${
+              activePopup === "home"
+                ? "text-[#0a1d39] font-semibold"
+                : "text-[#475569]"
+            } hover:text-[#0a1d39] text-left w-full whitespace-nowrap`}
+          >
+            Home
+          </button>
           {/* Services */}
           <div className="relative group">
             <button
@@ -218,7 +234,12 @@ const Navbar = () => {
           </div>
           {activePopup === "avatar" && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
-              <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <button
+                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                onClick={() => {
+                  window.location.href = "/profile";
+                }}
+              >
                 <svg
                   className="w-4 h-4 mr-2"
                   fill="none"

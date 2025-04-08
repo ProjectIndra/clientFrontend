@@ -94,7 +94,6 @@ function Profile() {
 
 	return (
 		<div>
-			<Navbar />
 			<h2 className='vm-instances-heading'>Profile and Settings</h2>
 			<div className="Profile-Content">
 				<div className="c2">

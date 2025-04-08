@@ -1,64 +1,83 @@
-import '../css/providerCard.css';
+import "../css/providerCard.css";
 import { useState } from "react";
 
-const ProviderCard = ({ provider }) => {
-    const [isHovered, setIsHovered] = useState(false);
+const ProviderCard = ({ provider, isActive=false }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
-    const handleMouseEnter = () => {
-        setIsHovered(true);
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
 
-    };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-    };
-
-    return (
-        <div
-            className="provider"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            style={{
-                backgroundColor: !provider.edit && isHovered  ? "#DFF0F8":"white" ,
-                transform: !provider.edit && isHovered ? "scale(1.05)" : "scale(1)",
-                transition: "transform 0.3s ease-in-out, background-color 0.3s ease-in-out",
-                cursor: !provider.edit && isHovered ? "pointer" : "default"
-            }}
-        >
-            <div className='provider-icon'>
-                <img src='/img/computer.png' alt='icon_img'></img>
+  return (
+    <div className="w-full flex justify-center">
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={`w-full max-w-[700px] min-w-[200px] h-[140px] flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden ${isActive? "bg-blue-50" : "bg-white"} ${
+          !provider.edit && isHovered
+            ? "bg-blue-50 scale-103 cursor-pointer"
+            : "bg-white"
+        }`}
+      >
+        {/* Left: Icon + Details */}
+        <div className="flex flex-col p-4 w-[85%]">
+          {/* Top: Icon + Title + Edit */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex gap-4">
+              <img src="/img/computer.png" alt="icon" className="w-10 h-10" />
+              <h3 className="text-lg font-semibold text-start">
+                {provider.provider_name}
+              </h3>
             </div>
-            <div className='provider-details-container'>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <h3>{provider.provider_name}</h3>
-                    {provider.edit && <img src='/img/edit.png' style={{ height: "20px", width: "20px", cursor: "pointer" }} alt='icon_img'></img>}
-                </div>
+            {provider.edit && (
+              <img
+                src="/img/edit.png"
+                alt="edit"
+                className="w-5 h-5 mt-1 cursor-pointer"
+              />
+            )}
+          </div>
 
-                <div className='provider-details'>
-                    <div className='provider-detail'>
-                        <p className='pkey'>Max vCPUs</p>
-                        <p className='pval'>{provider.provider_allowed_vcpu}</p>
-                    </div>
-                    <div className='provider-detail'>
-                        <p className='pkey'>Max RAM</p>
-                        <p className='pval'>{provider.provider_allowed_ram}</p>
-                    </div>
-                    <div className='provider-detail'>
-                        <p className='pkey'>Max Storage</p>
-                        <p className='pval'>{provider.provider_allowed_storage}</p>
-                    </div>
-                    <div className='provider-detail'>
-                        <p className='pkey'>Rating</p>
-                        <p className='pval'>{provider.provider_rating}</p>
-                    </div>
-                </div>
+          {/* Grid of 4 */}
+          <div className="grid grid-cols-4 gap-4 text-sm whitespace-nowrap">
+            <div className="flex flex-col">
+              <span className="text-gray-500 font-medium">Max vCPUs</span>
+              <span className="font-semibold">
+                {provider.provider_allowed_vcpu}
+              </span>
             </div>
-            {provider.provider_status ?
-                <div style={{ width: "15%", backgroundColor: "#79E193", borderRadius: " 0px 10px 10px 0px", height: "100%" }}></div>
-                :
-                <div style={{ width: "15%", backgroundColor: "#E17984", borderRadius: " 0px 10px 10px 0px", height: "100%" }}></div>}
+            <div className="flex flex-col">
+              <span className="text-gray-500 font-medium">Max RAM</span>
+              <span className="font-semibold">
+                {provider.provider_allowed_ram}
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-gray-500 font-medium">Max Storage</span>
+              <span className="font-semibold">
+                {provider.provider_allowed_storage}
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-gray-500 font-medium">Rating</span>
+              <span className="font-semibold">{provider.provider_rating}</span>
+            </div>
+          </div>
         </div>
-    );
+
+        {/* Right status bar */}
+        <div
+          className={`w-[15%] h-full ${
+            isActive ? "bg-lime-300" : "bg-gray-200"
+          } rounded-r-xl`}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default ProviderCard;

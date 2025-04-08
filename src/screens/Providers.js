@@ -109,10 +109,11 @@ const Providers = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen ">
-    <h2 className="text-3xl font-bold text-center text-black mt-10">Providers</h2>
-  
-    <div className="flex flex-col md:flex-row w-full px-4 md:px-16 gap-10 pt-10">
+    <div className="bg-gray-50 p-6 font-sans mt-16">
+    <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+    Providers
+    </h2>
+    <div className="flex flex-col md:flex-row w-full gap-10">
       {/* Left Column */}
       <div className="w-full md:w-2/5">
         <CustomSearch />

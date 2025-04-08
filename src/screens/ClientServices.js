@@ -90,7 +90,7 @@ const ClientServices = () => {
 
   return (
     <>
-      <div className="bg-gray-50 p-6 font-sans">
+      <div className="bg-gray-50 p-6 font-sans mt-20">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">
           VM Instances
         </h2>

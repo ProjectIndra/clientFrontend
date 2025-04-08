@@ -6,6 +6,24 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navRef = useRef();
 
+  const [user, setUser] = useState(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload;
+    } catch (err) {
+      console.error("Invalid token", err);
+      return null;
+    }
+  });
+  const [initials, setInitials] = useState(() => {
+    if (user?.username) {
+      return user.username.slice(0, 2).toUpperCase();
+    }
+    return "";
+  });
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (navRef.current && !navRef.current.contains(e.target)) {
@@ -99,11 +117,14 @@ const Navbar = () => {
         >
           <button
             onClick={() => {
-              if (window.location.pathname !== "/home" && activePopup !== "home") {
+              if (
+                window.location.pathname !== "/home" &&
+                activePopup !== "home"
+              ) {
                 window.location.href = "/home";
-                togglePopup("home")
+                togglePopup("home");
               }
-              togglePopup("home")
+              togglePopup("home");
             }}
             className={`${
               activePopup === "home"
@@ -230,7 +251,7 @@ const Navbar = () => {
             className="w-10 aspect-square bg-[#004d3c] text-white flex items-center justify-center rounded-full font-bold shrink-0 cursor-pointer"
             onClick={() => togglePopup("avatar")}
           >
-            DS
+            {initials}
           </div>
           {activePopup === "avatar" && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">

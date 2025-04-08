@@ -13,7 +13,7 @@ const ProviderCard = ({ provider, isActive=false }) => {
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-start">
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}

@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import { apiCall } from '../Api';
 
 const Buckets = () => {
-	const [path, setPath] = useState('/');
+	const [path, setPath] = useState('');
 	const [entries, setEntries] = useState([]);
 	const [selectedItems, setSelectedItems] = useState([]);
 
@@ -13,7 +13,7 @@ const Buckets = () => {
 	}, [path]);
 
 	const fetchDirectory = (currentPath) => {
-		apiCall("GET", "/bucket/list?path=" + currentPath)
+		apiCall("GET", "/hdfs/list?path=" + currentPath)
 			.then((data) => {
 				console.log(data);
 				setEntries(Array.isArray(data.contents) ? data.contents : []);
@@ -29,7 +29,7 @@ const Buckets = () => {
 	};
 
 	const handleFileClick = (filePath) => {
-		window.location.href = `/api/download?path=${encodeURIComponent(filePath)}`;
+		window.location.href = `/hdfs/download?path=${encodeURIComponent(filePath)}`;
 	};
 
 	const handleBackClick = () => {
@@ -43,7 +43,7 @@ const Buckets = () => {
 	const handleCreateDir = () => {
 		const dirName = prompt("Enter new folder name:");
 		if (dirName) {
-			apiCall("POST", "/api/mkdir", { path: `${path}/${dirName}` })
+			apiCall("POST", "/hdfs/mkdir", { path: `${path}/${dirName}` })
 				.then(() => fetchDirectory(path))
 				.catch((err) => alert(err));
 		}
@@ -56,14 +56,14 @@ const Buckets = () => {
 			formData.append("file", file);
 			formData.append("path", path);
 
-			apiCall("POST", "/bucket/uploadFile", formData)
+			apiCall("POST", "/hdfs/uploadFile", formData)
 				.then(() => fetchDirectory(path))
 				.catch((err) => alert(err));
 		}
 	};
 
 	const handleDelete = () => {
-		apiCall("POST", "/api/delete", { paths: selectedItems })
+		apiCall("POST", "/hdfs/delete", { paths: selectedItems })
 			.then(() => fetchDirectory(path))
 			.catch((err) => alert(err));
 	};

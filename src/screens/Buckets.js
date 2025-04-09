@@ -14,7 +14,8 @@ const fakeData = [
 		size: "-",
 		lastModified: "Mar 20 14:23",
 		replication: "-",
-		blockSize: "-"
+		blockSize: "-",
+		fileDescription: "This is a file description"
 	},
 	{
 		name: "photos",
@@ -26,7 +27,8 @@ const fakeData = [
 		size: "-",
 		lastModified: "Mar 21 09:10",
 		replication: "-",
-		blockSize: "-"
+		blockSize: "-",
+		fileDescription: "This is a file description"
 	},
 	{
 		name: "report.pdf",
@@ -38,7 +40,8 @@ const fakeData = [
 		size: "512 KB",
 		lastModified: "Mar 22 11:45",
 		replication: "1",
-		blockSize: "128 MB"
+		blockSize: "128 MB",
+		fileDescription: "This is a file description"
 	},
 	{
 		name: "textfile.txt",
@@ -50,13 +53,14 @@ const fakeData = [
 		size: "16 B",
 		lastModified: "Mar 23 10:31",
 		replication: "1",
-		blockSize: "128 MB"
+		blockSize: "128 MB",
+		fileDescription: "This is a file description"
 	}
 ];
 
 
 const Buckets = () => {
-	const [path, setPath] = useState('/user/avinash');
+	const [path, setPath] = useState('user/avinash');
 	const [entries, setEntries] = useState([]);
 	const [selectedItems, setSelectedItems] = useState([]);
 
@@ -156,7 +160,7 @@ const Buckets = () => {
 								<th>Last Modified</th>
 								{/* <th>Replication</th>
 								<th>Block Size</th> */}
-								
+								<th>Description</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -188,7 +192,7 @@ const Buckets = () => {
 									<td>{entry.lastModified}</td>
 									{/* <td>{entry.replication}</td>
 									<td>{entry.blockSize}</td> */}
-									
+									<td>{entry.fileDescription}</td>
 								</tr>
 							))}
 						</tbody>

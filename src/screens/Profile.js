@@ -30,7 +30,13 @@ function Profile() {
 	}, []);
 
 	const fetchProviders = async () => {
-
+		await apiCall("get", "/ui/profile/getProviders").then((data) => {
+			console.log("Providers:", data);
+			setProviders(data);
+		}).catch((error) => {
+			console.log(error);
+			alert("Error: " + error);
+		});
 	};
 
 	const fetchWireguardDetails = async () => {

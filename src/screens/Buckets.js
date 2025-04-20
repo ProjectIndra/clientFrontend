@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import JSZip from 'jszip';  // Import JSZip for zipping folders
 import "../css/Buckets.css";
 import Navbar from '../components/Navbar';
 import { apiCall } from '../Api';
@@ -11,15 +12,13 @@ const Buckets = () => {
 	const [selectedItems, setSelectedItems] = useState([]);
 
 	useEffect(() => {
-		console.log("path:", `/${path}`);
 		setLoading(true);
 		fetchDirectory(path).finally(() => setLoading(false));
 	}, [path]);
 
-	const fetchDirectory = async(currentPath) => {
+	const fetchDirectory = async (currentPath) => {
 		return apiCall("GET", "/hdfs/list?path=" + currentPath)
 			.then((data) => {
-				console.log(data);
 				setEntries(Array.isArray(data.contents) ? data.contents : []);
 				setSelectedItems([]);
 			})
@@ -42,8 +41,7 @@ const Buckets = () => {
 
 	const handleBackClick = () => {
 		if (loading) return;
-		const p=`/${path}`
-		const segments = p.split('/');
+		const segments = (`/${path}`).split('/');
 		if (segments.length > 1) {
 			segments.pop();
 			setPath(segments.join('/') || '');
@@ -53,63 +51,85 @@ const Buckets = () => {
 	const handleCreateDir = () => {
 		const dirName = prompt("Enter new folder name:");
 		if (dirName) {
-			apiCall("POST", "/hdfs/mkdir", { path: path!==''? `${path}/${dirName}`:dirName })
-				.then(() => { setLoading(true); fetchDirectory(path);  setLoading(false)})
+			apiCall("POST", "/hdfs/mkdir", { path: path !== '' ? `${path}/${dirName}` : dirName })
+				.then(() => { setLoading(true); fetchDirectory(path); setLoading(false) })
 				.catch((err) => alert(err));
-			console.log("Creating directory:", `/${path}/${dirName}`);
 		}
 	};
 
-	// const handleUpload = (event) => {
-	// 	const file = event.target.files[0];
-	// 	if (file) {
-	// 		// const formData = new FormData();
-	// 		let formData = {}
-	// 		formData["file"] = file;
-	// 		formData["path"] = path;
-	// 		console.log(formData)
-
-	// 		apiCall("POST", "/hdfs/uploadFile", formData)
-	// 			.then(() => {  fetchDirectory(path);  })
-	// 			.catch((err) => alert(err));
-	// 	} else {
-	// 		console.log("No file selected");
-	// 	}
-	// };
+	const zipFolder = async (files) => {
+		const zip = new JSZip();
+		const folderName = path.split('/').pop(); // Folder name
+		const fileArray = Array.from(files); // ✅ Convert FileList to array
+		fileArray.forEach(file => {
+			// Add each file to the zip
+			zip.file(file.webkitRelativePath || file.name, file);
+		});
+		return zip.generateAsync({ type: 'blob' });  // Generate zip as a blob
+	};
 
 
 	const handleUpload = async (event) => {
-		const file = event.target.files[0];
-		if (!file) return;
+		const files = event.target.files;
+		if (!files || files.length === 0) return;
 
-		const formData = new FormData();
-		formData.append("file", file);
-		formData.append("path", path); // use state value
+		const isFolderUpload = files[0].webkitRelativePath;  // Check if it's a folder upload
 
-		// Debug log to confirm FormData content
-		for (let [key, value] of formData.entries()) {
-			console.log(`${key}:`, value);
-		}
+		if (isFolderUpload) {
+			try {
+				const zippedBlob = await zipFolder(files);  // Zip the folder
+				const formData = new FormData();
+				formData.append("file", zippedBlob, `${path.split('/').pop()}.zip`);  // Append zipped file
+				formData.append("path", path);
+				formData.append("type", "folder");
 
-		try {
-			const response = await axios.post(
-				`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFile`,
-				formData,
-				{
-					headers: {
-						// Don't set Content-Type manually! Axios will set it to multipart/form-data
-						Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-						"ngrok-skip-browser-warning": "69420",
-					},
-					withCredentials: true,
-				}
-			);
+				// Send the zipped file to the backend
+				const response = await axios.post(
+					`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFileFolder`,
+					formData,
+					{
+						headers: {
+							Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+							"ngrok-skip-browser-warning": "69420",
+						},
+						withCredentials: true,
+					}
+				);
 
-			console.log("Upload success:", response.data);
-			fetchDirectory(path); // Refresh contents
-		} catch (err) {
-			console.error("Upload error:", err);
-			alert(err.response?.data?.error || "Upload failed");
+				console.log("Folder upload success:", response.data);
+				fetchDirectory(path);  // Refresh directory contents
+			} catch (err) {
+				console.error("Error during folder zipping/upload:", err);
+				alert("Error while zipping/uploading folder.");
+			}
+		} else {
+			// Regular file upload logic (as before)
+			const formData = new FormData();
+			for (let file of files) {
+				formData.append("file", file);
+				formData.append("path", path);
+				formData.append("type", "file");
+			}
+
+			try {
+				const response = await axios.post(
+					`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFile`,
+					formData,
+					{
+						headers: {
+							Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+							"ngrok-skip-browser-warning": "69420",
+						},
+						withCredentials: true,
+					}
+				);
+
+				console.log("Upload success:", response.data);
+				fetchDirectory(path);  // Refresh directory contents
+			} catch (err) {
+				console.error( err);
+				alert("Error while uploading files.");
+			}
 		}
 	};
 
@@ -121,7 +141,6 @@ const Buckets = () => {
 
 	const handleRename = () => {
 		const newName = prompt("Enter new name:");
-		console.log("oldpath",selectedItems)
 		if (newName) {
 			apiCall("POST", "/hdfs/rename", { old_path: selectedItems[0], new_name: newName })
 				.then(() => { setLoading(true); fetchDirectory(path); setLoading(false) })
@@ -155,10 +174,31 @@ const Buckets = () => {
 
 				<div className="actions">
 					<button className="action-btn" onClick={handleCreateDir}>📁 Create Directory</button>
+
+					{/* Upload Files */}
 					<label className="upload-btn">
-						📤 Upload
-						<input type="file" hidden onChange={handleUpload} />
+						📤 Upload Files
+						<input
+							type="file"
+							hidden
+							multiple
+							onChange={handleUpload}
+						/>
 					</label>
+
+					{/* Upload Folder */}
+					<label className="upload-btn">
+						📁 Upload Folder
+						<input
+							type="file"
+							hidden
+							multiple
+							webkitdirectory=""
+							directory=""
+							onChange={handleUpload}
+						/>
+					</label>
+
 					<button className="delete-btn" onClick={handleDelete} disabled={selectedItems.length === 0}>🗑️ Delete</button>
 					<button className='rename-btn' onClick={handleRename} disabled={selectedItems.length !== 1}>✏️ Rename</button>
 				</div>

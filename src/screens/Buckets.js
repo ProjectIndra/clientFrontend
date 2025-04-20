@@ -57,16 +57,17 @@ const Buckets = () => {
 		}
 	};
 
-	// Function to zip the folder before uploading
 	const zipFolder = async (files) => {
 		const zip = new JSZip();
 		const folderName = path.split('/').pop(); // Folder name
-		files.forEach(file => {
+		const fileArray = Array.from(files); // ✅ Convert FileList to array
+		fileArray.forEach(file => {
 			// Add each file to the zip
 			zip.file(file.webkitRelativePath || file.name, file);
 		});
 		return zip.generateAsync({ type: 'blob' });  // Generate zip as a blob
 	};
+
 
 	const handleUpload = async (event) => {
 		const files = event.target.files;
@@ -84,7 +85,7 @@ const Buckets = () => {
 
 				// Send the zipped file to the backend
 				const response = await axios.post(
-					`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFile`,
+					`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFileFolder`,
 					formData,
 					{
 						headers: {

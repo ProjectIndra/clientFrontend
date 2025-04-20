@@ -8,6 +8,7 @@ import ClientServices from "./screens/ClientServices";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ManageProviders from "./screens/ManageProviders";
 import Buckets from "./screens/Buckets";
+import DocsMainPage from "./docs/components/docsMainPage.js";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/client/services" element={<ClientServices />} />
             <Route path="/manage/providers" element={<ManageProviders />} />
             <Route path="/buckets" element={<Buckets />} />
+            <Route path="/docs" element={<DocsMainPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

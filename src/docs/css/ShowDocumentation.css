@@ -1,0 +1,58 @@
+/* Center and style the markdown content */
+.showdocumentation {
+    box-sizing: border-box;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    overflow-x: auto;
+}
+
+/* Optional tweaks for better spacing */
+.showdocumentation h1, 
+.showdocumentation h2, 
+.showdocumentation h3 {
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+  margin-top: 1.5em;
+}
+
+/* Improve table readability */
+.showdocumentation table {
+  border-collapse: collapse;
+  width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+
+.showdocumentation th,
+.showdocumentation td {
+  border: 1px solid #dfe2e5;
+  padding: 6px 13px;
+}
+
+.showdocumentation blockquote {
+  color: #6a737d;
+  border-left: 0.25em solid #dfe2e5;
+  padding: 0 1em;
+  margin-left: 0;
+  background-color: #f6f8fa;
+}
+
+/* Code block padding */
+.showdocumentation pre {
+  background: #f6f8fa;
+  padding: 16px;
+  border-radius: 6px;
+  overflow: auto;
+}
+
+/* Inline code */
+.showdocumentation code {
+  background-color: rgba(27,31,35,0.05);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 85%;
+}

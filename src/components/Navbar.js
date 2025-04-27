@@ -73,9 +73,9 @@ function Navbar() {
                onMouseEnter={() => setActiveDropdown("manage")}
                onMouseLeave={() => setActiveDropdown(null)}>
                <ul className="nav-items">
-                  <li><Link to="/client/services">Setup</Link></li>
+                  <li><Link to="/docs">Setup</Link></li>
                   <li><Link to="/manage/providers">Manage Providers</Link></li>
-                  <li><Link to="/client/services">Manage Clients</Link></li>
+                  <li><Link to="/manage/clients">Manage Clients</Link></li>
                </ul>
             </div>
          )}

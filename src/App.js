@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ManageProviders from "./screens/ManageProviders";
 import Buckets from "./screens/Buckets";
 import DocsMainPage from "./docs/components/docsMainPage.js";
+import ManageClients from "./screens/ManageClients.js";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/providersList" element={<ProvidersList />} />
             <Route path="/client/services" element={<ClientServices />} />
             <Route path="/manage/providers" element={<ManageProviders />} />
+            <Route path="/manage/clients" element={<ManageClients />} />
             <Route path="/buckets" element={<Buckets />} />
             <Route path="/docs" element={<DocsMainPage />} />
           </Route>

@@ -5,20 +5,14 @@ import '../css/Providers.css';
 import { apiCall } from '../Api';
 
 async function runQuery(formData, selectedProvider) {
-    // apiCall("get", "/providers/query?provider_id=" + formData.provider_id
-    //                                 + "&vcpu=" + formData.vcpus
-    //                                 + "&ram=" + formData.ram
-    //                                 + "&storage=" + formData.storage
-    //                                 + "&vm_image_type=" + formData.vm_image
-    //     ).then((data) => {
-    //         console.log(data);
-    //         alert("Can Create VM: " + data.can_create);
-    //     })
-    //     .catch((error) => {
-    //         console.log(error);
-    //         alert("Error: " + error);
-    //     });
-    apiCall("post", "/providers/query", {vcpus:formData.vcpus, ram:formData.ram, storage:formData.storage, vm_image:formData.vm_image, provider_id:formData.provider_id, provider_user_id:selectedProvider.user_id})
+    apiCall("post", "/providers/query", {
+        vcpus: formData.vcpus,
+        ram: formData.ram,
+        storage: formData.storage,
+        vm_image: formData.vm_image,
+        provider_id: formData.provider_id,
+        provider_user_id: selectedProvider.user_id
+    })
         .then((data) => {
             console.log(data);
             alert("Can Create VM: " + data.can_create);
@@ -30,11 +24,19 @@ async function runQuery(formData, selectedProvider) {
 }
 
 async function runRequest(formData, selectedProvider) {
-    apiCall("post", "/vms/launch", { vcpus: formData.vcpus, ram: formData.ram, storage: formData.storage, vm_image: formData.vm_image, provider_id: formData.provider_id, provider_user_id: selectedProvider.user_id, vm_name: formData.vm_name, provider_name: selectedProvider.provider_name})
+    apiCall("post", "/vms/launch", {
+        vcpus: formData.vcpus,
+        ram: formData.ram,
+        storage: formData.storage,
+        vm_image: formData.vm_image,
+        provider_id: formData.provider_id,
+        provider_user_id: selectedProvider.user_id,
+        vm_name: formData.vm_name,
+        provider_name: selectedProvider.provider_name
+    })
         .then((data) => {
             console.log(data);
             alert(data.message);
-            
         })
         .catch((error) => {
             console.log(error);
@@ -48,49 +50,60 @@ const Providers = () => {
     const images = ['linux', 'windows', 'FreeBSD'];
 
     const [providers, setProviders] = useState([]);
-    const [selectedProvider, setSelectedProvider] = useState(null); // Store selected provider
-
-    useEffect(() => {
-        apiCall("get", "/providers/lists")
-            .then((data) => {
-                console.log(data);
-                if (data.all_providers && Array.isArray(data.all_providers)) {
-                    setProviders(data.all_providers);
-                } else throw new Error("all_providers key not present in response data");
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("Error: " + error);
-            });
-    }, []);
+    const [selectedProvider, setSelectedProvider] = useState(null);
+    const [searchInput, setSearchInput] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
 
     const [formData, setFormData] = useState({
         vcpus: '',
         ram: '',
         vm_image: '',
         remarks: '',
-        provider_id: '',  // No default provider selected
+        provider_id: '',
         vm_name: '',
         client_id: '1',
     });
 
+    // Debouncing logic
     useEffect(() => {
-        console.log("Updated formData:", formData);
-    }, [formData]);
+        const handler = setTimeout(() => {
+            setDebouncedSearch(searchInput);
+        }, 500);
 
-    // Handle provider selection
+        return () => clearTimeout(handler);
+    }, [searchInput]);
+
+    // Fetch providers when debounced search changes
+    useEffect(() => {
+        fetchProviders();
+    }, [debouncedSearch]);
+
+    const fetchProviders = async () => {
+        try {
+            console.log(debouncedSearch)
+            const response = await apiCall("get", `/providers/lists?provider_name=${debouncedSearch}`);
+
+            if (response.all_providers && Array.isArray(response.all_providers)) {
+                setProviders(response.all_providers);
+            } else {
+                throw new Error("all_providers key not present in response data");
+            }
+        } catch (error) {
+            console.log(error);
+            alert("Error: " + error);
+        }
+    };
+
     const handleProviderSelect = (provider) => {
-        console.log("Selected Provider:", provider);
         setSelectedProvider(provider);
         setFormData((prev) => ({
             ...prev,
-            provider_id: provider.provider_id.toString() // Ensure it's a string
+            provider_id: provider.provider_id.toString()
         }));
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log("handle change", name, value);
         setFormData({
             ...formData,
             [name]: value
@@ -99,15 +112,17 @@ const Providers = () => {
 
     const handleSubmitQuery = async (e) => {
         e.preventDefault();
-        console.log("Submitting form with data:", formData);
         await runQuery(formData, selectedProvider);
     };
 
     const handleSubmitRequest = async (e) => {
         e.preventDefault();
-        console.log("Submitting form with data:", formData);
-        await runRequest(formData,selectedProvider);
-    }
+        await runRequest(formData, selectedProvider);
+    };
+
+    const handleSearchInputChange = (e) => {
+        setSearchInput(e.target.value);
+    };
 
     return (
         <div className='providersPage'>
@@ -116,9 +131,14 @@ const Providers = () => {
             <div className='provider-main-container'>
                 <div className='c2'>
                     <div className='search-provider'>
-                        <form action="#">
-                            <input type="search" className="provider-form" placeholder="Search by Name, vCPU, RAM..." required />
-                            <button type="submit">Search</button>
+                        <form action="#" onSubmit={(e) => e.preventDefault()}>
+                            <input
+                                type="search"
+                                className="provider-form"
+                                placeholder="Search by Name, vCPU, RAM..."
+                                value={searchInput}
+                                onChange={handleSearchInputChange}
+                            />
                         </form>
                     </div>
                     <div className='listall-provider'>
@@ -137,8 +157,13 @@ const Providers = () => {
                                 <button className='provider-specs-sheet'>Specs Sheet</button>
                             </div>
                             <div className='setup-provider'>
-                                <input name='vm_name' placeholder='VM Name' value={formData.vm_name} onChange={handleChange} />
-                                
+                                <input
+                                    name='vm_name'
+                                    placeholder='VM Name'
+                                    value={formData.vm_name}
+                                    onChange={handleChange}
+                                />
+
                                 <div className='inputs-selected'>
                                     <div className='select-container'>
                                         <label>Select vCPUs</label>
@@ -178,13 +203,18 @@ const Providers = () => {
                                         ))}
                                     </select>
                                 </div>
-                                
+
                                 <div className='provider-input-btns'>
                                     <button className='btn' onClick={handleSubmitQuery}>Query VM</button>
                                     <button className='btn' onClick={handleSubmitRequest}>Request VM</button>
                                 </div>
-                                
-                                <input name='remarks' placeholder='Remarks?' value={formData.remarks} onChange={handleChange} />
+
+                                <input
+                                    name='remarks'
+                                    placeholder='Remarks?'
+                                    value={formData.remarks}
+                                    onChange={handleChange}
+                                />
                             </div>
                         </>
                     ) : (

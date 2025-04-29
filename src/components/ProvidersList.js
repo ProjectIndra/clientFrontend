@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/Providers.css';
 import ProviderCard from '../components/ProviderCard';
 
 const ProvidersList = ({ providers }) => {

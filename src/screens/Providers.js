@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import ProviderCard from "../components/ProviderCard";
-import "../css/Providers.css";
 import { apiCall } from "../Api";
 
 // Updated runQuery using POST and sending provider_user_id
@@ -142,8 +141,7 @@ const Providers = () => {
   };
 
   return (
-    <div className="bg-gray-50 p-6 font-sans mt-16">
-      <Navbar />
+    <div className="p-6 font-sans mt-16">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">
         Providers
       </h2>
@@ -159,7 +157,7 @@ const Providers = () => {
               onChange={handleSearchInputChange}
             />
           </form>
-          <div className="flex flex-wrap justify-center gap-5 pt-5">
+          <div className="flex flex-wrap justify-center gap-5 pt-5 h-[500px] overflow-y-auto py-4">
             {providers.map((provider, idx) => (
               <div
                 className="w-full flex"

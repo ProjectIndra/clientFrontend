@@ -48,7 +48,6 @@ const DocsMainPage = () => {
 
 
     return <>
-        <Navbar />
         <div className="docs-main-page">
             <Sidebar handleFileChange={handleFileChange} mdFiles={mdFiles} />
             <ShowDocumentation mdFile={mdFile} scrollToId={scrollToId} />

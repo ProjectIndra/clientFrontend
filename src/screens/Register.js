@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { apiCall } from "../Api";
-import '../css/Register.css';
 import { useState } from "react";
 
 function Register() {

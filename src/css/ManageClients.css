@@ -1,0 +1,85 @@
+.manage-clients {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+.manage-clients-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+	background-color: #f8f8f8;
+	border-bottom: 1px solid #ddd;
+}
+
+.add-client-button {
+	padding: 0.5rem 1rem;
+	background-color: #4caf50;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.manage-clients-body {
+	display: flex;
+	flex: 1;
+	overflow: hidden;
+}
+
+.client-list {
+	width: 35%;
+	background-color: #f0f0f0;
+	overflow-y: auto;
+	border-right: 1px solid #ccc;
+	padding: 1rem;
+}
+
+.client-card {
+	background: white;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	border-radius: 5px;
+	cursor: pointer;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+	transition: background 0.3s;
+}
+
+.client-card:hover {
+	background-color: #e6f7ff;
+}
+
+.client-card.selected {
+	background-color: #d0f0ff;
+	border: 1px solid #0077cc;
+}
+
+.client-details {
+	flex: 1;
+	padding: 2rem;
+	overflow-y: auto;
+}
+
+.client-actions {
+	margin-top: 2rem;
+	display: flex;
+	gap: 1rem;
+}
+
+.client-actions button {
+	padding: 0.5rem 1rem;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.client-actions button:first-child {
+	background-color: #ff9800; /* Pause */
+	color: white;
+}
+
+.client-actions button:last-child {
+	background-color: #f44336; /* Delete */
+	color: white;
+}

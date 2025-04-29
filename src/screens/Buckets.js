@@ -1,216 +1,250 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import JSZip from 'jszip';  // Import JSZip for zipping folders
 import "../css/Buckets.css";
-import Navbar from "../components/Navbar";
-
-const fakeData = [
-  {
-    name: "documents",
-    path: "/user/avinash/documents",
-    type: "DIRECTORY",
-    permission: "drwxr-xr-x",
-    owner: "avinash",
-    group: "hdfs",
-    size: "-",
-    lastModified: "Mar 20 14:23",
-    replication: "-",
-    blockSize: "-",
-  },
-  {
-    name: "photos",
-    path: "/user/avinash/photos",
-    type: "DIRECTORY",
-    permission: "drwxr-xr-x",
-    owner: "avinash",
-    group: "hdfs",
-    size: "-",
-    lastModified: "Mar 21 09:10",
-    replication: "-",
-    blockSize: "-",
-  },
-  {
-    name: "report.pdf",
-    path: "/user/avinash/report.pdf",
-    type: "FILE",
-    permission: "-rw-r--r--",
-    owner: "avinash",
-    group: "hdfs",
-    size: "512 KB",
-    lastModified: "Mar 22 11:45",
-    replication: "1",
-    blockSize: "128 MB",
-  },
-  {
-    name: "textfile.txt",
-    path: "/user/avinash/textfile.txt",
-    type: "FILE",
-    permission: "-rw-r--r--",
-    owner: "avinash",
-    group: "hdfs",
-    size: "16 B",
-    lastModified: "Mar 23 10:31",
-    replication: "1",
-    blockSize: "128 MB",
-  },
-];
+import Navbar from '../components/Navbar';
+import { apiCall } from '../Api';
 
 const Buckets = () => {
-  const [path, setPath] = useState("/user/avinash");
-  const [entries, setEntries] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
+	const [path, setPath] = useState('');
+	const [loading, setLoading] = useState(false);
+	const [entries, setEntries] = useState([]);
+	const [selectedItems, setSelectedItems] = useState([]);
 
-  useEffect(() => {
-    fetchDirectory(path);
-  }, [path]);
+	useEffect(() => {
+		setLoading(true);
+		fetchDirectory(path).finally(() => setLoading(false));
+	}, [path]);
 
-  const fetchDirectory = async (currentPath) => {
-    try {
-      // Simulating API response delay
-      setTimeout(() => {
-        setEntries(fakeData);
-        setSelectedItems([]);
-      }, 500);
-    } catch (err) {
-      console.error("Error fetching directory:", err);
-    }
-  };
+	const fetchDirectory = async (currentPath) => {
+		return apiCall("GET", "/hdfs/list?path=" + currentPath)
+			.then((data) => {
+				setEntries(Array.isArray(data.contents) ? data.contents : []);
+				setSelectedItems([]);
+			})
+			.catch((error) => {
+				alert(error);
+			});
+	};
 
-  const handleFolderClick = (folderName) => {
-    setPath((prev) => `${prev}/${folderName}`);
-  };
+	const handleFolderClick = (folderName) => {
+		if (!loading) {
+			setPath(prev => (prev === '' ? folderName : `${prev}/${folderName}`));
+		}
+	};
 
-  const handleFileClick = (filePath) => {
-    window.location.href = `/api/download?path=${encodeURIComponent(filePath)}`;
-  };
+	const handleFileClick = (filePath) => {
+		if (!loading) {
+			window.location.href = `/hdfs/download?path=${encodeURIComponent(filePath)}`;
+		}
+	};
 
-  const handleBackClick = () => {
-    const segments = path.split("/");
-    if (segments.length > 1) {
-      segments.pop();
-      setPath(segments.join("/") || "/");
-    }
-  };
+	const handleBackClick = () => {
+		if (loading) return;
+		const segments = (`/${path}`).split('/');
+		if (segments.length > 1) {
+			segments.pop();
+			setPath(segments.join('/') || '');
+		}
+	};
 
-  const handleCreateDir = async () => {
-    const dirName = prompt("Enter new folder name:");
-    if (dirName) {
-      await axios.post("/api/mkdir", { path: `${path}/${dirName}` });
-      fetchDirectory(path);
-    }
-  };
+	const handleCreateDir = () => {
+		const dirName = prompt("Enter new folder name:");
+		if (dirName) {
+			apiCall("POST", "/hdfs/mkdir", { path: path !== '' ? `${path}/${dirName}` : dirName })
+				.then(() => { setLoading(true); fetchDirectory(path); setLoading(false) })
+				.catch((err) => alert(err));
+		}
+	};
 
-  const handleUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("path", path);
-      await axios.post("/api/upload", formData);
-      fetchDirectory(path);
-    }
-  };
+	const zipFolder = async (files) => {
+		const zip = new JSZip();
+		const folderName = path.split('/').pop(); // Folder name
+		const fileArray = Array.from(files); // ✅ Convert FileList to array
+		fileArray.forEach(file => {
+			// Add each file to the zip
+			zip.file(file.webkitRelativePath || file.name, file);
+		});
+		return zip.generateAsync({ type: 'blob' });  // Generate zip as a blob
+	};
 
-  const handleDelete = async () => {
-    await axios.post("/api/delete", { paths: selectedItems });
-    fetchDirectory(path);
-  };
 
-  const toggleSelect = (itemPath) => {
-    setSelectedItems((prev) =>
-      prev.includes(itemPath)
-        ? prev.filter((p) => p !== itemPath)
-        : [...prev, itemPath]
-    );
-  };
+	const handleUpload = async (event) => {
+		const files = event.target.files;
+		if (!files || files.length === 0) return;
 
-  return (
-    <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
-      <h2 className="text-3xl font-bold text-gray-800">My Buckets</h2>
+		const isFolderUpload = files[0].webkitRelativePath;  // Check if it's a folder upload
 
-      <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
-        <div className="flex items-center gap-4">
-          <button
-            className="px-4 py-2 rounded bg-lime-300 text-black font-medium text-sm hover:brightness-110 transition"
-            onClick={handleBackClick}
-          >
-            ⬅️ Back
-          </button>
-          <input
-            className="flex-1 px-4 py-2 rounded border border-gray-300 bg-gray-100 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-lime-400"
-            value={path}
-            readOnly
-          />
-        </div>
+		if (isFolderUpload) {
+			try {
+				const zippedBlob = await zipFolder(files);  // Zip the folder
+				const formData = new FormData();
+				formData.append("file", zippedBlob, `${path.split('/').pop()}.zip`);  // Append zipped file
+				formData.append("path", path);
+				formData.append("type", "folder");
 
-        <div className="flex flex-wrap gap-4">
-          <button
-            className="px-4 py-2 rounded bg-lime-300 text-black font-medium text-sm hover:brightness-110 transition"
-            onClick={handleCreateDir}
-          >
-            📁 Create Directory
-          </button>
+				// Send the zipped file to the backend
+				const response = await axios.post(
+					`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFileFolder`,
+					formData,
+					{
+						headers: {
+							Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+							"ngrok-skip-browser-warning": "69420",
+						},
+						withCredentials: true,
+					}
+				);
 
-          <label className="px-4 py-2 rounded bg-lime-300 text-black font-medium text-sm cursor-pointer hover:brightness-110 transition">
-            📤 Upload
-            <input type="file" hidden onChange={handleUpload} />
-          </label>
+				console.log("Folder upload success:", response.data);
+				fetchDirectory(path);  // Refresh directory contents
+			} catch (err) {
+				console.error("Error during folder zipping/upload:", err);
+				alert("Error while zipping/uploading folder.");
+			}
+		} else {
+			// Regular file upload logic (as before)
+			const formData = new FormData();
+			for (let file of files) {
+				formData.append("file", file);
+				formData.append("path", path);
+				formData.append("type", "file");
+			}
 
-          <button
-            className="px-4 py-2 rounded bg-red-500 text-white font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={handleDelete}
-            disabled={selectedItems.length === 0}
-          >
-            🗑️ Delete
-          </button>
-        </div>
+			try {
+				const response = await axios.post(
+					`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFile`,
+					formData,
+					{
+						headers: {
+							Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+							"ngrok-skip-browser-warning": "69420",
+						},
+						withCredentials: true,
+					}
+				);
 
-        <table className="w-full text-sm text-left border-t border-gray-200">
-          <thead>
-            <tr className="bg-gray-100 text-gray-700">
-              <th className="py-2 px-3">Select</th>
-              <th className="py-2 px-3">Name</th>
-              <th className="py-2 px-3">Size</th>
-              <th className="py-2 px-3">Last Modified</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((entry, idx) => (
-              <tr
-                key={idx}
-                className="border-b border-gray-100 hover:bg-gray-50 transition"
-              >
-                <td className="py-2 px-3">
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.includes(entry.path)}
-                    onChange={() => toggleSelect(entry.path)}
-                  />
-                </td>
-                <td className="py-2 px-3">
-                  <span
-                    className={`cursor-pointer font-medium ${
-                      entry.type === "DIRECTORY"
-                        ? "text-blue-600"
-                        : "text-gray-800"
-                    }`}
-                    onClick={() =>
-                      entry.type === "DIRECTORY"
-                        ? handleFolderClick(entry.name)
-                        : handleFileClick(entry.path)
-                    }
-                  >
-                    {entry.name}
-                  </span>
-                </td>
-                <td className="py-2 px-3">{entry.size}</td>
-                <td className="py-2 px-3">{entry.lastModified}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+				console.log("Upload success:", response.data);
+				fetchDirectory(path);  // Refresh directory contents
+			} catch (err) {
+				console.error( err);
+				alert("Error while uploading files.");
+			}
+		}
+	};
+
+	const handleDelete = () => {
+		apiCall("POST", "/hdfs/delete", { paths: selectedItems })
+			.then(() => { setLoading(true); fetchDirectory(path); setLoading(false) })
+			.catch((err) => alert(err));
+	};
+
+	const handleRename = () => {
+		const newName = prompt("Enter new name:");
+		if (newName) {
+			apiCall("POST", "/hdfs/rename", { old_path: selectedItems[0], new_name: newName })
+				.then(() => { setLoading(true); fetchDirectory(path); setLoading(false) })
+				.catch((err) => alert(err));
+		}
+	};
+
+	const toggleSelect = (itemPath) => {
+		setSelectedItems((prev) =>
+			prev.includes(itemPath)
+				? prev.filter((p) => p !== itemPath)
+				: [...prev, itemPath]
+		);
+	};
+
+	return (
+		<div className="buckets-comp">
+			{loading && (
+				<div className="loading-overlay">
+					<div className="spinner" />
+				</div>
+			)}
+
+			<Navbar />
+			<h2>My Buckets</h2>
+			<div className="hdfs-container">
+				<div className="path-bar">
+					<input className="path-input" value={path === '' ? '/' : `/${path}`} readOnly />
+					<button className="back-btn" onClick={handleBackClick}>⬅️ Back</button>
+				</div>
+
+				<div className="actions">
+					<button className="action-btn" onClick={handleCreateDir}>📁 Create Directory</button>
+
+					{/* Upload Files */}
+					<label className="upload-btn">
+						📤 Upload Files
+						<input
+							type="file"
+							hidden
+							multiple
+							onChange={handleUpload}
+						/>
+					</label>
+
+					{/* Upload Folder */}
+					<label className="upload-btn">
+						📁 Upload Folder
+						<input
+							type="file"
+							hidden
+							multiple
+							webkitdirectory=""
+							directory=""
+							onChange={handleUpload}
+						/>
+					</label>
+
+					<button className="delete-btn" onClick={handleDelete} disabled={selectedItems.length === 0}>🗑️ Delete</button>
+					<button className='rename-btn' onClick={handleRename} disabled={selectedItems.length !== 1}>✏️ Rename</button>
+				</div>
+
+				<table className="hdfs-table">
+					<thead>
+						<tr>
+							<th>Select</th>
+							<th>Name</th>
+							<th>Size</th>
+							<th>Last Modified</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody className={loading ? 'no-clicks' : ''}>
+						{entries.map((entry, idx) => (
+							<tr key={idx} className="table-row">
+								<td>
+									<input
+										type="checkbox"
+										checked={selectedItems.includes(entry.path)}
+										onChange={() => toggleSelect(entry.path)}
+									/>
+								</td>
+								<td>
+									<span
+										className={`entry-name ${entry.type === 'DIRECTORY' ? 'folder' : 'file'}`}
+										onClick={() =>
+											entry.type === 'DIRECTORY'
+												? handleFolderClick(entry.name)
+												: handleFileClick(entry.path)
+										}
+									>
+										{entry.name}
+									</span>
+								</td>
+								<td>{entry.size}</td>
+								<td>{entry.lastModified}</td>
+								<td>{entry.fileDescription}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	);
 };
 
 export default Buckets;

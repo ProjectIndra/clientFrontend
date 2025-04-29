@@ -1,299 +1,193 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import "../css/Profile.css";
-import ProviderCard from "../components/ProviderCard";
+import '../css/Profile.css';
+import ProviderCard from "../components/ProviderCard"; // Importing the same ProviderCard
 import { apiCall } from "../Api";
 
 function Profile() {
-  const [providers, setProviders] = useState([
-    { id: 1, name: "Example Provider 1" },
-    { id: 2, name: "Example Provider 2" },
-  ]);
-  const [wg, setWg] = useState([
-    { wireguard_ip: "10.0.0.1", wireguard_pubkey: "pubkey123" },
-    { wireguard_ip: "10.0.0.2", wireguard_pubkey: "pubkey456" },
-  ]);
-  const [account, setAccount] = useState({
-    img: "/img/profile.png",
-    username: "johndoe123",
-    account_name: "John Doe",
-    email: "john.doe@example.com",
-  });
-  const [editData, setEditData] = useState(null);
-  const [token, setToken] = useState("requesting...");
+    const [providers, setProviders] = useState([]);
+    const [wg, setWg] = useState([]);
+    const [account, setAccount] = useState({
+        profile_image: "/img/profile.png", 
+        username: "johndoe123", 
+        profile_name: "John Doe", 
+        email: "john.doe@example.com"
+    });
+    const [editData, setEditData] = useState(null);
 
-  useEffect(() => {
-    fetchAccountDetails();
-
-    // fetchProviders();
-    // fetchWireguardDetails();
-  }, []);
-
-  const fetchProviders = async () => {};
-
-  const fetchWireguardDetails = async () => {
-    // try {
-    // 	const response = await fetch('/api/wireguard');
-    // 	const data = await response.json();
-    // 	setWg(data);
-    // } catch (error) {
-    // 	console.log("Error fetching Wireguard details:", error);
-    // }
-  };
-
-  const fetchAccountDetails = async () => {
-    await apiCall("get", "/ui/profile/getUserDetails")
-      .then((data) => {
-        console.log("acc:", data);
-
-        setAccount((prev) => {
-          return {
-            ...prev,
-            img: data.profile_image,
-            username: data.username,
-            account_name: data.profile_name,
-            email: data.email,
-          };
+    // Fetch providers
+    const fetchProviders = async () => {
+        await apiCall("get", "/ui/providers/userProviderDetails").then((data) => {
+            if (data.all_providers && Array.isArray(data.all_providers)) {
+                setProviders(data.all_providers);
+            } else {
+                throw new Error("all_providers key not present in response data");
+            }
+        }).catch((error) => {
+            console.log(error);
+            alert("Error: " + error);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Error: " + error);
-      });
-  };
-  const updateAccountDetails = async (updatedData) => {
-    await apiCall("post", "/ui/profile/updateUserDetails", {
-      profile_name: updatedData.profile_name,
-      profile_image: updatedData.profile_image,
-    })
-      .then((data) => {
-        console.log(data);
-        setAccount(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Error: " + error);
-      });
-  };
+    };
 
-  const handleEdit = (data) => {
-    setEditData(data);
-  };
+    // Fetch client session details
+    const fetchClients = async () => {
+        await apiCall("get", "/ui/getAllCliSessionDetails").then((data) => {
+            console.log("Clients:", data);
+            setWg(data.cli_session_details);
+        }).catch((error) => {
+            console.log(error);
+            alert("Error: " + error);
+        });
+    };
 
-  // const handleSave = async (updatedData) => {
-  // 	try {
-  // 		await fetch(`/api/update`, {
-  // 			method: 'POST',
-  // 			headers: { 'Content-Type': 'application/json' },
-  // 			body: JSON.stringify(updatedData)
-  // 		});
-  // 		setEditData(null);
-  // 		fetchProviders();
-  // 		fetchWireguardDetails();
-  // 		fetchAccountDetails();
-  // 	} catch (error) {
-  // 		console.log("Error updating data:", error);
-  // 	}
+    useEffect(() => {
+        const fetchAccountDetails = async () => {
+            await apiCall("get", "/ui/profile/getUserDetails").then((data) => {
+                console.log("Account Data:", data);
+                setAccount({
+                    profile_image: data.profile_image,
+                    username: data.username,
+                    profile_name: data.profile_name,
+                    email: data.email
+                });
+            }).catch((error) => {
+                console.log(error);
+                alert("Error: " + error);
+            });
+        };
 
-  // };
+        fetchAccountDetails();
+        fetchClients(); // Fetch client details
+        fetchProviders(); // Fetch user provider details
+    }, []);
 
-  return (
-    <div className="p-6 bg-gray-50 font-sans">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-        Profile and Settings
-      </h2>
+    const updateAccountDetails = async (updatedData) => { 
+        await apiCall("post", "/ui/profile/updateUserDetails", {
+            profile_name: updatedData.profile_name,
+            profile_image: updatedData.profile_image,
+        }).then((data) => { 
+            console.log(data);
+            setAccount(data);
+        }).catch((error) => {
+            console.log(error);
+            alert("Error: " + error);
+        });
+    }
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Left Side */}
-        <div className="flex-1 space-y-6">
-          {/* Profile Info */}
-          <div className="flex items-start gap-4 bg-white p-6 rounded-lg shadow-sm border">
-            <div className="w-20 h-20 rounded-full overflow-hidden">
-              <img
-                src={account.img}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
+    const handleEdit = (data) => {
+        setEditData(data);
+    };
+
+    return (
+        <div>
+            <Navbar />
+            <h2 className='vm-instances-heading'>Profile and Settings</h2>
+            <div className="Profile-Content">
+                <div className="c2">
+                    <div className="profile-details">
+                        <div className="profile-img">
+                            <img src={account.profile_image} alt="Profile" />
+                        </div>
+                        <div className="profile-details-r">
+                            <div className="profile-acc">
+                                <h3>{account.username || "Account Name"}</h3>
+                                <img src="/img/edit.png" alt="Edit" onClick={() => handleEdit({ type: 'account', ...account })} />
+                            </div>
+                            <div className="profile-ids">
+                                <p>{account.profile_name || "account_name"}</p>
+                                <p>{account.email || "Email"}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="profile-providers">
+                        <div className="profile-l">
+                            <div className="wg-accs">
+                                <h3>Your Providers</h3>
+                            </div>
+                            <div className="listall-provider">
+                                {/* Displaying providers using ProviderCard */}
+                                {providers.map((provider, idx) => (
+                                    <div key={idx}>
+                                        <ProviderCard provider={provider} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="profile-l">
+                            <div className="wg-accs">
+                                <h3>Your Clients</h3>
+                            </div>
+                            <div>
+                                {wg.map((client) => (
+                                    <div key={client.cli_id} className="client-card">
+                                        <h4>Client ID: {client.cli_id}</h4>
+                                        <p><strong>WireGuard IP:</strong> {client.cli_wireguard_ip}</p>
+                                        <p><strong>WireGuard Public Key:</strong> {client.cli_wireguard_public_key}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="c3">
+                    {editData && <EditScreen data={editData} onSave={updateAccountDetails} onCancel={() => setEditData(null)} />}
+                </div>
             </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {account ? account.username : "Account Name"}
-                </h3>
-                <img
-                  src="/img/edit.png"
-                  alt="Edit"
-                  className="w-5 h-5 cursor-pointer"
-                  onClick={() => handleEdit({ type: "account", ...account })}
-                />
-              </div>
-              <div className="mt-2 text-sm text-gray-600 space-y-1">
-                <p>{account ? account.account_name : "account_name"}</p>
-                <p>{account ? account.email : "Email"}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* CLI Token Setup */}
-          <div className="bg-white p-6 rounded-lg shadow-sm border space-y-4">
-            <div>
-              <span className="text-base font-semibold text-gray-700 block mb-2">
-                CLI Client Setup
-              </span>
-              <div className="flex items-center justify-between bg-gray-100 px-4 py-2 rounded-md font-mono text-sm">
-                <span className="truncate">indra auth {token}</span>
-                <img
-                  src="/img/copy.png"
-                  alt="copy_img"
-                  className="w-5 h-5 cursor-pointer"
-                />
-              </div>
-            </div>
-
-            <div>
-              <span className="text-base font-semibold text-gray-700 block mb-2">
-                Provider Server Setup
-              </span>
-              <div className="flex items-center justify-between bg-gray-100 px-4 py-2 rounded-md font-mono text-sm">
-                <span className="truncate">
-                  /bin/bash -c "$(curl -fsSL
-                  https://github.com/avinash84319/providerServer/install.sh)"
-                </span>
-                <img
-                  src="/img/copy.png"
-                  alt="cp_img"
-                  className="w-5 h-5 cursor-pointer"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Providers and Clients */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Providers */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Your Servers
-              </h3>
-              <div className="space-y-4">
-                {providers.map((provider) => (
-                  <ProviderCard
-                    key={provider.id}
-                    provider={provider}
-                    onEdit={() => handleEdit({ type: "provider", provider })}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Clients */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Your Clients
-              </h3>
-              <div className="space-y-4">
-                {wg.map((item, index) => (
-                  <div
-                    key={index}
-                    className="text-sm text-gray-700 bg-gray-100 px-4 py-3 rounded-md"
-                  >
-                    <p className="mb-1">
-                      <span className="font-medium">Wireguard IP: </span>
-                      {item.wireguard_ip}
-                    </p>
-                    <p>
-                      <span className="font-medium">Wireguard Pubkey: </span>
-                      {item.wireguard_pubkey}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
-
-        {/* Right Side (Edit Panel) */}
-        <div className="w-full lg:w-1/3">
-          {editData && (
-            <EditScreen
-              data={editData}
-              onSave={updateAccountDetails}
-              onCancel={() => setEditData(null)}
-            />
-          )}
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 function EditScreen({ data, onSave, onCancel }) {
-  const [formData, setFormData] = useState(data);
-  useEffect(() => {
-    console.log("Form Data:", formData);
-  }, [formData]);
+    const [formData, setFormData] = useState(data);
+    const [imageBase64, setImageBase64] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value, files, type } = e.target;
+    useEffect(() => {
+        console.log("Form Data:", formData);
+    }, [formData]);
 
-    if (type === "file") {
-      setFormData({ ...formData, [name]: files[0] }); // store the actual File object
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
+    const handleChange = (e) => {
+        const { name, value, files, type } = e.target;
 
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-md border space-y-6 w-full">
-      <h3 className="text-xl font-semibold text-gray-800">
-        Edit Account Details
-      </h3>
+        if (type === "file") {
+            const file = files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setImageBase64(reader.result);
+                    setFormData({ ...formData, [name]: reader.result });
+                };
+                reader.readAsDataURL(file);
+            }
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
+    };
 
-      {/* Profile Name */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
-          Update Profile Name
-        </label>
-        <input
-          name="profile_name"
-          value={formData.profile_name || ""}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter new profile name"
-        />
-      </div>
-
-      {/* Profile Image */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
-          Update Profile Image
-        </label>
-        <input
-          name="profile_image"
-          type="file"
-          accept="image/*"
-          onChange={handleChange}
-          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-        />
-      </div>
-
-      {/* Buttons */}
-      <div className="flex gap-4 pt-4">
-        <button
-          onClick={() => onSave(formData)}
-          className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
-        >
-          Save
-        </button>
-        <button
-          onClick={onCancel}
-          className="px-5 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition duration-200"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  );
+    return (
+        <div className="edit-screen">
+            <h3>Edit Account Details</h3>
+            <div>
+                <label>Update Profile Name</label>
+                <input
+                    name="profile_name"
+                    value={formData.profile_name || ""}
+                    onChange={handleChange}
+                />
+            </div>
+            <div>
+                <label>Update Profile Image</label>
+                <input
+                    name="profile_image"
+                    onChange={handleChange}
+                    type="file"
+                    accept="image/*"
+                />
+                {imageBase64 && <img src={imageBase64} alt="Preview" className="preview-image" />}
+            </div>
+            <button onClick={() => onSave(formData)}>Save</button>
+            <button onClick={onCancel}>Cancel</button>
+        </div>
+    );
 }
 
 export default Profile;

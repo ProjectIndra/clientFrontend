@@ -10,6 +10,7 @@ import ManageProviders from "./screens/ManageProviders";
 import Buckets from "./screens/Buckets";
 import DocsMainPage from "./docs/components/docsMainPage.js";
 import ManageClients from "./screens/ManageClients.js";
+import PageWrapper from "./components/PageWrapper"; // Add this line
 
 function App() {
   return (
@@ -22,14 +23,14 @@ function App() {
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/providersList" element={<ProvidersList />} />
-            <Route path="/client/services" element={<ClientServices />} />
-            <Route path="/manage/providers" element={<ManageProviders />} />
-            <Route path="/manage/clients" element={<ManageClients />} />
-            <Route path="/buckets" element={<Buckets />} />
-            <Route path="/docs" element={<DocsMainPage />} />
+            <Route path="/home" element={<PageWrapper><Home /></PageWrapper>} />
+            <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+            <Route path="/providersList" element={<PageWrapper><ProvidersList /></PageWrapper>} />
+            <Route path="/client/services" element={<PageWrapper><ClientServices /></PageWrapper>} />
+            <Route path="/manage/providers" element={<PageWrapper><ManageProviders /></PageWrapper>} />
+            <Route path="/manage/clients" element={<PageWrapper><ManageClients /></PageWrapper>} />
+            <Route path="/buckets" element={<PageWrapper><Buckets /></PageWrapper>} />
+            <Route path="/docs" element={<PageWrapper><DocsMainPage /></PageWrapper>} />
           </Route>
         </Routes>
       </BrowserRouter>

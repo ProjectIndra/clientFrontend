@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiCall } from "../Api";
 
 const Navbar = () => {
   const [activePopup, setActivePopup] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [account, setAccount] = useState({
+    profile_image: "/img/profile.png",
+  });
   const navRef = useRef();
 
   const [user, setUser] = useState(() => {
@@ -23,6 +27,38 @@ const Navbar = () => {
     if (user?.username) return user.username.slice(0, 2).toUpperCase();
     return "";
   });
+
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      const cachedProfile = localStorage.getItem("indra_profile");
+  
+      if (cachedProfile) {
+        const parsed = JSON.parse(cachedProfile);
+        setAccount(parsed);
+        return;
+      }
+  
+      try {
+        const data = await apiCall("get", "/ui/profile/getUserDetails");
+        console.log("Account Data:", data);
+  
+        const newAccount = {
+          profile_image: data.profile_image,
+          username: data.username,
+          profile_name: data.profile_name,
+          email: data.email,
+        };
+  
+        setAccount(newAccount);
+        localStorage.setItem("indra_profile", JSON.stringify(newAccount));
+      } catch (error) {
+        console.error("Error fetching account details:", error);
+        alert("Error: " + error);
+      }
+    };
+  
+    fetchAccountDetails();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -184,10 +220,18 @@ const Navbar = () => {
         {/* Avatar */}
         <div className="relative">
           <div
-            className="w-10 aspect-square bg-[#004d3c] text-white flex items-center justify-center rounded-full font-bold shrink-0 cursor-pointer"
+            className="w-10 aspect-square bg-[#004d3c] text-white flex items-center justify-center rounded-full font-bold shrink-0 cursor-pointer overflow-hidden"
             onClick={() => togglePopup("avatar")}
           >
-            {initials}
+            {account.profile_image ? (
+              <img
+                src={account.profile_image}
+                alt="Avatar"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              initials
+            )}
           </div>
           {activePopup === "avatar" && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">

@@ -1,192 +1,143 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
-import ProviderCard from "../components/ProviderCard"; // Importing the same ProviderCard
+import React, { useEffect, useState } from "react";
 import { apiCall } from "../Api";
 
 function Profile() {
-    const [providers, setProviders] = useState([]);
-    const [wg, setWg] = useState([]);
-    const [account, setAccount] = useState({
-        profile_image: "/img/profile.png", 
-        username: "johndoe123", 
-        profile_name: "John Doe", 
-        email: "john.doe@example.com"
-    });
-    const [editData, setEditData] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    // Fetch providers
-    const fetchProviders = async () => {
-        await apiCall("get", "/ui/providers/userProviderDetails").then((data) => {
-            if (data.all_providers && Array.isArray(data.all_providers)) {
-                setProviders(data.all_providers);
-            } else {
-                throw new Error("all_providers key not present in response data");
-            }
-        }).catch((error) => {
-            console.log(error);
-            alert("Error: " + error);
-        });
-    };
-
-    // Fetch client session details
-    const fetchClients = async () => {
-        await apiCall("get", "/ui/getAllCliSessionDetails").then((data) => {
-            console.log("Clients:", data);
-            setWg(data.cli_session_details);
-        }).catch((error) => {
-            console.log(error);
-            alert("Error: " + error);
-        });
-    };
-
-    useEffect(() => {
-        const fetchAccountDetails = async () => {
-            await apiCall("get", "/ui/profile/getUserDetails").then((data) => {
-                console.log("Account Data:", data);
-                setAccount({
-                    profile_image: data.profile_image,
-                    username: data.username,
-                    profile_name: data.profile_name,
-                    email: data.email
-                });
-            }).catch((error) => {
-                console.log(error);
-                alert("Error: " + error);
-            });
-        };
-
-        fetchAccountDetails();
-        fetchClients(); // Fetch client details
-        fetchProviders(); // Fetch user provider details
-    }, []);
-
-    const updateAccountDetails = async (updatedData) => { 
-        await apiCall("post", "/ui/profile/updateUserDetails", {
-            profile_name: updatedData.profile_name,
-            profile_image: updatedData.profile_image,
-        }).then((data) => { 
-            console.log(data);
-            setAccount(data);
-        }).catch((error) => {
-            console.log(error);
-            alert("Error: " + error);
-        });
+  const fetchUserDetails = async () => {
+    try {
+      const data = await apiCall("get", "/ui/profile/getUserDetails");
+      setUser(data);
+    } catch (error) {
+      console.error("Error fetching user details", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const handleEdit = (data) => {
-        setEditData(data);
-    };
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
-    return (
-        <div>
-            <Navbar />
-            <h2 className='vm-instances-heading'>Profile and Settings</h2>
-            <div className="Profile-Content">
-                <div className="c2">
-                    <div className="profile-details">
-                        <div className="profile-img">
-                            <img src={account.profile_image} alt="Profile" />
-                        </div>
-                        <div className="profile-details-r">
-                            <div className="profile-acc">
-                                <h3>{account.username || "Account Name"}</h3>
-                                <img src="/img/edit.png" alt="Edit" onClick={() => handleEdit({ type: 'account', ...account })} />
-                            </div>
-                            <div className="profile-ids">
-                                <p>{account.profile_name || "account_name"}</p>
-                                <p>{account.email || "Email"}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="profile-providers">
-                        <div className="profile-l">
-                            <div className="wg-accs">
-                                <h3>Your Providers</h3>
-                            </div>
-                            <div className="listall-provider">
-                                {/* Displaying providers using ProviderCard */}
-                                {providers.map((provider, idx) => (
-                                    <div key={idx}>
-                                        <ProviderCard provider={provider} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="profile-l">
-                            <div className="wg-accs">
-                                <h3>Your Clients</h3>
-                            </div>
-                            <div>
-                                {wg.map((client) => (
-                                    <div key={client.cli_id} className="client-card">
-                                        <h4>Client ID: {client.cli_id}</h4>
-                                        <p><strong>WireGuard IP:</strong> {client.cli_wireguard_ip}</p>
-                                        <p><strong>WireGuard Public Key:</strong> {client.cli_wireguard_public_key}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="c3">
-                    {editData && <EditScreen data={editData} onSave={updateAccountDetails} onCancel={() => setEditData(null)} />}
-                </div>
+  const getInitials = (name) =>
+    name?.split(" ").map((n) => n[0]).join("").toUpperCase();
+
+  return (
+    <div className="p-6 bg-white rounded-xl shadow-lg max-w-6xl mx-auto">
+      {loading ? (
+        <div className="space-y-8">
+          {/* Header Section */}
+          <div className="flex gap-6">
+            <div className="w-32 h-32 bg-gray-200 rounded-2xl animate-pulse" />
+            <div className="flex-1 space-y-3">
+              <div className="h-6 w-48 bg-gray-200 rounded-md animate-pulse" />
+              <div className="h-4 w-32 bg-gray-200 rounded-md animate-pulse" />
+              <div className="flex gap-3 mt-4">
+                <div className="h-10 w-24 bg-gray-200 rounded-md animate-pulse" />
+                <div className="h-10 w-28 bg-gray-200 rounded-md animate-pulse" />
+              </div>
             </div>
+            <div className="flex gap-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="space-y-2">
+                  <div className="h-6 w-12 bg-gray-200 rounded-md animate-pulse" />
+                  <div className="h-4 w-14 bg-gray-100 rounded-md animate-pulse" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Projects */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="bg-gray-100 rounded-xl overflow-hidden shadow-md"
+              >
+                <div className="h-40 bg-gray-200 animate-pulse" />
+                <div className="p-4 space-y-2">
+                  <div className="h-4 w-2/3 bg-gray-200 rounded-md animate-pulse" />
+                  <div className="h-3 w-1/3 bg-gray-100 rounded-md animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-    );
+      ) : (
+        <>
+          {/* Actual Profile */}
+            <div className="flex flex-col md:flex-row md:items-center gap-6 items-start">
+            <div className="w-32 h-32 rounded-2xl overflow-hidden shrink-0">
+              {user.profile_image ? (
+                <img
+                  src={user.profile_image}
+                  alt="profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-teal-800 text-white flex items-center justify-center rounded-2xl text-3xl font-bold">
+                  {getInitials(user.profile_name || user.username)}
+                </div>
+              )}
+            </div>
+
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-semibold text-gray-800">
+                  {user.profile_name}
+                </h1>
+                <span className="text-xs font-medium bg-lime-200 text-lime-800 px-2 py-1 rounded-md">
+                  PRO
+                </span>
+              </div>
+              <p className="text-gray-500 mt-1">{user.email}</p>
+              <div className="mt-4 flex gap-3">
+                <button className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700">
+                  Follow
+                </button>
+                <button className="px-4 py-2 border border-gray-300 text-gray-800 rounded-md hover:bg-gray-100">
+                  Get in touch
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6 mt-6 md:mt-0">
+              <Metric label="Followers" value="2,985" />
+              <Metric label="Following" value="132" />
+              <Metric label="Likes" value="548" />
+            </div>
+          </div>
+
+          {/* Project List */}
+          <div className="mt-10">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Projects</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-gray-50 rounded-xl shadow-md overflow-hidden"
+                >
+                  <div className="h-40 bg-gray-200"></div>
+                  <div className="p-4">
+                    <h3 className="text-gray-800 font-medium">Project {i}</h3>
+                    <p className="text-sm text-gray-500 mt-1">Mobile UI</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
 
-function EditScreen({ data, onSave, onCancel }) {
-    const [formData, setFormData] = useState(data);
-    const [imageBase64, setImageBase64] = useState(null);
-
-    useEffect(() => {
-        console.log("Form Data:", formData);
-    }, [formData]);
-
-    const handleChange = (e) => {
-        const { name, value, files, type } = e.target;
-
-        if (type === "file") {
-            const file = files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setImageBase64(reader.result);
-                    setFormData({ ...formData, [name]: reader.result });
-                };
-                reader.readAsDataURL(file);
-            }
-        } else {
-            setFormData({ ...formData, [name]: value });
-        }
-    };
-
-    return (
-        <div className="edit-screen">
-            <h3>Edit Account Details</h3>
-            <div>
-                <label>Update Profile Name</label>
-                <input
-                    name="profile_name"
-                    value={formData.profile_name || ""}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label>Update Profile Image</label>
-                <input
-                    name="profile_image"
-                    onChange={handleChange}
-                    type="file"
-                    accept="image/*"
-                />
-                {imageBase64 && <img src={imageBase64} alt="Preview" className="preview-image" />}
-            </div>
-            <button onClick={() => onSave(formData)}>Save</button>
-            <button onClick={onCancel}>Cancel</button>
-        </div>
-    );
-}
+const Metric = ({ label, value }) => (
+  <div className="text-center">
+    <p className="text-xl font-semibold text-gray-800">{value}</p>
+    <p className="text-sm text-gray-500">{label}</p>
+  </div>
+);
 
 export default Profile;

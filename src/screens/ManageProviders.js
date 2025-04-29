@@ -279,10 +279,10 @@ export default function ManageProviders() {
                     <p className="text-sm">
                       <span className="font-medium">Email:</span> {user.email}
                     </p>
-                    {/* <p className="text-sm">
+                    <p className="text-sm">
                       <span className="font-medium">Name:</span>{" "}
                       {user.profile_name}
-                    </p> */}
+                    </p>
                   </div>
                 </div>
               );

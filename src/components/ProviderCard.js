@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ProviderCard = ({ provider, isActive=false }) => {
+const ProviderCard = ({ provider, isActive = false }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -16,7 +16,9 @@ const ProviderCard = ({ provider, isActive=false }) => {
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`w-full max-w-[700px] min-w-[200px] h-[140px] flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden ${isActive? "bg-blue-50" : "bg-white"} ${
+        className={`w-full max-w-[700px] min-w-[200px] h-[140px] flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden ${
+          isActive ? "bg-blue-50" : "bg-white"
+        } ${
           !provider.edit && isHovered
             ? "bg-blue-50 scale-103 cursor-pointer"
             : "bg-white"
@@ -28,7 +30,7 @@ const ProviderCard = ({ provider, isActive=false }) => {
           <div className="flex items-start justify-between mb-4">
             <div className="flex gap-4">
               <img src="/img/computer.png" alt="icon" className="w-10 h-10" />
-              <h3 className="text-lg font-semibold text-start">
+              <h3 className="text-lg font-semibold text-start truncate w-full">
                 {provider.provider_name}
               </h3>
             </div>

@@ -1,4 +1,3 @@
-import "../css/providerCard.css";
 import { useState } from "react";
 
 const ProviderCard = ({ provider, isActive=false }) => {

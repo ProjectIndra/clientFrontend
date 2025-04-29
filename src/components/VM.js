@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../css/VM.css';
 
 const VM = () => {
     const [vCPUs, setVCPUs] = useState(1);

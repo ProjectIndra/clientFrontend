@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { apiCall } from '../Api';
-import Navbar from '../components/Navbar';
-import '../css/ClientServices.css';
 
 let debounceTimer;
 
@@ -88,22 +86,21 @@ const ClientServices = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className='ClientServices mt-20 p-6 bg-gray-50 font-sans'>
+    <div className='flex-1 h-full'>
+      <div className='mt-20  p-6 font-sans'>
         <h2 className='text-2xl font-semibold text-gray-800 mb-6'>VM Instances</h2>
-        <div className='ClientServices-Content flex flex-col lg:flex-row gap-8'>
-          <div className='vm-container flex-1 min-w-[400px]'>
-            <div className='vm-search mb-4'>
+        <div className='flex flex-col lg:flex-row gap-8'>
+          <div className='flex-1 min-w-[400px]'>
+            <div className='mb-4'>
               <input
                 type="search"
-                className="vm-input w-full border border-gray-300 rounded-md px-4 py-2"
+                className="w-full border border-gray-300 rounded-md px-4 py-2"
                 placeholder="Search by Name, vCPU, RAM..."
                 value={searchInput}
                 onChange={handleSearchChange}
               />
             </div>
-            <div className="vmlist-table bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
               <table className="w-full text-left">
                 <thead className="bg-gray-100 text-gray-700 font-medium">
                   <tr>
@@ -179,7 +176,7 @@ const ClientServices = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

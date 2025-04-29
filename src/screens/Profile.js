@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import '../css/Profile.css';
 import ProviderCard from "../components/ProviderCard"; // Importing the same ProviderCard
 import { apiCall } from "../Api";
 

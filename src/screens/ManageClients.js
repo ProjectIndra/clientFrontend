@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Api";
 import Navbar from "../components/Navbar";
-import "../css/ManageClients.css";
 
 export default function ManageClients() {
 

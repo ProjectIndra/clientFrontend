@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import JSZip from 'jszip';  // Import JSZip for zipping folders
-import "../css/Buckets.css";
-import Navbar from '../components/Navbar';
 import { apiCall } from '../Api';
 
 const Buckets = () => {
@@ -157,93 +155,141 @@ const Buckets = () => {
 	};
 
 	return (
-		<div className="buckets-comp">
-			{loading && (
-				<div className="loading-overlay">
-					<div className="spinner" />
-				</div>
-			)}
-
-			<Navbar />
-			<h2>My Buckets</h2>
-			<div className="hdfs-container">
-				<div className="path-bar">
-					<input className="path-input" value={path === '' ? '/' : `/${path}`} readOnly />
-					<button className="back-btn" onClick={handleBackClick}>⬅️ Back</button>
-				</div>
-
-				<div className="actions">
-					<button className="action-btn" onClick={handleCreateDir}>📁 Create Directory</button>
-
-					{/* Upload Files */}
-					<label className="upload-btn">
-						📤 Upload Files
-						<input
-							type="file"
-							hidden
-							multiple
-							onChange={handleUpload}
-						/>
-					</label>
-
-					{/* Upload Folder */}
-					<label className="upload-btn">
-						📁 Upload Folder
-						<input
-							type="file"
-							hidden
-							multiple
-							webkitdirectory=""
-							directory=""
-							onChange={handleUpload}
-						/>
-					</label>
-
-					<button className="delete-btn" onClick={handleDelete} disabled={selectedItems.length === 0}>🗑️ Delete</button>
-					<button className='rename-btn' onClick={handleRename} disabled={selectedItems.length !== 1}>✏️ Rename</button>
-				</div>
-
-				<table className="hdfs-table">
-					<thead>
-						<tr>
-							<th>Select</th>
-							<th>Name</th>
-							<th>Size</th>
-							<th>Last Modified</th>
-							<th>Description</th>
-						</tr>
-					</thead>
-					<tbody className={loading ? 'no-clicks' : ''}>
-						{entries.map((entry, idx) => (
-							<tr key={idx} className="table-row">
-								<td>
-									<input
-										type="checkbox"
-										checked={selectedItems.includes(entry.path)}
-										onChange={() => toggleSelect(entry.path)}
-									/>
-								</td>
-								<td>
-									<span
-										className={`entry-name ${entry.type === 'DIRECTORY' ? 'folder' : 'file'}`}
-										onClick={() =>
-											entry.type === 'DIRECTORY'
-												? handleFolderClick(entry.name)
-												: handleFileClick(entry.path)
-										}
-									>
-										{entry.name}
-									</span>
-								</td>
-								<td>{entry.size}</td>
-								<td>{entry.lastModified}</td>
-								<td>{entry.fileDescription}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
+		<div className="relative bg-gray-50 min-h-screen">
+		{loading && (
+		  <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+			<div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+		  </div>
+		)}
+		
+		<div className="max-w-7xl mx-auto p-6">
+		  <h2 className="text-2xl font-semibold text-slate-800 mb-6">My Buckets</h2>
+		  
+		  <div className="bg-white rounded-lg shadow">
+			{/* Path bar */}
+			<div className="flex items-center p-4 border-b">
+			<button 
+				className="mr-4 px-3 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center transition-colors"
+				onClick={handleBackClick}
+			  >
+				⬅️ Back
+			  </button>
+			  <input 
+				className="flex-grow p-2 bg-gray-50 border rounded-md focus:outline-none focus:ring-1 focus:ring-lime-300"
+				value={path === '' ? '/' : `/${path}`} 
+				readOnly 
+			  />
+		
 			</div>
+			
+			{/* Actions toolbar */}
+			<div className="flex flex-wrap gap-2 p-4 border-b">
+			  <button 
+				onClick={handleCreateDir}
+				className="px-3 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center transition-colors"
+			  >
+				📁 Create Directory
+			  </button>
+			  
+			  <label className="px-3 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center cursor-pointer transition-colors">
+				📤 Upload Files
+				<input
+				  type="file"
+				  className="hidden"
+				  multiple
+				  onChange={handleUpload}
+				/>
+			  </label>
+			  
+			  <label className="px-3 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center cursor-pointer transition-colors">
+				📁 Upload Folder
+				<input
+				  type="file"
+				  className="hidden"
+				  multiple
+				  webkitdirectory=""
+				  directory=""
+				  onChange={handleUpload}
+				/>
+			  </label>
+			  
+			  <button 
+				onClick={handleDelete} 
+				disabled={selectedItems.length === 0}
+				className={`px-3 py-2 rounded-md flex items-center transition-colors ${
+				  selectedItems.length === 0 
+					? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+					: 'bg-red-50 text-red-600 hover:bg-red-100'
+				}`}
+			  >
+				🗑️ Delete
+			  </button>
+			  
+			  <button 
+				onClick={handleRename} 
+				disabled={selectedItems.length !== 1}
+				className={`px-3 py-2 rounded-md flex items-center transition-colors ${
+				  selectedItems.length !== 1 
+					? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+					: 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+				}`}
+			  >
+				✏️ Rename
+			  </button>
+			</div>
+			
+			{/* Table */}
+			<div className="overflow-x-auto">
+			  <table className="w-full">
+				<thead className="bg-gray-50 text-left">
+				  <tr>
+					<th className="px-4 py-3 w-16">Select</th>
+					<th className="px-4 py-3">Name</th>
+					<th className="px-4 py-3">Size</th>
+					<th className="px-4 py-3">Last Modified</th>
+					<th className="px-4 py-3">Description</th>
+				  </tr>
+				</thead>
+				<tbody className={`divide-y divide-gray-100 ${loading ? 'pointer-events-none opacity-50' : ''}`}>
+				  {entries.map((entry, idx) => (
+					<tr key={idx} className="hover:bg-gray-50"
+					>
+					  <td className="px-4 py-3">
+						<input
+						  type="checkbox"
+						  checked={selectedItems.includes(entry.path)}
+						  onChange={() => toggleSelect(entry.path)}
+						  className="rounded border-gray-300 text-lime-500 focus:ring-lime-400"
+						/>
+					  </td>
+					  <td className="px-4 py-3">
+						<span
+						  onClick={() =>
+							entry.type === 'DIRECTORY'
+							  ? handleFolderClick(entry.name)
+							  : handleFileClick(entry.path)
+						  }
+						  className={`cursor-pointer ${
+							entry.type === 'DIRECTORY'
+							  ? 'text-blue-600 font-medium'
+							  : 'text-gray-700'
+						  }`}
+						>
+						  {entry.type === 'DIRECTORY' ? '📁 ' : '📄 '}
+						  {entry.name}
+						</span>
+					  </td>
+					  <td className="px-4 py-3 text-gray-500">{entry.size}</td>
+					  <td className="px-4 py-3 text-gray-500">{entry.lastModified}</td>
+					  <td className="px-4 py-3 text-gray-500">{entry.fileDescription}</td>
+					</tr>
+				  ))}
+				</tbody>
+			  </table>
+			</div>
+		  </div>
 		</div>
+	  </div>
 	);
 };
 

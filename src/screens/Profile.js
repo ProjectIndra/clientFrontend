@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Api";
+import ProviderCard from "../components/ProviderCard";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -16,15 +17,52 @@ function Profile() {
     }
   };
 
+  const [providers, setProviders] = useState([]);
+  const [wg, setWg] = useState([]);
+  // Fetch providers
+  const fetchProviders = async () => {
+    await apiCall("get", "/ui/providers/userProviderDetails")
+      .then((data) => {
+        if (data.all_providers && Array.isArray(data.all_providers)) {
+          setProviders(data.all_providers);
+        } else {
+          throw new Error("all_providers key not present in response data");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Error: " + error);
+      });
+  };
+
+  // Fetch client session details
+  const fetchClients = async () => {
+    await apiCall("get", "/ui/getAllCliSessionDetails")
+      .then((data) => {
+        console.log("Clients:", data);
+        setWg(data.cli_session_details);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Error: " + error);
+      });
+  };
+
   useEffect(() => {
     fetchUserDetails();
+    fetchProviders();
+    fetchClients();
   }, []);
 
   const getInitials = (name) =>
-    name?.split(" ").map((n) => n[0]).join("").toUpperCase();
-
+    name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  const [isProvider, setIsProvider] = useState(true);
   return (
-    <div className="p-6 bg-white rounded-xl shadow-lg max-w-6xl mx-auto">
+    <div className="px-32 pt-16 bg-white max-w-6xljustify-center">
       {loading ? (
         <div className="space-y-8">
           {/* Header Section */}
@@ -67,7 +105,7 @@ function Profile() {
       ) : (
         <>
           {/* Actual Profile */}
-            <div className="flex flex-col md:flex-row md:items-center gap-6 items-start">
+          <div className="flex flex-col md:flex-row md:items-start gap-6 items-start">
             <div className="w-32 h-32 rounded-2xl overflow-hidden shrink-0">
               {user.profile_image ? (
                 <img
@@ -92,39 +130,60 @@ function Profile() {
                 </span>
               </div>
               <p className="text-gray-500 mt-1">{user.email}</p>
-              <div className="mt-4 flex gap-3">
-                <button className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700">
-                  Follow
-                </button>
-                <button className="px-4 py-2 border border-gray-300 text-gray-800 rounded-md hover:bg-gray-100">
-                  Get in touch
-                </button>
-              </div>
             </div>
 
             <div className="flex items-center gap-6 mt-6 md:mt-0">
-              <Metric label="Followers" value="2,985" />
-              <Metric label="Following" value="132" />
-              <Metric label="Likes" value="548" />
+              <Metric label="Hours" value="2,985" />
+              <Metric label="Clients" value="132" />
+              <Metric label="Ratings" value="4.3" />
             </div>
           </div>
 
           {/* Project List */}
           <div className="mt-10">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Projects</h2>
+            <div className="flex space-x-8">
+              <h2
+                className={`text-lg mb-4 cursor-pointer ${
+                  isProvider
+                    ? "text-gray-800 font-semibold "
+                    : "text-gray-400 font-regular"
+                }`}
+                onClick={() => setIsProvider(true)}
+              >
+                Projects
+              </h2>
+
+              <h2
+                className={`text-lg mb-4 cursor-pointer ${
+                  !isProvider
+                    ? "text-gray-800 font-semibold"
+                    : "text-gray-400 font-regular"
+                }`}
+                onClick={() => setIsProvider(false)}
+              >
+                Clients
+              </h2>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="bg-gray-50 rounded-xl shadow-md overflow-hidden"
-                >
-                  <div className="h-40 bg-gray-200"></div>
-                  <div className="p-4">
-                    <h3 className="text-gray-800 font-medium">Project {i}</h3>
-                    <p className="text-sm text-gray-500 mt-1">Mobile UI</p>
-                  </div>
-                </div>
-              ))}
+              {isProvider
+                ? providers.map((provider) => (
+                    <ProviderCard provider={provider} />
+                  ))
+                : wg.map((client) => (
+                    <div
+                      key={client.cli_id}
+                      className={`p-4 border rounded cursor-pointer`}
+                    >
+                      <h3 className="font-semibold text-gray-800">
+                        {client.cli_id}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Status:{" "}
+                        {client.cli_status ? "🟢 Active" : "🔴 Inactive"}
+                      </p>
+                    </div>
+                  ))}
             </div>
           </div>
         </>

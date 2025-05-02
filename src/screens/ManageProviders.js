@@ -15,6 +15,8 @@ export default function ManageProviders() {
     vm_name: "",
     client_id: "1",
   });
+  const [isLoadingFirst, setIsLoadingProviders] = useState(false);
+  const [isLoadingClients,setIsLoadingClients] = useState(false);
 
   const vcpus = [1, 2, 4, 8, 16, 32, 64];
   const rams = [2048, 4096, 8192, 16384, 32768, 65536];
@@ -40,6 +42,7 @@ export default function ManageProviders() {
   };
 
   const fetchProviders = async () => {
+    setIsLoadingProviders(true);
     await apiCall("get", "/ui/providers/userProviderDetails")
       .then((data) => {
         if (data.all_providers && Array.isArray(data.all_providers)) {
@@ -51,10 +54,14 @@ export default function ManageProviders() {
       .catch((error) => {
         console.log(error);
         alert("Error: " + error);
-      });
+      }).finally(() => {
+        setIsLoadingProviders(false);
+      }
+      );
   };
 
   const fetchActiveUsers = async () => {
+    setIsLoadingClients(true);
     await apiCall("get", "/ui/providers/providerClientDetails")
       .then((data) => {
         if (data.client_details && Array.isArray(data.client_details)) {
@@ -65,7 +72,10 @@ export default function ManageProviders() {
       .catch((error) => {
         console.log(error);
         alert("Error: " + error);
-      });
+      }).finally(() => {
+        setIsLoadingClients(false);
+      }
+      );
   };
 
   useEffect(() => {
@@ -105,7 +115,12 @@ export default function ManageProviders() {
         {/* LEFT side - Provider List */}
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-medium text-slate-800 mb-4">Providers</h3>
-          <div className="space-y-4 h-[500px] overflow-y-auto">
+          <div className="relative space-y-4 h-[500px] overflow-y-auto">
+            {isLoadingFirst && (
+              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+              </div>
+            )}
             {providers?.map((provider, idx) => (
               <div key={idx} onClick={() => handleProviderSelect(provider)}>
                 <ProviderCard
@@ -250,7 +265,12 @@ export default function ManageProviders() {
           <h3 className="text-lg font-medium text-slate-800 mb-4">
             Active Usage by Clients
           </h3>
-          <div className="space-y-4 h-[500px] overflow-y-auto">
+          <div className="relative space-y-4 h-[500px] overflow-y-auto">
+            {isLoadingClients && (
+              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+              </div>
+            )}
             {activeUsers?.map((user, idx) => {
               const initials = user?.username
                 ? user.username.slice(0, 2).toUpperCase()

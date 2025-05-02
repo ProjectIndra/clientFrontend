@@ -7,6 +7,8 @@ const ClientServices = () => {
   const [selectedVM, setSelectedVM] = useState(null);
   const [vms, setVms] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchVMs();
@@ -26,15 +28,20 @@ const ClientServices = () => {
       const url = searchInput.trim()
         ? `/vms/allVms?vm_name=${encodeURIComponent(searchInput.trim())}`
         : "/vms/allVms";
-
+      setIsLoading(true);
       const data = await apiCall("get", url);
       if (data.all_vms && Array.isArray(data.all_vms)) {
         setVms(data.all_vms);
+        
       } else {
+        setIsLoading(false);
         throw new Error("all_vms key not present in response data");
       }
     } catch (error) {
       console.log(error);
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -100,7 +107,12 @@ const ClientServices = () => {
                 onChange={handleSearchChange}
               />
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
+            <div className="relative bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
+              {isLoading && (
+                <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                  <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+                </div>
+              )}
               <table className="w-full text-left">
                 <thead className="bg-gray-100 text-gray-700 font-medium">
                   <tr>
@@ -130,6 +142,7 @@ const ClientServices = () => {
                 </tbody>
               </table>
             </div>
+
           </div>
 
           <div className='vm-details-cont flex-1 min-w-[350px] bg-white p-6 border border-gray-200 rounded-lg'>

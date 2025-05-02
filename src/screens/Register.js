@@ -4,6 +4,7 @@ import { useState } from "react";
 
 function Register() {
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
 
     const handlesubmit = async(e) => {
         e.preventDefault();
@@ -12,6 +13,7 @@ function Register() {
             const username = e.target[1].value;
             const password = e.target[2].value;
             try {
+              setIsLoading(true)
                 await apiCall("post", "/register", { email: email, username: username, password: password }).then((res) => {
                     console.log(res);
                     window.location.href = '/login';
@@ -19,6 +21,9 @@ function Register() {
             } catch (error) {
                 // alert(error);
                 setError(error);
+            }
+            finally{
+              setIsLoading(false)
             }
         }
         else {
@@ -31,7 +36,12 @@ function Register() {
         <div className="flex flex-col md:flex-row max-w-6xl w-full rounded-3xl overflow-hidden shadow-lg">
           
           {/* Left - Registration Form */}
-          <div className="w-full md:w-1/2 bg-pureWhite p-10 flex flex-col justify-center items-center">
+          <div className="relative w-full md:w-1/2 bg-pureWhite p-10 flex flex-col justify-center items-center">
+          {isLoading && (
+              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+              </div>
+        )}
             <h2 className="text-4xl font-bold text-greenDark mb-6 text-center">Register</h2>
             
             <form onSubmit={handlesubmit} className="flex flex-col space-y-4 w-full max-w-[320px]">

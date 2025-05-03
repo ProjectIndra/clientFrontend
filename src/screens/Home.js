@@ -2,6 +2,10 @@ import Navbar from "../components/Navbar";
 import LockBoxLanding from "../components/HomeComponent";
 
 function Home() {
+  const handleGetStartedClick = () => {
+    // Handle the "Get Started" button click
+    window.location.href = "/docs";
+  };
   return (
     <div className="font-sans bg-pureWhite text-grayText">
       {/* Navbar */}
@@ -21,7 +25,7 @@ function Home() {
 
           {/* Buttons */}
           <div className="flex gap-4 mb-10">
-            <button className="bg-lime-300 font-medium text-[#0D0D0D] px-6 py-2 rounded-md hover: transition">
+            <button onClick={handleGetStartedClick} className="bg-lime-300 font-medium text-[#0D0D0D] px-6 py-2 rounded-md hover: transition">
               Get Started
             </button>
             <button className="text-[#0D0D0D] font-medium hover:underline">

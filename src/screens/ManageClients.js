@@ -4,19 +4,21 @@ import Navbar from "../components/Navbar";
 
 export default function ManageClients() {
   const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [selectedClient, setSelectedClient] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
+        setIsLoading(true)
         const response = await apiCall("GET", "/ui/getAllCliSessionDetails");
         // Assuming the API returns an array of client objects
         setClients(response.cli_session_details);
       } catch (error) {
         console.error("Error fetching clients:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -30,6 +32,7 @@ export default function ManageClients() {
   const handleDelete = () => {
     if (selectedClient) {
       try {
+        setIsLoading(true)
         apiCall("GET", `/ui/deleteCliSession?	cli_id=${selectedClient.cli_id}`);
         setClients(
           clients.filter((client) => client.cli_id !== selectedClient.cli_id)
@@ -38,11 +41,15 @@ export default function ManageClients() {
       } catch (error) {
         console.error("Error deleting client:", error);
       }
+      finally{
+        setIsLoading(false)
+      }
     }
   };
 
   const handleAddClient = async () => {
     try {
+      setIsLoading(true)
       let response = await apiCall("GET", "/ui/getCliVerificationToken");
       console.log(response);
       if (response.cli_verification_token === undefined) {
@@ -56,6 +63,9 @@ export default function ManageClients() {
     } catch (error) {
       console.error("Error adding client:", error);
     }
+    finally{
+      setIsLoading(false)
+    }
   };
 
   return (
@@ -63,6 +73,11 @@ export default function ManageClients() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-800">Manage Clients</h1>
+        {isLoading && (
+              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+              </div>
+        )}
         <button
           onClick={handleAddClient}
           className="bg-lime-500 hover:bg-lime-600 text-white px-4 py-2 rounded shadow"
@@ -74,8 +89,11 @@ export default function ManageClients() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left: Client List */}
         <div className="space-y-4 h-[500px] overflow-y-auto">
-          {loading ? (
-            <p className="text-gray-500">Loading clients...</p>
+          {isLoading ? (
+            // <p className="text-gray-500">Loading clients...</p>
+            <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+              </div>
           ) : clients.length === 0 ? (
             <p className="text-gray-500">No clients found.</p>
           ) : (

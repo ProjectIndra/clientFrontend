@@ -130,12 +130,12 @@ const Navbar = () => {
         <nav
           className={`${
             mobileMenuOpen ? "flex" : "hidden"
-          } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6 text-sm mt-4 md:mt-0 ml-12`}
+          } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-16 text-sm mt-4 md:mt-0 ml-12`}
         >
           {/* Services */}
           <div className="relative group">
             <button
-              onClick={() => togglePopup("services")}
+              onMouseOver={() => togglePopup("services")}
               className={`${
                 activePopup === "services" ? "text-[#0a1d39] font-semibold" : "text-[#475569]"
               } hover:text-[#0a1d39] text-left w-full`}
@@ -143,14 +143,14 @@ const Navbar = () => {
               Services
             </button>
             {activePopup === "services" && showNavbar && (
-              <div className="absolute top-full left-0 mt-2 w-56 p-4 bg-white rounded-lg shadow-md z-50 flex flex-col">
-                <Link className="text-sm hover:bg-gray-100 px-2 py-1 rounded" to="/client/services">
+              <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
+                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/client/services">
                   Compute-Engine
                 </Link>
-                <Link className="text-sm hover:bg-gray-100 px-2 py-1 rounded" to="/providersList">
+                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/providersList">
                   Providers
                 </Link>
-                <Link className="text-sm hover:bg-gray-100 px-2 py-1 rounded" to="/buckets">
+                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/buckets">
                   Buckets
                 </Link>
               </div>
@@ -160,7 +160,7 @@ const Navbar = () => {
           {/* Manage */}
           <div className="relative group">
             <button
-              onClick={() => togglePopup("manage")}
+              onMouseOver={() => togglePopup("manage")}
               className={`${
                 activePopup === "manage" ? "text-[#0a1d39] font-semibold" : "text-[#475569]"
               } hover:text-[#0a1d39] text-left w-full`}
@@ -168,14 +168,14 @@ const Navbar = () => {
               Manage
             </button>
             {activePopup === "manage" && showNavbar && (
-              <div className="absolute top-full left-0 mt-2 w-56 p-4 bg-white rounded-lg shadow-md z-50 flex flex-col">
-                <Link className="text-sm hover:bg-gray-100 px-2 py-1 rounded" to="/docs">
+              <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
+                {/* <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/docs">
                   Setup
-                </Link>
-                <Link className="text-sm hover:bg-gray-100 px-2 py-1 rounded" to="/manage/providers">
+                </Link> */}
+                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/manage/providers">
                   Manage Providers
                 </Link>
-                <Link className="text-sm hover:bg-gray-100 px-2 py-1 rounded" to="/manage/clients">
+                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/manage/clients">
                   Manage Clients
                 </Link>
               </div>
@@ -196,26 +196,26 @@ const Navbar = () => {
 
       {/* Right Section */}
       <div className="w-full md:w-auto flex justify-between md:justify-end items-center mt-4 md:mt-0 space-x-4 md:space-x-16 relative">
-        {/* Search Box */}
-        <div className="relative w-full max-w-sm md:max-w-[300px]">
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-full px-4 py-2 pr-10 bg-[#f9fbfa] border border-gray-200 text-sm rounded-md focus:outline-none"
-          />
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 text-gray-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <circle cx="11" cy="11" r="8" strokeWidth="2" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" strokeWidth="2" />
-            </svg>
-          </div>
-        </div>
+        {/* Search Box
+        // <div className="relative w-full max-w-sm md:max-w-[300px]">
+        //   <input
+        //     type="text"
+        //     placeholder="Search"
+        //     className="w-full px-4 py-2 pr-10 bg-[#f9fbfa] border border-gray-200 text-sm rounded-md focus:outline-none"
+        //   />
+        //   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+        //     <svg
+        //       xmlns="http://www.w3.org/2000/svg"
+        //       className="h-4 w-4 text-gray-500"
+        //       fill="none"
+        //       viewBox="0 0 24 24"
+        //       stroke="currentColor"
+        //     >
+        //       <circle cx="11" cy="11" r="8" strokeWidth="2" />
+        //       <line x1="21" y1="21" x2="16.65" y2="16.65" strokeWidth="2" />
+        //     </svg>
+        //   </div>
+        // </div> */}
 
         {/* Avatar */}
         <div className="relative">

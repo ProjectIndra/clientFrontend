@@ -3,47 +3,6 @@ import Navbar from "../components/Navbar";
 import ProviderCard from "../components/ProviderCard";
 import { apiCall } from "../Api";
 
-// Updated runQuery using POST and sending provider_user_id
-async function runQuery(formData, selectedProvider) {
-  apiCall("post", "/providers/query", {
-    vcpus: formData.vcpus,
-    ram: formData.ram,
-    storage: formData.storage,
-    vm_image: formData.vm_image,
-    provider_id: formData.provider_id,
-    provider_user_id: selectedProvider.user_id,
-  })
-    .then((data) => {
-      console.log(data);
-      alert("Can Create VM: " + data.can_create);
-    })
-    .catch((error) => {
-      console.log(error);
-      alert("Error: " + error);
-    });
-}
-
-// Updated runRequest using POST and sending provider_user_id and provider_name
-async function runRequest(formData, selectedProvider) {
-  apiCall("post", "/vms/launch", {
-    vcpus: formData.vcpus,
-    ram: formData.ram,
-    storage: formData.storage,
-    vm_image: formData.vm_image,
-    provider_id: formData.provider_id,
-    provider_user_id: selectedProvider.user_id,
-    vm_name: formData.vm_name,
-    provider_name: selectedProvider.provider_name,
-  })
-    .then((data) => {
-      console.log(data);
-      alert(data.message);
-    })
-    .catch((error) => {
-      console.log(error);
-      alert("Error: " + error);
-    });
-}
 
 const Providers = () => {
   const vcpus = [1, 2, 4, 8, 16, 32, 64];
@@ -64,6 +23,7 @@ const Providers = () => {
     client_id: "1",
     storage: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   // Debounce search input so we don't make too many API calls
   useEffect(() => {
@@ -80,6 +40,7 @@ const Providers = () => {
 
   const fetchProviders = async () => {
     try {
+      setIsLoading(true);
       const response = await apiCall(
         "get",
         `/providers/lists?provider_name=${debouncedSearch}`
@@ -87,13 +48,69 @@ const Providers = () => {
       if (response.all_providers && Array.isArray(response.all_providers)) {
         setProviders(response.all_providers);
       } else {
+        setIsLoading(false);
         throw new Error("all_providers key not present in response data");
       }
     } catch (error) {
       console.log(error);
       alert("Error: " + error);
     }
+    finally {
+      setIsLoading(false);
+    }
   };
+
+  // Updated runQuery using POST and sending provider_user_id
+  async function runQuery(formData, selectedProvider) {
+    setIsLoading(true);
+    apiCall("post", "/providers/query", {
+      vcpus: formData.vcpus,
+      ram: formData.ram,
+      storage: formData.storage,
+      vm_image: formData.vm_image,
+      provider_id: formData.provider_id,
+      provider_user_id: selectedProvider.user_id,
+    })
+      .then((data) => {
+        console.log(data);
+        alert("Can Create VM: " + data.can_create);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Error: " + error);
+      }).finally(() => {
+        setIsLoading(false);
+      }
+      );
+  }
+
+  // Updated runRequest using POST and sending provider_user_id and provider_name
+  async function runRequest(formData, selectedProvider) {
+    setIsLoading(true);
+    apiCall("post", "/vms/launch", {
+      vcpus: formData.vcpus,
+      ram: formData.ram,
+      storage: formData.storage,
+      vm_image: formData.vm_image,
+      provider_id: formData.provider_id,
+      provider_user_id: selectedProvider.user_id,
+      vm_name: formData.vm_name,
+      provider_name: selectedProvider.provider_name,
+    })
+      .then((data) => {
+
+        console.log(data);
+        alert(data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Error: " + error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+      
+  }
 
   // Update selected provider and adjust formData accordingly
   const handleProviderSelect = (provider) => {
@@ -158,6 +175,11 @@ const Providers = () => {
             />
           </form>
           <div className="flex flex-wrap justify-center gap-5 pt-5 h-[500px] overflow-y-auto py-4">
+            {isLoading && (
+              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+              </div>
+            )}
             {providers.map((provider, idx) => (
               <div
                 className="w-full flex"

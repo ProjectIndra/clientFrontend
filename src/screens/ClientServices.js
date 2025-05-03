@@ -7,6 +7,9 @@ const ClientServices = () => {
   const [selectedVM, setSelectedVM] = useState(null);
   const [vms, setVms] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [isLoadingVmLists, setIsLoadingVmLists] = useState(false);
+  const [isLoadingVmCrud, setIsLoadingVmCrud] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchVMs();
@@ -26,19 +29,30 @@ const ClientServices = () => {
       const url = searchInput.trim()
         ? `/vms/allVms?vm_name=${encodeURIComponent(searchInput.trim())}`
         : "/vms/allVms";
-
+      setIsLoadingVmLists(true);
+      setSelectedVM(null);
       const data = await apiCall("get", url);
       if (data.all_vms && Array.isArray(data.all_vms)) {
         setVms(data.all_vms);
+        
       } else {
+        setIsLoadingVmLists(false);
         throw new Error("all_vms key not present in response data");
       }
     } catch (error) {
       console.log(error);
     }
+    finally {
+      setIsLoadingVmLists(false);
+    }
   };
 
   const handleSelectVM = (vm) => {
+
+    if(vm?.vm_id === selectedVM?.vm_id){
+      setSelectedVM(null);
+      return;
+    }
     setSelectedVM(vm);
   };
 
@@ -46,11 +60,15 @@ const ClientServices = () => {
     if (selectedVM) {
       alert(`Activating VM: ${selectedVM.vm_name}`);
       try {
+        setIsLoadingVmCrud(true);
         const data = await apiCall("get", `/vms/start?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`);
         alert(data.message);
         fetchVMs();
       } catch (error) {
         alert("Error: " + error);
+      }
+      finally {
+        setIsLoadingVmCrud(false);
       }
     }
   };
@@ -59,11 +77,15 @@ const ClientServices = () => {
     if (selectedVM) {
       alert(`Deleting VM: ${selectedVM.vm_name}`);
       try {
+        setIsLoadingVmCrud(true);
         const data = await apiCall("get", `/vms/remove?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`);
         alert(data.message);
         fetchVMs();
       } catch (error) {
         alert("Error: " + error);
+      }
+      finally {
+        setIsLoadingVmCrud(false);
       }
     }
   };
@@ -72,11 +94,15 @@ const ClientServices = () => {
     if (selectedVM) {
       alert(`Deactivating VM: ${selectedVM.vm_name}`);
       try {
+        setIsLoadingVmCrud(true);
         const data = await apiCall("get", `/vms/stop?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`);
         alert(data.message);
         fetchVMs();
       } catch (error) {
         alert("Error: " + error);
+      }
+      finally {
+        setIsLoadingVmCrud(false);
       }
     }
   };
@@ -94,13 +120,18 @@ const ClientServices = () => {
             <div className='mb-4'>
               <input
                 type="search"
-                className="w-full border border-gray-300 rounded-md px-4 py-2"
-                placeholder="Search by Name, vCPU, RAM..."
+                className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-4 py-2"
+                placeholder="Search by VM Name"
                 value={searchInput}
                 onChange={handleSearchChange}
               />
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
+            <div className="relative bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
+              {isLoadingVmLists && (
+                <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                  <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+                </div>
+              )}
               <table className="w-full text-left">
                 <thead className="bg-gray-100 text-gray-700 font-medium">
                   <tr>
@@ -113,26 +144,44 @@ const ClientServices = () => {
                 </thead>
                 <tbody>
                   {vms.map((vm, index) => (
-                    <tr key={index} className="border-t border-gray-100 hover:bg-gray-50">
+                    <tr
+                      key={index}
+                      className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${selectedVM?.vm_id === vm.vm_id ? 'bg-lime-50' : ''
+                        }`}
+                      onClick={() => handleSelectVM(vm)}
+                    >
                       <td className="px-4 py-3">
                         <input
                           type="radio"
                           name="selectedVM"
+                          onClick={(e) => e.stopPropagation()} // Prevent row click duplication
+                          checked={selectedVM?.vm_id === vm.vm_id}
                           onChange={() => handleSelectVM(vm)}
+                          className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
+                          readOnly
                         />
                       </td>
-                      <td className="px-4 py-3">{vm.provider_name}</td>
+                      <td className="px-4 py-3 max-w-[150px] truncate" title={vm.provider_name}>
+                        {vm.provider_name}
+                      </td>
                       <td className="px-4 py-3">{vm.vm_name}</td>
                       <td className="px-4 py-3">{vm.wireguard_ip}</td>
                       <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             </div>
+
           </div>
 
-          <div className='vm-details-cont flex-1 min-w-[350px] bg-white p-6 border border-gray-200 rounded-lg'>
+          <div className='relative vm-details-cont flex-1 min-w-[350px] bg-white p-6 border border-gray-200 rounded-lg'>
+            {isLoadingVmCrud && (
+              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+              </div>
+            )}
             <h2 className='text-lg font-semibold text-gray-800 mb-4'>VM Details</h2>
             {selectedVM ? (
               <>
@@ -171,7 +220,7 @@ const ClientServices = () => {
                 </div>
               </>
             ) : (
-              <p className='text-gray-500 italic'>Select a VM to see details</p>
+              <p className='text-gray-500 italic text-center'>Select a VM to see it's details</p>
             )}
           </div>
         </div>

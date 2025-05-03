@@ -12,4 +12,4 @@ jobs:
       - name: Run the UI deployment script
         run: |
           cd /home/avinash/scripts
-          sudo bash UIDeploymentScript.sh
+          sudo bash clientFrontendScript.sh

@@ -7,7 +7,8 @@ import { apiCall } from "../Api";
 const Providers = () => {
   const vcpus = [1, 2, 4, 8, 16, 32, 64];
   const rams = [2048, 4096, 8192, 16384, 32768, 65536];
-  const images = ["linux", "windows", "FreeBSD"];
+  // const images = ["linux", "windows", "FreeBSD"];
+  const images = ["linux"]
 
   const [providers, setProviders] = useState([]);
   const [selectedProvider, setSelectedProvider] = useState(null);
@@ -168,8 +169,8 @@ const Providers = () => {
           <form onSubmit={(e) => e.preventDefault()} className="mb-4">
             <input
               type="search"
-              placeholder="Search by Name, vCPU, RAM..."
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
+              placeholder="Search by Provider Name"
+              className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
               value={searchInput}
               onChange={handleSearchInputChange}
             />
@@ -178,6 +179,12 @@ const Providers = () => {
             {isLoading && (
               <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                 <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+              </div>
+            )}
+            {/* if there is no provider then mention No provider is active */}
+            {!isLoading && providers.length === 0 && (
+              <div className="text-center text-gray-500 w-full mt-10">
+                No provider is active
               </div>
             )}
             {providers.map((provider, idx) => (
@@ -202,15 +209,15 @@ const Providers = () => {
                 <h3 className="text-xl font-semibold">
                   {selectedProvider.provider_name}
                 </h3>
-                <button className="bg-lime-300 text-black font-medium rounded px-4 py-1 hover:brightness-110">
+                {/* <button className="bg-lime-300 text-black font-medium rounded px-4 py-1 hover:brightness-110">
                   Specs Sheet
-                </button>
+                </button> */}
               </div>
               <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
                 <input
                   name="vm_name"
                   placeholder="VM Name"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
                   value={formData.vm_name}
                   onChange={handleChange}
                 />
@@ -223,7 +230,7 @@ const Providers = () => {
                       name="vcpus"
                       value={formData.vcpus}
                       onChange={handleChange}
-                      className="border border-gray-300 rounded-md px-3 py-2"
+                      className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
                     >
                       <option value="">Select</option>
                       {vcpus.map((cpu, idx) => (
@@ -241,7 +248,7 @@ const Providers = () => {
                       name="ram"
                       value={formData.ram}
                       onChange={handleChange}
-                      className="border border-gray-300 rounded-md px-3 py-2"
+                      className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
                     >
                       <option value="">Select</option>
                       {rams.map((ram, idx) => (
@@ -259,7 +266,7 @@ const Providers = () => {
                       name="storage"
                       value={formData.storage}
                       onChange={handleChange}
-                      className="border border-gray-300 rounded-md px-3 py-2"
+                      className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
                     >
                       <option value="">Select</option>
                       {rams.map((storage, idx) => (
@@ -278,7 +285,7 @@ const Providers = () => {
                     name="vm_image"
                     value={formData.vm_image}
                     onChange={handleChange}
-                    className="border border-gray-300 rounded-md px-3 py-2"
+                    className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
                   >
                     <option value="">Select</option>
                     {images.map((image, idx) => (
@@ -305,7 +312,7 @@ const Providers = () => {
                 <input
                   name="remarks"
                   placeholder="Remarks?"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
                   value={formData.remarks}
                   onChange={handleChange}
                 />

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiCall } from '../Api';
+import Toast from './ToastService';
 
 let debounceTimer;
 
@@ -9,7 +10,20 @@ const ClientServices = () => {
   const [searchInput, setSearchInput] = useState("");
   const [isLoadingVmLists, setIsLoadingVmLists] = useState(false);
   const [isLoadingVmCrud, setIsLoadingVmCrud] = useState(false);
-  const [error, setError] = useState(null);
+  const [toast, setToast] = useState({ message: "", type: "info", visible: false });
+
+  const [actionConfirm, setActionConfirm] = useState({
+    type: null, // 'start', 'stop', 'delete'
+    visible: false,
+  });
+
+  const showToast = (message, type = "info") => {
+    setToast({ message, type, visible: true });
+  };
+
+  const closeToast = () => {
+    setToast(prev => ({ ...prev, visible: false }));
+  };
 
   useEffect(() => {
     fetchVMs();
@@ -20,7 +34,6 @@ const ClientServices = () => {
     debounceTimer = setTimeout(() => {
       fetchVMs();
     }, 500);
-
     return () => clearTimeout(debounceTimer);
   }, [searchInput]);
 
@@ -37,86 +50,66 @@ const ClientServices = () => {
         if (selectedVM && !data.all_vms.some((vm) => vm.vm_id === selectedVM.vm_id)) {
           setSelectedVM(null);
         }
-        
+
       } else {
         setIsLoadingVmLists(false);
         throw new Error("all_vms key not present in response data");
       }
     } catch (error) {
-      console.log(error);
-    }
-    finally {
+      console.error(error);
+      showToast("Failed to load VMs");
+    } finally {
       setIsLoadingVmLists(false);
     }
   };
 
   const handleSelectVM = (vm) => {
-
-    if(vm?.vm_id === selectedVM?.vm_id){
+    if (vm?.vm_id === selectedVM?.vm_id) {
       setSelectedVM(null);
       return;
     }
     setSelectedVM(vm);
   };
 
-  const activateVM = async () => {
-    if (selectedVM) {
-      alert(`Activating VM: ${selectedVM.vm_name}`);
-      try {
-        setIsLoadingVmCrud(true);
-        const data = await apiCall("get", `/vms/start?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`);
-        alert(data.message);
-        fetchVMs();
-      } catch (error) {
-        alert("Error: " + error);
-      }
-      finally {
-        setIsLoadingVmCrud(false);
-      }
-    }
+  const confirmAction = (type) => {
+    setActionConfirm({ type, visible: true });
   };
 
-  const deleteVM = async () => {
-    if (selectedVM) {
-      alert(`Deleting VM: ${selectedVM.vm_name}`);
-      try {
-        setIsLoadingVmCrud(true);
-        const data = await apiCall("get", `/vms/remove?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`);
-        alert(data.message);
-        fetchVMs();
-      } catch (error) {
-        alert("Error: " + error);
-      }
-      finally {
-        setIsLoadingVmCrud(false);
-      }
-    }
-  };
+  const handleConfirmedAction = async () => {
+    const { type } = actionConfirm;
+    setActionConfirm({ type: null, visible: false });
 
-  const deactivateVM = async () => {
-    if (selectedVM) {
-      alert(`Deactivating VM: ${selectedVM.vm_name}`);
-      try {
-        setIsLoadingVmCrud(true);
-        const data = await apiCall("get", `/vms/stop?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`);
-        alert(data.message);
-        fetchVMs();
-      } catch (error) {
-        alert("Error: " + error);
-      }
-      finally {
-        setIsLoadingVmCrud(false);
-      }
-    }
-  };
+    if (!selectedVM) return;
 
-  const handleSearchChange = (e) => {
-    setSearchInput(e.target.value);
+    const endpointMap = {
+      start: `/vms/start?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
+      stop: `/vms/stop?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
+      delete: `/vms/remove?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
+    };
+
+    const actionVerb = {
+      start: "Activating",
+      stop: "Deactivating",
+      delete: "Deleting",
+    };
+
+    try {
+      setIsLoadingVmCrud(true);
+      showToast(`${actionVerb[type]} VM: ${selectedVM.vm_name}`, "info");
+      const data = await apiCall("get", endpointMap[type]);
+      showToast(data.message || `${type} succeeded`, "success");
+      fetchVMs();
+    } catch (error) {
+      showToast(`Error during VM ${type}`, "error");
+      console.error(error);
+    } finally {
+      setIsLoadingVmCrud(false);
+    }
   };
 
   return (
     <div className='flex-1 h-full'>
-      <div className='mt-20  p-6 font-sans'>
+      <div className='mt-20 p-6 font-sans'>
         <h2 className='text-2xl font-semibold text-gray-800 mb-6'>VM Instances</h2>
         <div className='flex flex-col lg:flex-row gap-8'>
           <div className='flex-1 min-w-[400px]'>
@@ -126,7 +119,7 @@ const ClientServices = () => {
                 className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-4 py-2"
                 placeholder="Search by VM Name"
                 value={searchInput}
-                onChange={handleSearchChange}
+                onChange={(e) => setSearchInput(e.target.value)}
               />
             </div>
             <div className="relative bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
@@ -154,39 +147,34 @@ const ClientServices = () => {
                     </tr>
                   ) : (
                     vms.map((vm, index) => (
-                      <tr
-                        key={index}
-                        className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${
-                          selectedVM?.vm_id === vm.vm_id ? 'bg-lime-50' : ''
+                    <tr
+                      key={index}
+                      className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${selectedVM?.vm_id === vm.vm_id ? 'bg-lime-50' : ''
                         }`}
-                        onClick={() => handleSelectVM(vm)}
-                      >
-                        <td className="px-4 py-3">
-                          <input
-                            type="radio"
-                            name="selectedVM"
-                            onClick={(e) => e.stopPropagation()}
-                            checked={selectedVM?.vm_id === vm.vm_id}
-                            onChange={() => handleSelectVM(vm)}
-                            className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
-                            readOnly
-                          />
-                        </td>
-                        <td className="px-4 py-3 max-w-[150px] truncate" title={vm.provider_name}>
-                          {vm.provider_name}
-                        </td>
-                        <td className="px-4 py-3">{vm.vm_name}</td>
-                        <td className="px-4 py-3">{vm.wireguard_ip}</td>
-                        <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
-                      </tr>
-                    ))
-                  )}
+                      onClick={() => handleSelectVM(vm)}
+                    >
+                      <td className="px-4 py-3">
+                        <input
+                          type="radio"
+                          name="selectedVM"
+                          checked={selectedVM?.vm_id === vm.vm_id}
+                          onChange={() => handleSelectVM(vm)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
+                          readOnly
+                        />
+                      </td>
+                      <td className="px-4 py-3 max-w-[150px] truncate" title={vm.provider_name}>
+                        {vm.provider_name}
+                      </td>
+                      <td className="px-4 py-3">{vm.vm_name}</td>
+                      <td className="px-4 py-3">{vm.wireguard_ip}</td>
+                      <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
+                    </tr>
+                  )))}
                 </tbody>
-
-
               </table>
             </div>
-
           </div>
 
           <div className='relative vm-details-cont flex-1 min-w-[350px] bg-white p-6 border border-gray-200 rounded-lg'>
@@ -199,33 +187,33 @@ const ClientServices = () => {
             {selectedVM ? (
               <>
                 <div className='vm-detail mb-4 space-y-2'>
-                  <p><span className='font-medium text-gray-700'>vCPUs: </span><span className='text-gray-600'>{selectedVM.vcpu}</span></p>
-                  <p><span className='font-medium text-gray-700'>RAM: </span><span className='text-gray-600'>{selectedVM.ram}</span></p>
-                  <p><span className='font-medium text-gray-700'>Storage: </span><span className='text-gray-600'>{selectedVM.storage}</span></p>
+                  <p><span className='font-medium text-gray-700'>vCPUs: </span>{selectedVM.vcpu}</p>
+                  <p><span className='font-medium text-gray-700'>RAM: </span>{selectedVM.ram}</p>
+                  <p><span className='font-medium text-gray-700'>Storage: </span>{selectedVM.storage}</p>
                 </div>
                 <div className='vm-wg mb-4 space-y-2'>
-                  <p><span className='font-medium text-gray-700'>Wireguard IP: </span><span className='text-gray-600'>{selectedVM.wireguard_ip}</span></p>
-                  <p><span className='font-medium text-gray-700'>Wireguard Pubkey: </span><span className='text-gray-600'>{selectedVM.wireguard_public_key}</span></p>
-                  <p><span className='font-medium text-gray-700'>Wireguard Endpoint: </span><span className='text-gray-600'>{selectedVM.wireguard_endpoint}</span></p>
+                  <p><span className='font-medium text-gray-700'>Wireguard IP: </span>{selectedVM.wireguard_ip}</p>
+                  <p><span className='font-medium text-gray-700'>Wireguard Pubkey: </span>{selectedVM.wireguard_public_key}</p>
+                  <p><span className='font-medium text-gray-700'>Wireguard Endpoint: </span>{selectedVM.wireguard_endpoint}</p>
                 </div>
                 <div className='vm-btns flex flex-wrap gap-3'>
                   <button
                     className='px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed'
-                    onClick={activateVM}
+                    onClick={() => confirmAction("start")}
                     disabled={selectedVM.status === "active"}
                   >
                     Start VM
                   </button>
                   <button
                     className='px-4 py-2 bg-yellow-600 text-white rounded-md text-sm hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed'
-                    onClick={deactivateVM}
+                    onClick={() => confirmAction("stop")}
                     disabled={selectedVM.status === "inactive"}
                   >
                     Stop VM
                   </button>
                   <button
                     className='px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed'
-                    onClick={deleteVM}
+                    onClick={() => confirmAction("delete")}
                     disabled={selectedVM.status === "active"}
                   >
                     Delete VM
@@ -233,11 +221,39 @@ const ClientServices = () => {
                 </div>
               </>
             ) : (
-              <p className='text-gray-500 italic text-center'>Select a VM to see it's details</p>
+              <p className='text-gray-500 italic text-center'>Select a VM to see its details</p>
             )}
           </div>
         </div>
       </div>
+
+      {/* Toast */}
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+
+      {/* Action Confirmation Modal */}
+      {actionConfirm.visible && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow max-w-sm text-center">
+            <p className="text-lg font-semibold text-gray-800 mb-4">
+              Are you sure you want to {actionConfirm.type} this VM?
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleConfirmedAction}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Yes, Confirm
+              </button>
+              <button
+                onClick={() => setActionConfirm({ type: null, visible: false })}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

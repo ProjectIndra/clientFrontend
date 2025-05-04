@@ -16,16 +16,15 @@ const ProviderCard = ({ provider, isActive = false }) => {
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`w-full max-w-[700px] min-w-[200px] h-[140px] flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden ${
-          isActive ? "bg-blue-50" : "bg-white"
-        } ${
+        className={`w-full max-w-[700px] min-w-[200px] h-[140px] flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden  ${
           !provider.edit && isHovered
-            ? "bg-blue-50 scale-103 cursor-pointer"
+            ? "bg-lime-50 scale-103 cursor-pointer"
             : "bg-white"
+          }
         }`}
       >
         {/* Left: Icon + Details */}
-        <div className="flex flex-col p-4 w-[85%]">
+        <div className={`flex flex-col p-4 w-[85%] ${isActive ? " bg-lime-50" : "bg-whtie"}`}>
           {/* Top: Icon + Title + Edit */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex gap-4">

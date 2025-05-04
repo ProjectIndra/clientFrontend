@@ -46,17 +46,27 @@ const Providers = () => {
         "get",
         `/providers/lists?provider_name=${debouncedSearch}`
       );
+
       if (response.all_providers && Array.isArray(response.all_providers)) {
-        setProviders(response.all_providers);
+        const updatedProviders = response.all_providers;
+        setProviders(updatedProviders);
+
+        // Check if the selected provider still exists in updated list
+        if (
+          selectedProvider &&
+          !updatedProviders.some(
+            (provider) => provider.provider_id === selectedProvider.provider_id
+          )
+        ) {
+          setSelectedProvider(null);
+        }
       } else {
-        setIsLoading(false);
         throw new Error("all_providers key not present in response data");
       }
     } catch (error) {
       console.log(error);
       alert("Error: " + error);
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -195,7 +205,7 @@ const Providers = () => {
               >
                 <ProviderCard
                   provider={provider}
-                  isActive={selectedProvider === provider}
+                  isActive={selectedProvider?.provider_id === provider?.provider_id}
                 />
               </div>
             ))}
@@ -216,7 +226,7 @@ const Providers = () => {
               <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
                 <input
                   name="vm_name"
-                  placeholder="VM Name"
+                  placeholder="VM Name (not necessary for query request)"
                   className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
                   value={formData.vm_name}
                   onChange={handleChange}
@@ -311,7 +321,7 @@ const Providers = () => {
                 </div>
                 <input
                   name="remarks"
-                  placeholder="Remarks?"
+                  placeholder="Remarks? (not necessary for query request)"
                   className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
                   value={formData.remarks}
                   onChange={handleChange}

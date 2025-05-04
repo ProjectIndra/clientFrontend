@@ -329,7 +329,9 @@ const Providers = () => {
               </div>
             </>
           ) : (
-            <p className="text-gray-500">Please select a provider.</p>
+            <div className="flex flex-col items-center justify-center h-full">
+            <p className="text-gray-500 text-center">Select a provider to see it's details.</p>
+            </div>
           )}
         </div>
       </div>

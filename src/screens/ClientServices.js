@@ -30,10 +30,13 @@ const ClientServices = () => {
         ? `/vms/allVms?vm_name=${encodeURIComponent(searchInput.trim())}`
         : "/vms/allVms";
       setIsLoadingVmLists(true);
-      setSelectedVM(null);
       const data = await apiCall("get", url);
       if (data.all_vms && Array.isArray(data.all_vms)) {
         setVms(data.all_vms);
+        // Check if the selected vm still exists in updated list
+        if (selectedVM && !data.all_vms.some((vm) => vm.vm_id === selectedVM.vm_id)) {
+          setSelectedVM(null);
+        }
         
       } else {
         setIsLoadingVmLists(false);
@@ -143,33 +146,43 @@ const ClientServices = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {vms.map((vm, index) => (
-                    <tr
-                      key={index}
-                      className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${selectedVM?.vm_id === vm.vm_id ? 'bg-lime-50' : ''
-                        }`}
-                      onClick={() => handleSelectVM(vm)}
-                    >
-                      <td className="px-4 py-3">
-                        <input
-                          type="radio"
-                          name="selectedVM"
-                          onClick={(e) => e.stopPropagation()} // Prevent row click duplication
-                          checked={selectedVM?.vm_id === vm.vm_id}
-                          onChange={() => handleSelectVM(vm)}
-                          className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
-                          readOnly
-                        />
+                  {!isLoadingVmCrud && vms.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="text-center text-gray-500 py-4">
+                        No VMs available
                       </td>
-                      <td className="px-4 py-3 max-w-[150px] truncate" title={vm.provider_name}>
-                        {vm.provider_name}
-                      </td>
-                      <td className="px-4 py-3">{vm.vm_name}</td>
-                      <td className="px-4 py-3">{vm.wireguard_ip}</td>
-                      <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
                     </tr>
-                  ))}
+                  ) : (
+                    vms.map((vm, index) => (
+                      <tr
+                        key={index}
+                        className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${
+                          selectedVM?.vm_id === vm.vm_id ? 'bg-lime-50' : ''
+                        }`}
+                        onClick={() => handleSelectVM(vm)}
+                      >
+                        <td className="px-4 py-3">
+                          <input
+                            type="radio"
+                            name="selectedVM"
+                            onClick={(e) => e.stopPropagation()}
+                            checked={selectedVM?.vm_id === vm.vm_id}
+                            onChange={() => handleSelectVM(vm)}
+                            className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
+                            readOnly
+                          />
+                        </td>
+                        <td className="px-4 py-3 max-w-[150px] truncate" title={vm.provider_name}>
+                          {vm.provider_name}
+                        </td>
+                        <td className="px-4 py-3">{vm.vm_name}</td>
+                        <td className="px-4 py-3">{vm.wireguard_ip}</td>
+                        <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
+
 
               </table>
             </div>

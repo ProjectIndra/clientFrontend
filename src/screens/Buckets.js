@@ -111,7 +111,7 @@ const Buckets = () => {
 
 			try {
 				const response = await axios.post(
-					`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFile`,
+					`${process.env.REACT_APP_MG_SERVER}/hdfs/uploadFileFolder`,
 					formData,
 					{
 						headers: {

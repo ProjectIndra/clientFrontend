@@ -104,7 +104,7 @@ const Navbar = () => {
         {/* Logo + Hamburger */}
         <div className="w-full flex justify-between items-center md:mr-10">
           <Link className="text-2xl md:text-3xl font-bold text-[#0a1d39]" to="/home">
-            Indra
+            ComputeKart
           </Link>
           <button
             className="md:hidden text-[#0a1d39] focus:outline-none"

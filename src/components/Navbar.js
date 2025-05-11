@@ -34,24 +34,24 @@ const Navbar = () => {
       if (!user) return;
       
       const cachedProfile = localStorage.getItem("indra_profile");
-  
+
       if (cachedProfile) {
         const parsed = JSON.parse(cachedProfile);
         setAccount(parsed);
         return;
       }
-  
+
       try {
         const data = await apiCall("get", "/ui/profile/getUserDetails");
         console.log("Account Data:", data);
-  
+
         const newAccount = {
           profile_image: data.profile_image,
           username: data.username,
           profile_name: data.profile_name,
           email: data.email,
         };
-  
+
         setAccount(newAccount);
         localStorage.setItem("indra_profile", JSON.stringify(newAccount));
       } catch (error) {
@@ -59,7 +59,7 @@ const Navbar = () => {
         alert("Error: " + error);
       }
     };
-  
+
     fetchAccountDetails();
   }, []);
 
@@ -98,7 +98,7 @@ const Navbar = () => {
   return (
     <header
       ref={navRef}
-      className={`w-full px-6 md:px-12 py-4 bg-white flex flex-col md:flex-row justify-between items-start md:items-center fixed top-0 z-50 transition-transform duration-300 ${
+      className={`w-full px-6 md:px-20 py-4 bg-white flex flex-col md:flex-row justify-between items-start md:items-center fixed top-0 z-50 transition-transform duration-300 ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -106,9 +106,17 @@ const Navbar = () => {
       <div className="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0">
         {/* Logo + Hamburger */}
         <div className="w-full flex justify-between items-center md:mr-10">
-          <Link className="text-2xl md:text-3xl font-bold text-[#0a1d39]" to="/home">
-            ComputeKart
+          <Link
+            className="text-2xl md:text-3xl font-bold text-[#0a1d39]"
+            to="/home"
+          >
+            <img
+              src="img/logo-Navbar.svg"
+              alt="ComputeKart"
+              className="h-4 md:h-8"
+            />
           </Link>
+
           <button
             className="md:hidden text-[#0a1d39] focus:outline-none"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -121,9 +129,19 @@ const Navbar = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               )}
             </svg>
           </button>
@@ -133,27 +151,38 @@ const Navbar = () => {
         <nav
           className={`${
             mobileMenuOpen ? "flex" : "hidden"
-          } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-16 text-sm mt-4 md:mt-0 ml-12`}
+          } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-10 text-sm mt-4 md:mt-0 ml-12`}
         >
           {/* Services */}
           <div className="relative group">
             <button
               onMouseOver={() => togglePopup("services")}
               className={`${
-                activePopup === "services" ? "text-[#0a1d39] font-semibold" : "text-[#475569]"
+                activePopup === "services"
+                  ? "text-[#0a1d39] font-semibold"
+                  : "text-[#475569]"
               } hover:text-[#0a1d39] text-left w-full`}
             >
               Services
             </button>
             {activePopup === "services" && showNavbar && (
               <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
-                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/client/services">
+                <Link
+                  className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
+                  to="/client/services"
+                >
                   Compute-Engine
                 </Link>
-                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/providersList">
+                <Link
+                  className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
+                  to="/providersList"
+                >
                   Providers
                 </Link>
-                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/buckets">
+                <Link
+                  className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
+                  to="/buckets"
+                >
                   Buckets
                 </Link>
               </div>
@@ -165,7 +194,9 @@ const Navbar = () => {
             <button
               onMouseOver={() => togglePopup("manage")}
               className={`${
-                activePopup === "manage" ? "text-[#0a1d39] font-semibold" : "text-[#475569]"
+                activePopup === "manage"
+                  ? "text-[#0a1d39] font-semibold"
+                  : "text-[#475569]"
               } hover:text-[#0a1d39] text-left w-full`}
             >
               Manage
@@ -175,10 +206,16 @@ const Navbar = () => {
                 {/* <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/docs">
                   Setup
                 </Link> */}
-                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/manage/providers">
+                <Link
+                  className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
+                  to="/manage/providers"
+                >
                   Manage Providers
                 </Link>
-                <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/manage/clients">
+                <Link
+                  className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
+                  to="/manage/clients"
+                >
                   Manage Clients
                 </Link>
               </div>
@@ -189,7 +226,9 @@ const Navbar = () => {
           <button
             onClick={() => (window.location.href = "/docs")}
             className={`${
-              activePopup === "docs" ? "text-[#0a1d39] font-semibold" : "text-[#475569]"
+              activePopup === "docs"
+                ? "text-[#0a1d39] font-semibold"
+                : "text-[#475569]"
             } hover:text-[#0a1d39] text-left w-full whitespace-nowrap`}
           >
             Documentation

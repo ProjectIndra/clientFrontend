@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { apiCall } from "../Api";
 import ProviderCard from "../components/ProviderCard";
+import ActionConfirmModal from "../components/actionConfirmModal";
 
 export default function ManageProviders() {
   const [providers, setProviders] = useState([]);
@@ -17,12 +18,22 @@ export default function ManageProviders() {
   });
   const [isLoadingFirst, setIsLoadingProviders] = useState(false);
   const [isLoadingClients,setIsLoadingClients] = useState(false);
+  const [isVerificationTokenLoading, setIsVerificationTokenLoading] =
+    useState(false);
 
   const vcpus = [1, 2, 4, 8, 16, 32, 64];
   const rams = [2048, 4096, 8192, 16384, 32768, 65536];
   const storage = [10, 20, 50, 100, 200, 500];
   const networks = [1, 2, 3, 4, 5, 6];
   const vms = [1, 2, 3, 4, 5, 6];
+
+  const [actionConfirm, setActionConfirm] = useState({
+      type: null, 
+      visible: false,
+      command: null,
+      message: null,
+      token: null,
+    });
 
   const handleProviderSelect = (provider) => {
     console.log("Selected Provider:", provider);
@@ -105,11 +116,53 @@ export default function ManageProviders() {
         alert("Error: " + error);
       });
   };
+  const handleAddNewProvider = async () => {
+      try {
+        setIsVerificationTokenLoading(true)
+        let response = await apiCall("GET", "/ui/getCliVerificationToken");
+        // console.log(response);
+        if (response.cli_verification_token === undefined) {
+          alert("Error: No verification token returned");
+          return;
+        }
+        // alert(
+        //   "use this Verification Token in cli to verfiy: " +
+        //     response.cli_verification_token
+        // );
+        setActionConfirm({
+            type: "error",
+            visible: true,
+          command: `sudo apt install mega -y && printf '%s\n' "${response.cli_verification_token}" "your-ngrok-auth" "your-ngrok-url" "qemu:///system"`,
+            message: "copy the below command to add new provider",
+          });
+      } catch (error) {
+        console.error("Error adding client:", error);
+      }
+      finally{
+        setIsVerificationTokenLoading(false)
+      }
+    };
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="relative max-w-7xl mx-auto p-6">
+      {
+      isVerificationTokenLoading && (
+        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between mb-4">
       <h2 className="text-2xl font-semibold text-slate-800 mb-6">
         Manage Providers
       </h2>
+        <button
+          className="px-4 py-2 bg-lime-500 hover:bg-lime-600 text-white rounded-md transition-colors"
+          onClick={handleAddNewProvider}
+        >
+          Add new Provider</button>
+      </div>
+
+
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* LEFT side - Provider List */}
@@ -121,16 +174,20 @@ export default function ManageProviders() {
                 <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
               </div>
             )}
-            {providers?.map((provider, idx) => (
-              <div key={idx} onClick={() => handleProviderSelect(provider)}>
-                <ProviderCard
-                  provider={provider}
-                  isActive={
-                    provider?.provider_id === selectedProvider?.provider_id
-                  }
-                />
-              </div>
-            ))}
+            {providers?.length === 0 ? (
+              <p className="text-gray-500 text-sm">You haven't created any provider yet.</p>
+            ) : (
+              providers.map((provider, idx) => (
+                <div key={idx} onClick={() => handleProviderSelect(provider)}>
+                  <ProviderCard
+                    provider={provider}
+                    isActive={
+                      provider?.provider_id === selectedProvider?.provider_id
+                    }
+                  />
+                </div>
+              ))
+            )}
           </div>
         </div>
 
@@ -139,7 +196,11 @@ export default function ManageProviders() {
           <h3 className="text-lg font-medium text-slate-800 mb-4">
             Setup / Update Provider
           </h3>
-          {selectedProvider ? (
+          {
+            providers?.length === 0 ? (
+              <p className="text-gray-500">You haven't created any provider yet.</p>
+            ) :
+          selectedProvider ? (
             <div className="space-y-4">
               <input
                 name="provider_name"
@@ -271,7 +332,11 @@ export default function ManageProviders() {
                 <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
               </div>
             )}
-            {activeUsers?.map((user, idx) => {
+            {
+              activeUsers?.length === 0 ? (
+                <p className="text-gray-500 text-sm">No client is using your providers.</p>
+              ) : (
+            activeUsers?.map((user, idx) => {
               const initials = user?.username
                 ? user.username.slice(0, 2).toUpperCase()
                 : "N/A";
@@ -306,10 +371,22 @@ export default function ManageProviders() {
                   </div>
                 </div>
               );
-            })}
+            }
+            ))}
           </div>
         </div>
       </div>
+      {/* Action Confirmation Modal */}
+            <ActionConfirmModal
+              visible={actionConfirm.visible}
+              type={actionConfirm.type}
+              onConfirm={()=>{}}
+              onCancel={() => setActionConfirm({ type: null, visible: false, command: null, message: null, token: null })}
+              message={actionConfirm.message}
+              copyToken={true}
+              command={actionConfirm.command}
+              token={actionConfirm.token}
+            />
     </div>
   );
 }

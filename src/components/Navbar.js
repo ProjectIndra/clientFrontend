@@ -30,6 +30,9 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchAccountDetails = async () => {
+      // check if the user is logged in or not , if not then just return
+      if (!user) return;
+      
       const cachedProfile = localStorage.getItem("indra_profile");
 
       if (cachedProfile) {

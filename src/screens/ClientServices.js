@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiCall } from '../Api';
-import Toast from './ToastService';
+import Toast from '../components/ToastService';
+import ActionConfirmModal from '../components/actionConfirmModal';
 
 let debounceTimer;
 
@@ -231,29 +232,12 @@ const ClientServices = () => {
       {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
 
       {/* Action Confirmation Modal */}
-      {actionConfirm.visible && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow max-w-sm text-center">
-            <p className="text-lg font-semibold text-gray-800 mb-4">
-              Are you sure you want to {actionConfirm.type} this VM?
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={handleConfirmedAction}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Yes, Confirm
-              </button>
-              <button
-                onClick={() => setActionConfirm({ type: null, visible: false })}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ActionConfirmModal
+        visible={actionConfirm.visible}
+        type={actionConfirm.type}
+        onConfirm={handleConfirmedAction}
+        onCancel={() => setActionConfirm({ type: null, visible: false })}
+      />
     </div>
   );
 };

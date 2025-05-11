@@ -9,29 +9,34 @@ export default function LockBoxLanding() {
 
   const faqs = [
     {
-      question: "What services do you offer?",
+      question: " What is this platform and who is it for?",
       answer:
-        "We offer a wide range of services including comprehensive data management, seamless integration with popular apps, real-time collaboration tools, advanced security features, and personalized support to enhance your experience.",
+        "This platform connects organizations that have spare server capacity with those who need on-demand compute power. Whether you're a company or an individual looking to monetize your unused hardware or a business/individual needing compute infrastructure, our platform supports both roles seamlessly.",
     },
     {
-      question: "How secure is my data?",
+      question: "How do I earn revenue by becoming a provider?",
       answer:
-        "Your data is secured with advanced encryption and authentication protocols.",
+        "Once you onboard your servers to the network, they become part of our public cloud pool. You earn passive income based on usage metrics like uptime, compute power provided, and reliability — all transparently tracked and paid out regularly.",
     },
     {
-      question: "What types of integrations do you support?",
+      question: "What if my infrastructure is not being used by anyone?",
       answer:
-        "We support integration with popular tools such as Google Drive, Zoom, and more.",
+        "Don't worry! You can still earn from your idle machines. The platform is designed to optimize resource allocation, so even if your infrastructure isn't being used at the moment, you will still receive a base amount for being available for at least a certain time.",
     },
     {
-      question: "Is there a free trial available?",
+      question: " Can I act as both a provider and a client from the same account?",
       answer:
-        "Yes, we offer a free trial for you to explore our platform before committing.",
+        "Absolutely. Our flexible architecture allows you to offer your spare resources while simultaneously using compute power from the network — all managed from a single, unified interface.",
+    },
+    {
+      question: "As a Client Will i get full access to the Vm of the provider?",
+      answer:
+        "Yes, as a client, you will have full access to the virtual machines (VMs) you provision. You can install software, run applications, and manage resources just like you would on a physical server. You won't have access to the underlying hardware or the ability to modify the host system.",
     },
     {
       question: "Where can I find tutorials or guides?",
       answer:
-        "Tutorials and guides are available in our help center for easy onboarding.",
+        "You can find tutorials and guides in our documentation section, which covers everything from onboarding to advanced features or else you can check out the demo video our YouTube channel.",
     },
   ];
 
@@ -55,7 +60,7 @@ export default function LockBoxLanding() {
           Why You’ll Love This
         </h2>
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6">
-          <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
+          <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md cursor-pointer">
             <h3 className="text-xl font-semibold mb-2">
               For Resource Providers
             </h3>
@@ -63,11 +68,11 @@ export default function LockBoxLanding() {
               Monetize your idle machines by securely sharing compute and
               storage resources with our cloud network. Join with minimal setup,
               stay in full control, and earn passive income—while powering a new
-              wave of decentralized infrastructure....
+              wave of decentralized infrastructure.
             </p>
-            <button className="text-blue-500 text-sm mt-3">Learn More</button>
+            {/* <button className="text-blue-500 text-sm mt-3">Learn More</button> */}
           </div>
-          <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
+          <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md cursor-pointer">
             <h3 className="text-xl font-semibold mb-2">
               For Resource Consumers
             </h3>
@@ -75,9 +80,9 @@ export default function LockBoxLanding() {
               Leverage a scalable, distributed infrastructure that spans across
               multiple providers and locations. Run workloads seamlessly across
               clusters, migrate between nodes, and utilize the same application
-              on different machines — all without managing the complexity.
+              on different machines — all without managing the complexity.
             </p>
-            <button className="text-blue-500 text-sm mt-3">Learn More</button>
+            {/* <button className="text-blue-500 text-sm mt-3">Learn More</button> */}
           </div>
         </div>
         <div className="mt-16 flex flex-col items-center">
@@ -90,7 +95,7 @@ export default function LockBoxLanding() {
             </code>
             <button
               onClick={handleCopy}
-              className="ml-3 px-3 py-2 rounded hover:bg-gray-100 transition flex items-center gap-2"
+              className="ml-3 px-3 py-2 rounded hover:bg-lime-300 transition flex items-center gap-2"
             >
               {copied ? (
                 <>
@@ -141,43 +146,35 @@ export default function LockBoxLanding() {
           Our Key Features
         </span>
         <h2 className="text-2xl md:text-4xl font-semibold mt-4">
-          Discover how enterprises can simplify infrastructure at scale.
+          🚀 Discover we enterprises can power and consume compute — seamlessly
         </h2>
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6">
-          <div className="bg-[#0D1A33] text-white rounded-xl p-6 md:w-1/4">
+          <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4 cursor-pointer">
             <h3 className="text-lg font-bold mb-2">
-              🏢 Centralized Server Ownership
+              🧠 Smart Compute Provisioning
             </h3>
             <p className="text-sm">
-              Corporates can deploy powerful servers in a single data-rich
-              location and provide lightweight thin clients to employees. Assign
-              isolated virtual machines to staff while minimizing hardware
-              maintenance and IT overhead.
+              Turn your unused hardware into a revenue-generating asset. Let your servers work for you by joining a cloud network that rewards availability and performance — no extra IT burden.
             </p>
-            <button className="text-white text-sm mt-3">Learn More</button>
+            {/* <button className="text-white text-sm mt-3">Learn More</button> */}
           </div>
-          <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4">
+          <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4 cursor-pointer">
             <h3 className="text-lg font-bold mb-2">
-              👨‍💻 Simplified Workforce Access
+              🔁 Roles: Be a Provider or a User
             </h3>
             <p className="text-sm">
-              Give every employee access to a secure, always-on virtual
-              environment from any location. VMs can be created, updated, and
-              managed centrally—reducing downtime and support issues across the
-              company.
+              Act as a host or consumer — or both. Whether you want to sell spare capacity or consume compute power, the platform can caters to both of your needs.
             </p>
-            <button className="text-blue-500 text-sm mt-3">Learn More</button>
+            {/* <button className="text-blue-500 text-sm mt-3">Learn More</button> */}
           </div>
-          <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4">
+          <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4 cursor-pointer">
             <h3 className="text-lg font-bold mb-2">
-              💸 Monetize Spare Compute
+              🌍 On-Demand Virtual Machines
             </h3>
             <p className="text-sm">
-              Unused server capacity? No problem. Sell excess compute and
-              storage to the public cloud network, generating passive revenue
-              from infrastructure that's already in place.
+              Launch secure, high-performance VMs in minutes. Whether your teams are local or remote, instantly provision compute power where and when it's needed.
             </p>
-            <button className="text-blue-500 text-sm mt-3">Learn More</button>
+            {/* <button className="text-blue-500 text-sm mt-3">Learn More</button> */}
           </div>
         </div>
       </section>
@@ -193,21 +190,18 @@ export default function LockBoxLanding() {
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6 items-center">
           <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
             <h3 className="text-xl font-semibold mb-2">
-              Integrate Seamlessly with Favorite Apps
+              Our Mission
             </h3>
             <p className="text-sm text-gray-600">
-              Laptops in sleep mode. Servers running at half capacity. Power
-              that’s waiting to be used. At the same time, people are held back
-              by limits—budget, access, geography. We’re here to change that.
+               Enable anyone to securely share computing resources with anyone in the world.
             </p>
           </div>
           <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
             <h3 className="text-xl font-semibold mb-2">
-              Our mission is simple
+              Our Vision
             </h3>
             <p className="text-sm text-gray-600">
-              Connect unused compute with those who need it. No waste. No
-              barriers. Just possibilities.
+              Enable heavy computing on any device—powered by millions of providers in one trusted cloud.
             </p>
           </div>
         </div>

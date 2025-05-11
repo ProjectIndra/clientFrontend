@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer"
 import LockBoxLanding from "../components/HomeComponent";
 
 function Home() {
@@ -19,8 +20,7 @@ function Home() {
             Turn your idle computer <br /> into a cloud provider
           </h1>
           <p className="text-gray-600 mb-6">
-            Earn by powering the cloud from your own device. <br />
-            Join the distributed computing revolution.
+            Earn by powering the cloud from your own device as a provider.<br/> Access high-performance computing at a fraction of the cost as a client.
           </p>
 
           {/* Buttons */}
@@ -35,26 +35,28 @@ function Home() {
 
           {/* Features */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="border border-blue-200 p-4 rounded-lg">
-              <h4 className="font-semibold mb-1">Deploy VMs on Any Hardware</h4>
+            <div className="border border-lime-200 p-4 rounded-lg">
+              <h4 className="font-semibold mb-1">Power the Cloud with Your Idle Device</h4>
               <p className="text-gray-500">
-                Utilize laptops and underutilized systems
+                Earn from underused laptops and desktops securely & effortlessly.
               </p>
             </div>
-            <div className="border border-blue-200 p-4 rounded-lg">
-              <h4 className="font-semibold mb-1">Auto VM</h4>
+            <div className="border border-lime-200 p-4 rounded-lg">
+              <h4 className="font-semibold mb-1">Host VMs. Earn Money. No Setup Hassle.</h4>
               <p className="text-gray-500">
-                Provisioning with secure access and scaling on demand
+                You provide the hardware. We handle the tech.
               </p>
             </div>
-            <div className="border border-blue-200 p-4 rounded-lg">
-              <h4 className="font-semibold mb-1">Optimized</h4>
-              <p className="text-gray-500">CPU, RAM, and storage allocation</p>
+            <div className="border border-lime-200 p-4 rounded-lg">
+              <h4 className="font-semibold mb-1">Run Demanding Tasks. Rent or Provide Compute</h4>
+              <p className="text-gray-500">Access affordable, scalable VMs or earn by sharing your idle hardware — we handle the rest.
+
+</p>
             </div>
-            <div className="border border-blue-200 p-4 rounded-lg">
-              <h4 className="font-semibold mb-1">Cut Costs</h4>
+            <div className="border border-lime-200 p-4 rounded-lg">
+              <h4 className="font-semibold mb-1">The Cloud that Anyone Can Power and Use.</h4>
               <p className="text-gray-500">
-                By utilizing idle laptops and underused hardware
+                Earn from underused computers or spin up VMs on demand. No infrastructure needed.
               </p>
             </div>
           </div>
@@ -70,6 +72,8 @@ function Home() {
         </div>
       </section>
       <LockBoxLanding />
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

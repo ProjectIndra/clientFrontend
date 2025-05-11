@@ -51,7 +51,7 @@ const DocsMainPage = () => {
         <div className="docs-main-page">
             <Sidebar handleFileChange={handleFileChange} mdFiles={mdFiles} />
             <ShowDocumentation mdFile={mdFile} scrollToId={scrollToId} />
-            <Mainheadings mdFile={mdFile} setScrollToId={setScrollToId} />
+            <Mainheadings className="z-0" mdFile={mdFile} setScrollToId={setScrollToId} />
         </div>
     </>
 };

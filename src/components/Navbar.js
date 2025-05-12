@@ -6,7 +6,7 @@ const Navbar = () => {
   const [activePopup, setActivePopup] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [account, setAccount] = useState({
-    profile_image: "/img/profile.png",
+    profile_image: "/logo512.png",
   });
   const navRef = useRef();
 
@@ -111,8 +111,8 @@ const Navbar = () => {
             to="/home"
           >
             <img
-              src="img/logo-Navbar.svg"
-              alt="ComputeKart"
+              src="/img/logo-Navbar.svg"
+              alt=""
               className="h-4 md:h-8"
             />
           </Link>
@@ -171,7 +171,7 @@ const Navbar = () => {
                   className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
                   to="/client/services"
                 >
-                  Compute-Engine
+                  Virtual Machines
                 </Link>
                 <Link
                   className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
@@ -183,7 +183,7 @@ const Navbar = () => {
                   className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
                   to="/buckets"
                 >
-                  Buckets
+                  Storage
                 </Link>
               </div>
             )}
@@ -216,7 +216,7 @@ const Navbar = () => {
                   className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
                   to="/manage/clients"
                 >
-                  Manage Clients
+                  Manage CLIs
                 </Link>
               </div>
             )}
@@ -267,9 +267,9 @@ const Navbar = () => {
           >
             {account.profile_image ? (
               <img
-                src={account.profile_image}
+                src={account?.profile_image}
                 alt="Avatar"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover border-2 border-lime-300 rounded-full"
               />
             ) : (
               initials
@@ -278,7 +278,7 @@ const Navbar = () => {
           {activePopup === "avatar" && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
               <button
-                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-lime-100"
                 onClick={() => (window.location.href = "/profile")}
               >
                 Profile

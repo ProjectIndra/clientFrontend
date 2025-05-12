@@ -14,9 +14,10 @@ const ClientServices = () => {
   const [toast, setToast] = useState({ message: "", type: "info", visible: false });
 
   const [actionConfirm, setActionConfirm] = useState({
-    type: null, // 'start', 'stop', 'delete'
+    type: null,
     visible: false,
   });
+  
 
   const showToast = (message, type = "info") => {
     setToast({ message, type, visible: true });
@@ -76,38 +77,6 @@ const ClientServices = () => {
     setActionConfirm({ type, visible: true });
   };
 
-  const handleConfirmedAction = async () => {
-    const { type } = actionConfirm;
-    setActionConfirm({ type: null, visible: false });
-
-    if (!selectedVM) return;
-
-    const endpointMap = {
-      start: `/vms/start?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
-      stop: `/vms/stop?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
-      delete: `/vms/remove?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
-    };
-
-    const actionVerb = {
-      start: "Activating",
-      stop: "Deactivating",
-      delete: "Deleting",
-    };
-
-    try {
-      setIsLoadingVmCrud(true);
-      showToast(`${actionVerb[type]} VM: ${selectedVM.vm_name}`, "info");
-      const data = await apiCall("get", endpointMap[type]);
-      showToast(data.message || `${type} succeeded`, "success");
-      fetchVMs();
-    } catch (error) {
-      showToast(`Error during VM ${type}`, "error");
-      console.error(error);
-    } finally {
-      setIsLoadingVmCrud(false);
-    }
-  };
-
   return (
     <div className='flex-1 h-full'>
       <div className='mt-20 p-6 font-sans'>
@@ -135,7 +104,7 @@ const ClientServices = () => {
                     <th className="px-4 py-3">Select</th>
                     <th className="px-4 py-3">Provider Name</th>
                     <th className="px-4 py-3">VM Name</th>
-                    <th className="px-4 py-3">Wireguard IP</th>
+                    {/* <th className="px-4 py-3">Wireguard IP</th> */}
                     <th className="px-4 py-3">Active</th>
                   </tr>
                 </thead>
@@ -169,7 +138,7 @@ const ClientServices = () => {
                         {vm.provider_name}
                       </td>
                       <td className="px-4 py-3">{vm.vm_name}</td>
-                      <td className="px-4 py-3">{vm.wireguard_ip}</td>
+                      {/* <td className="px-4 py-3">{vm.wireguard_ip}</td> */}
                       <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
                     </tr>
                   )))}
@@ -235,8 +204,10 @@ const ClientServices = () => {
       <ActionConfirmModal
         visible={actionConfirm.visible}
         type={actionConfirm.type}
-        onConfirm={handleConfirmedAction}
         onCancel={() => setActionConfirm({ type: null, visible: false })}
+        isCancelButtonVisible={true}
+        isConfirmButtonVisible={true}
+        message={`Are you sure you want to ${actionConfirm.type} this VM?`}
       />
     </div>
   );

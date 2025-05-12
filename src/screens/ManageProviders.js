@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { apiCall } from "../Api";
 import ProviderCard from "../components/ProviderCard";
 import ActionConfirmModal from "../components/actionConfirmModal";
+import Toast from '../components/ToastService';
 
 export default function ManageProviders() {
   const [providers, setProviders] = useState([]);
@@ -33,7 +34,22 @@ export default function ManageProviders() {
       command: null,
       message: null,
       token: null,
-    });
+      isConfirmButtonVisible: true,
+      isCancelButtonVisible: true,
+      confirmButtonName: "",
+      cancelButtonName: "",
+  });
+
+  const [toast, setToast] = useState({ message: "", type: "info", visible: false });
+
+  const showToast = (message, type = "info") => {
+    setToast({ message, type, visible: true });
+  };
+
+  const closeToast = () => {
+    setToast(prev => ({ ...prev, visible: false }));
+  };
+
 
   const handleProviderSelect = (provider) => {
     console.log("Selected Provider:", provider);
@@ -64,7 +80,9 @@ export default function ManageProviders() {
       })
       .catch((error) => {
         console.log(error);
-        alert("Error: " + error);
+        // alert("Error: " + error);
+        showToast("Failed to load providers", "error");
+        
       }).finally(() => {
         setIsLoadingProviders(false);
       }
@@ -82,7 +100,8 @@ export default function ManageProviders() {
       })
       .catch((error) => {
         console.log(error);
-        alert("Error: " + error);
+        // alert("Error: " + error);
+        showToast("Failed to load active users", "error");
       }).finally(() => {
         setIsLoadingClients(false);
       }
@@ -113,7 +132,8 @@ export default function ManageProviders() {
       })
       .catch((error) => {
         console.log(error);
-        alert("Error: " + error);
+        // alert("Error: " + error);
+        showToast("Error creating provider: " + error.message, "error");
       });
   };
   const handleAddNewProvider = async () => {
@@ -130,13 +150,18 @@ export default function ManageProviders() {
         //     response.cli_verification_token
         // );
         setActionConfirm({
-            type: "error",
-            visible: true,
+            // type: "error",
+          visible: true,
           command: `sudo apt install mega -y && printf '%s\n' "${response.cli_verification_token}" "your-ngrok-auth" "your-ngrok-url" "qemu:///system"`,
-            message: "copy the below command to add new provider",
-          });
+          message: "copy the below command to add new provider",
+          isConfirmButtonVisible: false,
+          isCancelButtonVisible: true,
+          cancelButtonName: "Done",
+        });
+        console.log(actionConfirm);
       } catch (error) {
         console.error("Error adding client:", error);
+        showToast("Error adding client: " + error.message, "error");
       }
       finally{
         setIsVerificationTokenLoading(false)
@@ -376,6 +401,9 @@ export default function ManageProviders() {
           </div>
         </div>
       </div>
+      {/* Toast */}
+            {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+      
       {/* Action Confirmation Modal */}
             <ActionConfirmModal
               visible={actionConfirm.visible}
@@ -386,7 +414,11 @@ export default function ManageProviders() {
               copyToken={true}
               command={actionConfirm.command}
               token={actionConfirm.token}
-            />
+              isConfirmButtonVisible={actionConfirm.isConfirmButtonVisible}
+              isCancelButtonVisible={actionConfirm.isCancelButtonVisible}
+              confirmButtonName={actionConfirm.confirmButtonName}
+              cancelButtonName={actionConfirm.cancelButtonName}
+      />
     </div>
   );
 }

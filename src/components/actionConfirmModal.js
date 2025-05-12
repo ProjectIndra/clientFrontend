@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ActionConfirmModal = ({ visible, type, onConfirm, onCancel, message, copyToken=false, command }) => {
+const ActionConfirmModal = ({ visible, type="", onConfirm, onCancel, message, copyToken=false, command, isConfirmButtonVisible=true, isCancelButtonVisible=true, confirmButtonName, cancelButtonName }) => {
     const [copied, setCopied] = useState(false);
     
     if (!visible) return null;
@@ -28,7 +28,7 @@ const ActionConfirmModal = ({ visible, type, onConfirm, onCancel, message, copyT
                         className="ml-3 px-3 py-2 rounded hover:bg-lime-300 transition flex items-center gap-2"
                     >
                         {copied ? (
-                            <div>
+                            <div className='flex items-center gap-2'>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-5 w-5 text-green-500"
@@ -69,21 +69,23 @@ const ActionConfirmModal = ({ visible, type, onConfirm, onCancel, message, copyT
                 </div>
                 )}
                 <div className="flex justify-center gap-4">
-                    {!copyToken && (
+                    {isConfirmButtonVisible &&  (
                         <button
                             onClick={onConfirm}
                             className="px-4 py-2 bg-lime-500 text-white rounded hover:bg-lime-600"
                         >
-                            Yes, Confirm
+                            {confirmButtonName || "Yes, Confirm"}
                         </button>
 
                     )}
-                    <button
-                        onClick={onCancel}
-                        className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-                    >
-                        Cancel
-                    </button>
+                    {isCancelButtonVisible && (
+                        <button
+                            onClick={onCancel}
+                            className={`px-4 py-2 bg-gray-300 text-gray-700 rounded hover:${cancelButtonName === "Done" ? "bg-lime-300" : "bg-red-100"}`}
+                        >
+                            {cancelButtonName || "Cancel"}
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

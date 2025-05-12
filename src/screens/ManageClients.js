@@ -53,11 +53,11 @@ export default function ManageClients() {
     setSelectedClient(client);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async() => {
     if (selectedClient) {
       try {
         setIsLoading(true)
-        apiCall("GET", `/ui/deleteCliSession?	cli_id=${selectedClient.cli_id}`);
+        await apiCall("GET", `/ui/deleteCliSession?	cli_id=${selectedClient.cli_id}`);
         setClients(
           clients.filter((client) => client.cli_id !== selectedClient.cli_id)
         );
@@ -110,7 +110,7 @@ export default function ManageClients() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Manage Clients</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Manage CLIs</h1>
         {isLoading && (
               <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                 <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
@@ -203,7 +203,9 @@ export default function ManageClients() {
               </div>
             </div>
           ) : (
-            <p className="text-gray-500">Select a client to view details</p>
+            <div className="flex flex-col items-center justify-center h-full">
+            <p className="text-gray-500 text-center">Select any cli to view it's details</p>
+            </div>
           )}
         </div>
       </div>

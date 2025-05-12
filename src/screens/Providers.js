@@ -3,9 +3,13 @@ import Navbar from "../components/Navbar";
 import ProviderCard from "../components/ProviderCard";
 import { apiCall } from "../Api";
 
+import Toast from '../components/ToastService';
+import ActionConfirmModal from '../components/actionConfirmModal';
+import { isCancel } from "axios";
+
 
 const Providers = () => {
-  const vcpus = [1, 2, 4, 8, 16, 32, 64];
+  const vcpus = [ 2, 4, 8, 16, 32, 64];
   const rams = [2048, 4096, 8192, 16384, 32768, 65536];
   // const images = ["linux", "windows", "FreeBSD"];
   const images = ["linux"]
@@ -25,6 +29,16 @@ const Providers = () => {
     storage: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState({ message: "", type: "info", visible: false });
+  const [actionConfirm, setActionConfirm] = useState({
+    visible: false,
+    type: null, // 'query', 'launch'
+    message: "",
+    isCancelButtonVisible: false,
+    isConfirmButtonVisible: true,
+    confirmButtonName: "",
+    cancelButtonName: "",
+  });
 
   // Debounce search input so we don't make too many API calls
   useEffect(() => {
@@ -65,7 +79,8 @@ const Providers = () => {
       }
     } catch (error) {
       console.log(error);
-      alert("Error: " + error);
+      // alert("Error: " + error);
+      setToast({ message: "Error: " + error, type: "error", visible: true });
     } finally {
       setIsLoading(false);
     }
@@ -83,12 +98,22 @@ const Providers = () => {
       provider_user_id: selectedProvider.user_id,
     })
       .then((data) => {
-        console.log(data);
-        alert("Can Create VM: " + data.can_create);
+        // alert("Can Create VM: " + data.can_create);
+        // use the actionConfirm modal to show the message
+        setActionConfirm({
+          visible: true,
+          type: "query",
+          message: data.can_create  ? "Hurray 🥳 you can Create VM in the Provider." : "Oops 🥲 you cannot Create VM in the provider",
+          isCancelButtonVisible: false,
+          isConfirmButtonVisible: true,
+          confirmButtonName: "OK",
+          cancelButtonName: "Cancel",
+        });
       })
       .catch((error) => {
         console.log(error);
-        alert("Error: " + error);
+        // alert("Error: " + error);
+        setToast({ message: "Error: " + error, type: "error", visible: true });
       }).finally(() => {
         setIsLoading(false);
       }
@@ -97,8 +122,8 @@ const Providers = () => {
 
   // Updated runRequest using POST and sending provider_user_id and provider_name
   async function runRequest(formData, selectedProvider) {
-    setIsLoading(true);
-    apiCall("post", "/vms/launch", {
+    setIsLoading(true);    
+    await apiCall("post", "/vms/launch", {
       vcpus: formData.vcpus,
       ram: formData.ram,
       storage: formData.storage,
@@ -109,13 +134,20 @@ const Providers = () => {
       provider_name: selectedProvider.provider_name,
     })
       .then((data) => {
-
-        console.log(data);
-        alert(data.message);
+        // alert(data.message);
+        setActionConfirm({
+          visible: true,
+          message: "Let's Go 🚀 VM has been created in the provider.",
+          isCancelButtonVisible: false,
+          isConfirmButtonVisible: true,
+          confirmButtonName: "OK",
+          cancelButtonName: "Cancel",
+        });
       })
       .catch((error) => {
         console.log(error);
-        alert("Error: " + error);
+        // alert("Error: " + error);
+        setToast({ message: "Error: " + error, type: "error", visible: true });
       })
       .finally(() => {
         setIsLoading(false);
@@ -125,7 +157,6 @@ const Providers = () => {
 
   // Update selected provider and adjust formData accordingly
   const handleProviderSelect = (provider) => {
-    console.log("Selected Provider:", provider);
     setSelectedProvider(provider);
     setFormData((prev) => ({
       ...prev,
@@ -136,7 +167,6 @@ const Providers = () => {
   // Handle changes for text and select inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log("handle change", name, value);
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -146,7 +176,6 @@ const Providers = () => {
   // Handle form submissions for query and launch request
   const handleSubmitQuery = async (e) => {
     e.preventDefault();
-    console.log("Submitting query with data:", formData);
     if (selectedProvider) {
       await runQuery(formData, selectedProvider);
     } else {
@@ -156,9 +185,16 @@ const Providers = () => {
 
   const handleSubmitRequest = async (e) => {
     e.preventDefault();
-    console.log("Submitting launch request with data:", formData);
     if (selectedProvider) {
-      await runRequest(formData, selectedProvider);
+      setActionConfirm({
+        visible: true,
+        type: "launch",
+        message: "Are you sure you want to request VM?",
+        isCancelButtonVisible: true,
+        isConfirmButtonVisible: true,
+        confirmButtonName: "Request",
+        cancelButtonName: "Cancel",
+      });
     } else {
       alert("Please select a provider.");
     }
@@ -166,6 +202,21 @@ const Providers = () => {
 
   const handleSearchInputChange = (e) => {
     setSearchInput(e.target.value);
+  };
+
+  const showToast = (message, type = "info") => {
+    setToast({ message, type, visible: true });
+  };
+
+  const closeToast = () => {
+    setToast(prev => ({ ...prev, visible: false }));
+  };
+
+  const handleConfirmedAction = async(type) => {
+    setActionConfirm({ visible: false, type: null });
+    if (type === "launch") {
+      await runRequest(formData, selectedProvider);
+    }
   };
 
   return (
@@ -335,6 +386,22 @@ const Providers = () => {
           )}
         </div>
       </div>
+      {/* Toast */}
+            {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+      
+            {/* Action Confirmation Modal */}
+            <ActionConfirmModal
+              visible={actionConfirm?.visible}
+              type={actionConfirm?.type}
+              onClose={() => setActionConfirm({ visible: false, type: null })}
+              onConfirm={() => handleConfirmedAction(actionConfirm?.type)}
+              onCancel={() => setActionConfirm({ type: null, visible: false })}
+              message={actionConfirm?.message}
+              isConfirmButtonVisible={actionConfirm?.isConfirmButtonVisible}
+              isCancelButtonVisible={actionConfirm?.isCancelButtonVisible}
+              confirmButtonName={actionConfirm?.confirmButtonName}
+              cancelButtonName={actionConfirm?.cancelButtonName}
+            />
     </div>
   );
 };

@@ -1,12 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Api";
 import Navbar from "../components/Navbar";
+import ActionConfirmModal from "../components/actionConfirmModal";
+import Toast from '../components/ToastService';
 
 export default function ManageClients() {
   const [clients, setClients] = useState([]);
   // const [loading, setLoading] = useState(true);
   const [selectedClient, setSelectedClient] = useState();
   const [isLoading, setIsLoading] = useState(false);
+
+  const [actionConfirm, setActionConfirm] = useState({
+        type: null, 
+        visible: false,
+        command: null,
+        message: null,
+        token: null,
+        isConfirmButtonVisible: true,
+        isCancelButtonVisible: true,
+  });
+
+  const [toast, setToast] = useState({ message: "", type: "info", visible: false });
+  
+
+  const showToast = (message, type = "info") => {
+    setToast({ message, type, visible: true });
+  };
+
+  const closeToast = () => {
+    setToast(prev => ({ ...prev, visible: false }));
+  };
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -17,6 +40,7 @@ export default function ManageClients() {
         setClients(response.cli_session_details);
       } catch (error) {
         console.error("Error fetching clients:", error);
+        showToast("Error fetching clients: " + error.message, "error");
       } finally {
         setIsLoading(false);
       }
@@ -40,6 +64,7 @@ export default function ManageClients() {
         setSelectedClient(null);
       } catch (error) {
         console.error("Error deleting client:", error);
+        showToast("Error deleting client: " + error.message, "error");
       }
       finally{
         setIsLoading(false)
@@ -51,17 +76,30 @@ export default function ManageClients() {
     try {
       setIsLoading(true)
       let response = await apiCall("GET", "/ui/getCliVerificationToken");
-      console.log(response);
+      // console.log(response);
       if (response.cli_verification_token === undefined) {
-        alert("Error: No verification token returned");
+        // alert("Error: No verification token returned");
+        showToast("Error: No verification token returned", "error");
+        setIsLoading(false)
         return;
       }
-      alert(
-        "use this Verification Token in cli to verfiy: " +
-          response.cli_verification_token
-      );
+      // alert(
+      //   "use this Verification Token in cli to verfiy: " +
+      //     response.cli_verification_token
+      // );
+      setActionConfirm({
+        // type: "error",
+        visible: true,
+        command: `${response.cli_verification_token}`,
+        message: "copy the below command and paste in the cli to verify",
+        token: response.cli_verification_token,
+        isConfirmButtonVisible: false,
+        isCancelButtonVisible: true,
+        cancelButtonName: "Done",
+      });
     } catch (error) {
       console.error("Error adding client:", error);
+      showToast("Error adding client: " + error.message, "error");
     }
     finally{
       setIsLoading(false)
@@ -169,6 +207,24 @@ export default function ManageClients() {
           )}
         </div>
       </div>
+      {/* Toast */}
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+
+      {/* Action Confirmation Modal */}
+      <ActionConfirmModal
+        visible={actionConfirm.visible}
+        type={actionConfirm.type}
+        onConfirm={() => { }}
+        onCancel={() => setActionConfirm({ type: null, visible: false, command: null, message: null, token: null })}
+        message={actionConfirm.message}
+        copyToken={true}
+        command={actionConfirm.command}
+        token={actionConfirm.token}
+        isConfirmButtonVisible={actionConfirm.isConfirmButtonVisible}
+        isCancelButtonVisible={actionConfirm.isCancelButtonVisible}
+        confirmButtonName={actionConfirm.confirmButtonName}
+        cancelButtonName={actionConfirm.cancelButtonName}
+      />
     </div>
   );
 }

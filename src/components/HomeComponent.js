@@ -85,7 +85,7 @@ export default function LockBoxLanding() {
             {/* <button className="text-blue-500 text-sm mt-3">Learn More</button> */}
           </div>
         </div>
-        <div className="mt-16 flex flex-col items-center">
+        {/* <div className="mt-16 flex flex-col items-center">
           <h2 className="text-2xl md:text-3xl font-semibold text-[#0D0D0D] text-center w-full max-w-[800px] break-words">
             Start providing services with one bash script...
           </h2>
@@ -137,7 +137,7 @@ export default function LockBoxLanding() {
               )}
             </button>
           </div>
-        </div>
+        </div> */}
       </section>
 
       {/* Key Features Section */}

@@ -16,6 +16,9 @@ const ClientServices = () => {
   const [actionConfirm, setActionConfirm] = useState({
     type: null,
     visible: false,
+    isConfirmButtonVisible: true,
+    isCancelButtonVisible: true,
+    
   });
   
 
@@ -52,6 +55,11 @@ const ClientServices = () => {
         if (selectedVM && !data.all_vms.some((vm) => vm.vm_id === selectedVM.vm_id)) {
           setSelectedVM(null);
         }
+        setSelectedVM((prev) => {
+          const foundVm = data.all_vms.find((vm) => vm.vm_id === prev?.vm_id);
+          return foundVm || null;
+        }
+        );
 
       } else {
         setIsLoadingVmLists(false);
@@ -75,6 +83,38 @@ const ClientServices = () => {
 
   const confirmAction = (type) => {
     setActionConfirm({ type, visible: true });
+  };
+
+  const handleConfirmedAction = async () => {
+    const { type } = actionConfirm;
+    setActionConfirm({ type: null, visible: false });
+
+    if (!selectedVM) return;
+
+    const endpointMap = {
+      start: `/vms/start?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
+      stop: `/vms/stop?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
+      delete: `/vms/remove?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
+    };
+
+    const actionVerb = {
+      start: "Activating",
+      stop: "Deactivating",
+      delete: "Deleting",
+    };
+
+    try {
+      setIsLoadingVmCrud(true);
+      showToast(`${actionVerb[type]} VM: ${selectedVM.vm_name}`, "info");
+      const data = await apiCall("get", endpointMap[type]);
+      showToast(data.message || `${type} succeeded`, "success");
+      fetchVMs();
+    } catch (error) {
+      showToast(`Error during VM ${type}`, "error");
+      console.error(error);
+    } finally {
+      setIsLoadingVmCrud(false);
+    }
   };
 
   return (
@@ -208,6 +248,7 @@ const ClientServices = () => {
         isCancelButtonVisible={true}
         isConfirmButtonVisible={true}
         message={`Are you sure you want to ${actionConfirm.type} this VM?`}
+        onConfirm={handleConfirmedAction}
       />
     </div>
   );

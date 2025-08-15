@@ -1,0 +1,15 @@
+name: Run script for UI deployment
+
+on:
+  push:
+    branches:
+      - feature/uiux-improvment
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Run the UI deployment script
+        run: |
+          cd /home/avinash/scripts
+          sudo bash clientFrontendScript.sh

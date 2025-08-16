@@ -11,6 +11,9 @@ import Buckets from "./screens/Buckets";
 import DocsMainPage from "./docs/components/docsMainPage.js";
 import ManageClients from "./screens/ManageClients.js";
 import PageWrapper from "./components/PageWrapper"; // Add this line
+import {Dashboard} from "./screens/Dashboard";
+import {DashboardView} from "./screens/DashboardView";  
+import {GraphService} from "./screens/GraphService";
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/dashboard" element={<PageWrapper><Dashboard /></PageWrapper>} />
+            <Route path="/dashboard/view" element={<PageWrapper><DashboardView /></PageWrapper>} />
+            <Route path="/dashboard/graph" element={<PageWrapper><GraphService /></PageWrapper>} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
@@ -31,6 +37,7 @@ function App() {
             <Route path="/manage/clients" element={<PageWrapper><ManageClients /></PageWrapper>} />
             <Route path="/buckets" element={<PageWrapper><Buckets /></PageWrapper>} />
             <Route path="/docs" element={<PageWrapper><DocsMainPage /></PageWrapper>} />
+            
           </Route>
         </Routes>
       </BrowserRouter>

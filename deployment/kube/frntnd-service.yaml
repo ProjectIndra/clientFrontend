@@ -10,5 +10,5 @@ spec:
     - name: TCP
       port: 80        # internal cluster port
       targetPort: 80    # container port
-      nodePort: 30005   # external port for bare-metal / NodePort access
+      nodePort: 30006   # external port for bare-metal / NodePort access
   type: NodePort

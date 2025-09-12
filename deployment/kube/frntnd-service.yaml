@@ -7,7 +7,7 @@ spec:
   selector:
     app: compute-kart-frntnd
   ports:
-    - name: TCP
+    - name: tcp
       port: 80        # internal cluster port
       targetPort: 80    # container port
       nodePort: 30006   # external port for bare-metal / NodePort access

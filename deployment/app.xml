@@ -1,0 +1,24 @@
+<configuration>
+
+    <!-- Suppress library logs, show only ERROR -->
+    <logger name="org.apache.kafka" level="ERROR"/>
+    <logger name="org.apache.zookeeper" level="ERROR"/>
+    <logger name="fs2.kafka" level="ERROR"/>
+    <logger name="doobie" level="ERROR"/>
+    <logger name="akka" level="ERROR"/>
+    <logger name="com.typesafe" level="ERROR"/>
+
+    <!-- Root logger: only ERROR -->
+    <root level="ERROR">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <!-- Console appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Timestamp + thread + level + logger + message -->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+</configuration>

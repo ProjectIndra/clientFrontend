@@ -139,7 +139,7 @@ export default function ManageProviders() {
   const handleAddNewProvider = async () => {
       try {
         setIsVerificationTokenLoading(true)
-        let response = await apiCall("GET", "/ui/getCliVerificationToken");
+        let response = await apiCall("GET", "/providerServer/getProviderVerificationToken");
         // console.log(response);
         if (response.cli_verification_token === undefined) {
           alert("Error: No verification token returned");

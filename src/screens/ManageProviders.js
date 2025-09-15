@@ -139,10 +139,16 @@ export default function ManageProviders() {
   const handleAddNewProvider = async () => {
       try {
         setIsVerificationTokenLoading(true)
-        let response = await apiCall("GET", "/providerServer/getProviderVerificationToken");
+        const requestData = {
+          "user_id": localStorage.getItem("user_id"),
+          "provider_id": ""
+        }
+
+        let response = await apiCall("POST", "/providerServer/getProviderVerificationToken", requestData);
         // console.log(response);
-        if (response.cli_verification_token === undefined) {
-          alert("Error: No verification token returned");
+        if (response && response.cli_verification_token === undefined) {
+          // alert("Error: No verification token returned");
+          showToast("Error: No verification token returned", "error");
           return;
         }
         // alert(
@@ -152,13 +158,14 @@ export default function ManageProviders() {
         setActionConfirm({
             // type: "error",
           visible: true,
-          command: `sudo apt install mega -y && printf '%s\n' "${response.cli_verification_token}" "your-ngrok-auth" "your-ngrok-url" "qemu:///system"`,
-          message: "copy the below command to add new provider",
+          // command: `sudo apt install mega -y && printf '%s\n' "${response.cli_verification_token}" "your-ngrok-auth" "your-ngrok-url" "qemu:///system"`,
+          message: "copy & paste the token to add new provider",
+          command: `${response.cli_verification_token}`,
           isConfirmButtonVisible: false,
           isCancelButtonVisible: true,
           cancelButtonName: "Done",
         });
-        console.log(actionConfirm);
+        // console.log(actionConfirm);
       } catch (error) {
         console.error("Error adding client:", error);
         showToast("Error adding client: " + error.message, "error");

@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: kumarsubrato/computekart-frontend:v0.0.5          execSync(`sudo docker build -t kumarsubrato/computekart-frontend:${version} -f ${__dirname}/docker/Dockerfile ${__dirname}/../..`, { stdio: 'inherit' });    
+          image: kumarsubrato/computekart-frontend:v0.0.6    
           ports:
             - containerPort: 80

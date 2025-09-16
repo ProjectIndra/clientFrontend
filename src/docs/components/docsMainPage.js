@@ -4,6 +4,7 @@ import Sidebar from './sidebar';
 import ShowDocumentation from './showDocumentation';
 import Mainheadings from './mainheadings';
 import "../css/docsMainPage.css";
+import { file } from 'jszip';
 
 const DocsMainPage = () => {
 
@@ -21,12 +22,16 @@ const DocsMainPage = () => {
             file: "/mdFiles/being_a_client.md"
         },
         {
-            name: "CLI Reference",
-            file: "/mdFiles/cli_reference.md"
-        },
-        {
             name: "API Reference",
             file: "/mdFiles/api_reference.md"
+        },
+        {
+            name: "CKart CLI Installation",
+            file: "/mdFiles/USER_INSTALLATION.md"
+        },
+        {
+            name: "CKart CLI Commands",
+            file: "/mdFiles/USER_COMMANDS.md"
         },
         {
             name: "FAQ",
@@ -35,7 +40,8 @@ const DocsMainPage = () => {
         {
             name: "Support",
             file: "/mdFiles/support.md"
-        }
+        },
+        
     ];
 
     const [scrollToId, setScrollToId] = useState(null);
@@ -47,13 +53,14 @@ const DocsMainPage = () => {
     }
 
 
-    return <>
+    return <div>
+        {/* <div><h2 className="text-2xl font-semibold text-slate-800 mb-6 p-6">Documentation</h2></div> */}
         <div className="docs-main-page">
             <Sidebar handleFileChange={handleFileChange} mdFiles={mdFiles} />
             <ShowDocumentation mdFile={mdFile} scrollToId={scrollToId} />
-            <Mainheadings className="z-0" mdFile={mdFile} setScrollToId={setScrollToId} />
+            <Mainheadings mdFile={mdFile} setScrollToId={setScrollToId} />
         </div>
-    </>
+    </div>
 };
 
 export default DocsMainPage;

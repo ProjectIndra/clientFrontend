@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+import { useEffect, useState, useCallback } from "react";
 import ProviderCard from "../components/ProviderCard";
 import { apiCall } from "../Api";
 
 import Toast from '../components/ToastService';
 import ActionConfirmModal from '../components/actionConfirmModal';
-import { isCancel } from "axios";
 
 
 const Providers = () => {
-  const vcpus = [ 2, 4, 8, 16, 32, 64];
+  const vcpus = [2, 4, 8, 16, 32, 64];
   const rams = [2048, 4096, 8192, 16384, 32768, 65536];
   // const images = ["linux", "windows", "FreeBSD"];
   const images = ["linux"]
@@ -28,6 +26,7 @@ const Providers = () => {
     client_id: "1",
     storage: "",
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState({ message: "", type: "info", visible: false });
   const [actionConfirm, setActionConfirm] = useState({
@@ -48,12 +47,7 @@ const Providers = () => {
     return () => clearTimeout(handler);
   }, [searchInput]);
 
-  // Fetch providers when debouncedSearch value changes
-  useEffect(() => {
-    fetchProviders();
-  }, [debouncedSearch]);
-
-  const fetchProviders = async () => {
+  const fetchProviders = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await apiCall(
@@ -61,15 +55,15 @@ const Providers = () => {
         `/providers/lists?provider_name=${debouncedSearch}`
       );
 
-      if (response.all_providers && Array.isArray(response.all_providers)) {
-        const updatedProviders = response.all_providers;
+      if (response.all_providers && Array.isArray(response.all_providers.data)) {
+        const updatedProviders = response.all_providers.data;
         setProviders(updatedProviders);
 
         // Check if the selected provider still exists in updated list
         if (
           selectedProvider &&
           !updatedProviders.some(
-            (provider) => provider.provider_id === selectedProvider.provider_id
+            (provider) => provider.providerId === selectedProvider.provider_id
           )
         ) {
           setSelectedProvider(null);
@@ -80,11 +74,16 @@ const Providers = () => {
     } catch (error) {
       console.log(error);
       // alert("Error: " + error);
-      setToast({ message: "Error: " + error, type: "error", visible: true });
+      setToast({ message: "Error fetching providers!", type: "error", visible: true });
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [debouncedSearch, selectedProvider]);
+
+  // Fetch providers when debouncedSearch value changes
+  useEffect(() => {
+    fetchProviders();
+  }, [fetchProviders]);
 
   // Updated runQuery using POST and sending provider_user_id
   async function runQuery(formData, selectedProvider) {
@@ -103,7 +102,7 @@ const Providers = () => {
         setActionConfirm({
           visible: true,
           type: "query",
-          message: data.can_create  ? "Hurray 🥳 you can Create VM in the Provider." : "Oops 🥲 you cannot Create VM in the provider",
+          message: data.can_create ? "Hurray 🥳 you can Create VM in the Provider." : "Oops 🥲 you cannot Create VM in the provider",
           isCancelButtonVisible: false,
           isConfirmButtonVisible: true,
           confirmButtonName: "OK",
@@ -122,7 +121,7 @@ const Providers = () => {
 
   // Updated runRequest using POST and sending provider_user_id and provider_name
   async function runRequest(formData, selectedProvider) {
-    setIsLoading(true);    
+    setIsLoading(true);
     await apiCall("post", "/vms/launch", {
       vcpus: formData.vcpus,
       ram: formData.ram,
@@ -152,7 +151,7 @@ const Providers = () => {
       .finally(() => {
         setIsLoading(false);
       });
-      
+
   }
 
   // Update selected provider and adjust formData accordingly
@@ -160,7 +159,7 @@ const Providers = () => {
     setSelectedProvider(provider);
     setFormData((prev) => ({
       ...prev,
-      provider_id: provider.provider_id.toString(),
+      provider_id: provider.providerId.toString(),
     }));
   };
 
@@ -204,15 +203,15 @@ const Providers = () => {
     setSearchInput(e.target.value);
   };
 
-  const showToast = (message, type = "info") => {
-    setToast({ message, type, visible: true });
-  };
+  // const showToast = (message, type = "info") => {
+  //   setToast({ message, type, visible: true });
+  // };
 
   const closeToast = () => {
     setToast(prev => ({ ...prev, visible: false }));
   };
 
-  const handleConfirmedAction = async(type) => {
+  const handleConfirmedAction = async (type) => {
     setActionConfirm({ visible: false, type: null });
     if (type === "launch") {
       await runRequest(formData, selectedProvider);
@@ -236,7 +235,7 @@ const Providers = () => {
               onChange={handleSearchInputChange}
             />
           </form>
-          <div className="flex flex-wrap justify-center gap-5 pt-5 h-[500px] overflow-y-auto py-4">
+          <div className="flex flex-wrap justify-center gap-5 pt-5  overflow-y-auto py-4">
             {isLoading && (
               <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                 <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
@@ -256,7 +255,7 @@ const Providers = () => {
               >
                 <ProviderCard
                   provider={provider}
-                  isActive={selectedProvider?.provider_id === provider?.provider_id}
+                  isActive={selectedProvider?.provider_id === provider?.providerId}
                 />
               </div>
             ))}
@@ -381,27 +380,27 @@ const Providers = () => {
             </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-gray-500 text-center">Select a provider to see it's details.</p>
+              <p className="text-gray-500 text-center">Select a provider to see it's details.</p>
             </div>
           )}
         </div>
       </div>
       {/* Toast */}
-            {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
-      
-            {/* Action Confirmation Modal */}
-            <ActionConfirmModal
-              visible={actionConfirm?.visible}
-              type={actionConfirm?.type}
-              onClose={() => setActionConfirm({ visible: false, type: null })}
-              onConfirm={() => handleConfirmedAction(actionConfirm?.type)}
-              onCancel={() => setActionConfirm({ type: null, visible: false })}
-              message={actionConfirm?.message}
-              isConfirmButtonVisible={actionConfirm?.isConfirmButtonVisible}
-              isCancelButtonVisible={actionConfirm?.isCancelButtonVisible}
-              confirmButtonName={actionConfirm?.confirmButtonName}
-              cancelButtonName={actionConfirm?.cancelButtonName}
-            />
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+
+      {/* Action Confirmation Modal */}
+      <ActionConfirmModal
+        visible={actionConfirm?.visible}
+        type={actionConfirm?.type}
+        onClose={() => setActionConfirm({ visible: false, type: null })}
+        onConfirm={() => handleConfirmedAction(actionConfirm?.type)}
+        onCancel={() => setActionConfirm({ type: null, visible: false })}
+        message={actionConfirm?.message}
+        isConfirmButtonVisible={actionConfirm?.isConfirmButtonVisible}
+        isCancelButtonVisible={actionConfirm?.isCancelButtonVisible}
+        confirmButtonName={actionConfirm?.confirmButtonName}
+        cancelButtonName={actionConfirm?.cancelButtonName}
+      />
     </div>
   );
 };

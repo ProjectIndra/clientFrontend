@@ -226,7 +226,11 @@ export default function ManageProviders() {
               <p className="text-gray-500 text-sm">You haven't created any provider yet.</p>
             ) : (
               providers.map((provider, idx) => (
-                <div key={idx} onClick={() => handleProviderSelect(provider)} className={`provider-card ${provider?.providerId === selectedProvider?.providerId ? "border-lime-500 border-2 rounded-lg p-1" : ""}`}>
+                <div
+                  key={idx}
+                  onClick={() => handleProviderSelect(provider)}
+                  className={`provider-card ${provider?.providerId === selectedProvider?.providerId ? "border-lime-500 border-2 rounded-lg p-1" : ""}`}
+                >
                   <ProviderCard
                     provider={provider}
                     isActive={

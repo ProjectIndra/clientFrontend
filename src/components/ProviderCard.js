@@ -12,18 +12,16 @@ const ProviderCard = ({ provider, isActive = false }) => {
   };
 
   return (
-    <div className="w-full flex justify-start">
+    <div className={`w-full flex justify-start`}>
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`w-full flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden  ${isHovered
-          ? "bg-lime-50 scale-103 cursor-pointer"
-          : "bg-white"
-          }
+        className={`w-full flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden  
+          ${isHovered ? "bg-lime-50 scale-103 cursor-pointer" : "bg-white"}
         }`}
       >
         {/* Left: Icon + Details */}
-        <div className={`flex flex-col p-4 flex-1 ${isActive ? " bg-lime-50" : "bg-white"}`}>
+        <div className="flex flex-col p-4 flex-1" >
           {/* Top: Icon + Title + Edit */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex gap-4">
@@ -71,7 +69,19 @@ const ProviderCard = ({ provider, isActive = false }) => {
               <span className="text-gray-500 font-medium">Max VMs</span>
               <span className="font-semibold">{provider?.providerAllowedVms}</span>
             </div>}
-            {provider?.providerUrl && <div className="flex flex-col">
+            {provider?.providerRamCapacity && <div className="flex flex-col">
+              <span className="text-gray-500 font-medium">RAM Capacity (GB)</span>
+              <span className="font-semibold">{provider?.providerRamCapacity}</span>
+            </div>}
+            {provider?.providerVcpuCapacity && <div className="flex flex-col">
+              <span className="text-gray-500 font-medium">vCPU Capacity</span>
+              <span className="font-semibold">{provider?.providerVcpuCapacity}</span>
+            </div>}
+            {provider?.providerStorageCapacity && <div className="flex flex-col">
+              <span className="text-gray-500 font-medium">Storage Capacity (GB)</span>
+              <span className="font-semibold">{provider?.providerStorageCapacity}</span>
+            </div>}
+            {/* {provider?.providerUrl && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Provider URL</span>
               <span className="font-semibold truncate">{provider?.providerUrl}</span>
             </div>}
@@ -86,13 +96,13 @@ const ProviderCard = ({ provider, isActive = false }) => {
             {provider?.providerUserId && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">User ID</span>
               <span className="font-semibold truncate">{provider?.providerUserId}</span>
-            </div>}
+            </div>} */}
           </div>
         </div>
 
         {/* Right status bar */}
         <div
-          className={`w-6 h-full ${isActive ? "bg-lime-300" : "bg-red-200"
+          className={`w-6 h-full ${provider?.providerStatus ? "bg-lime-300" : "bg-red-300"
             }`}
         />
       </div>

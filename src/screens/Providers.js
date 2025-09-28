@@ -55,15 +55,15 @@ const Providers = () => {
         `/providers/lists?provider_name=${debouncedSearch}`
       );
 
-      if (response.all_providers && Array.isArray(response.all_providers.data)) {
-        const updatedProviders = response.all_providers.data;
+      if (response.all_providers && Array.isArray(response.all_providers)) {
+        const updatedProviders = response.all_providers;
         setProviders(updatedProviders);
 
         // Check if the selected provider still exists in updated list
         if (
           selectedProvider &&
           !updatedProviders.some(
-            (provider) => provider.providerId === selectedProvider.provider_id
+            (provider) => provider.providerId === selectedProvider.providerId
           )
         ) {
           setSelectedProvider(null);
@@ -112,7 +112,7 @@ const Providers = () => {
       .catch((error) => {
         console.log(error);
         // alert("Error: " + error);
-        setToast({ message: "Error: " + error, type: "error", visible: true });
+        setToast({ message: "Quering Server Error", type: "error", visible: true });
       }).finally(() => {
         setIsLoading(false);
       }
@@ -146,7 +146,7 @@ const Providers = () => {
       .catch((error) => {
         console.log(error);
         // alert("Error: " + error);
-        setToast({ message: "Error: " + error, type: "error", visible: true });
+        setToast({ message: "Server Error while Running Request ", type: "error", visible: true });
       })
       .finally(() => {
         setIsLoading(false);
@@ -255,7 +255,7 @@ const Providers = () => {
               >
                 <ProviderCard
                   provider={provider}
-                  isActive={selectedProvider?.provider_id === provider?.providerId}
+                  isActive={selectedProvider?.providerId === provider?.providerId}
                 />
               </div>
             ))}
@@ -267,7 +267,7 @@ const Providers = () => {
             <>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold">
-                  {selectedProvider.provider_name}
+                  {selectedProvider.providerName}
                 </h3>
                 {/* <button className="bg-lime-300 text-black font-medium rounded px-4 py-1 hover:brightness-110">
                   Specs Sheet

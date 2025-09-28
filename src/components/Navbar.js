@@ -179,12 +179,12 @@ const Navbar = () => {
                 >
                   Providers
                 </Link>
-                <Link
+                {/* <Link
                   className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
                   to="/buckets"
                 >
                   Storage
-                </Link>
+                </Link> */}
               </div>
             )}
           </div>

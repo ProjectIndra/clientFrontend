@@ -92,9 +92,9 @@ const ClientServices = () => {
     if (!selectedVM) return;
 
     const endpointMap = {
-      start: `/vms/start?vm_id=${selectedVM.internalVmName}&provider_id=${selectedVM.providerId}`,
-      stop: `/vms/stop?vm_id=${selectedVM.internalVmName}&provider_id=${selectedVM.providerId}`,
-      delete: `/vms/remove?vm_id=${selectedVM.internalVmName}&provider_id=${selectedVM.providerId}`,
+      start: "/vms/start",
+      stop: "/vms/stop",
+      delete: "/vms/remove",
     };
 
     const actionVerb = {
@@ -106,7 +106,11 @@ const ClientServices = () => {
     try {
       setIsLoadingVmCrud(true);
       showToast(`${actionVerb[type]} VM: ${selectedVM.vmName}`, "info");
-      const data = await apiCall("get", endpointMap[type]);
+      const payload = {
+        vm_id: selectedVM.internalVmName,
+        provider_id: selectedVM.providerId,
+      };
+      const data = await apiCall("post", endpointMap[type], payload);
       showToast(data.message || `${type} succeeded`, "success");
       fetchVMs();
     } catch (error) {
@@ -149,41 +153,44 @@ const ClientServices = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {!isLoadingVmCrud && vms.length === 0 ? (
+                  {!isLoadingVmCrud && vms.filter(vm => !vm.vmDeleted).length === 0 ?(
                     <tr>
                       <td colSpan={5} className="text-center text-gray-500 py-4">
                         No VMs available
                       </td>
                     </tr>
                   ) : (
-                    vms.map((vm, index) => (
-                      <tr
-                        key={index}
-                        className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? '' : 'bg-lime-100'
-                          }`}
-                        onClick={() => handleSelectVM(vm)}
-                      >
-                        <td className="px-4 py-3">
-                          <input
-                            type="radio"
-                            name="selectedVM"
-                            checked={selectedVM?.internalVmName === vm.internalVmName}
-                            onChange={() => handleSelectVM(vm)}
-                            onClick={(e) => e.stopPropagation()}
-                            className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
-                            readOnly
-                          />
-                        </td>
-                        {/* <td className="px-4 py-3 max-w-[150px] truncate" title={vm.providerName || 'N/A'}>
+                      vms.map((vm, index) => 
+                        !selectedVM?.vmDeleted &&
+                          (
+                          <tr
+                            key={index}
+                            className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? '' : 'bg-lime-100'
+                              }`}
+                            onClick={() => handleSelectVM(vm)}
+                          >
+                            <td className="px-4 py-3">
+                              <input
+                                type="radio"
+                                name="selectedVM"
+                                checked={selectedVM?.internalVmName === vm.internalVmName}
+                                onChange={() => handleSelectVM(vm)}
+                                onClick={(e) => e.stopPropagation()}
+                                className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
+                                readOnly
+                              />
+                            </td>
+                            {/* <td className="px-4 py-3 max-w-[150px] truncate" title={vm.providerName || 'N/A'}>
                           {vm.providerName || 'N/A'} */}
-                        <td className="px-4 py-3 max-w-[150px] truncate" title={vm.providerId || 'N/A'}>
-                          {vm.providerId || 'N/A'}
-                        </td>
-                        <td className="px-4 py-3">{vm.vmName}</td>
-                        {/* <td className="px-4 py-3">{vm.wireguard_ip}</td> */}
-                        <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
-                      </tr>
-                    )))}
+                            <td className="px-4 py-3 max-w-[150px] truncate" title={vm.providerId || 'N/A'}>
+                              {vm.providerId || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3">{vm.vmName}</td>
+                            {/* <td className="px-4 py-3">{vm.wireguard_ip}</td> */}
+                            <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
+                          </tr>
+                        )
+                      ))}
                 </tbody>
               </table>
             </div>
@@ -196,7 +203,7 @@ const ClientServices = () => {
               </div>
             )}
             <h2 className='text-lg font-semibold text-gray-800 mb-4'>VM Details</h2>
-            {selectedVM ? (
+            {selectedVM && !selectedVM?.vmDeleted ? (
               <>
                 <div className='vm-detail mb-4 space-y-2'>
                   <p><span className='font-medium text-gray-700'>vCPUs: </span>{selectedVM.vcpus}</p>

@@ -18,9 +18,9 @@ const ClientServices = () => {
     visible: false,
     isConfirmButtonVisible: true,
     isCancelButtonVisible: true,
-    
+
   });
-  
+
 
   const showToast = (message, type = "info") => {
     setToast({ message, type, visible: true });
@@ -45,18 +45,18 @@ const ClientServices = () => {
   const fetchVMs = async () => {
     try {
       const url = searchInput.trim()
-        ? `/vms/allVms?vm_name=${encodeURIComponent(searchInput.trim())}`
+        ? `/vms/allVms?vmName=${encodeURIComponent(searchInput.trim())}`
         : "/vms/allVms";
       setIsLoadingVmLists(true);
       const data = await apiCall("get", url);
       if (data.all_vms && Array.isArray(data.all_vms)) {
         setVms(data.all_vms);
         // Check if the selected vm still exists in updated list
-        if (selectedVM && !data.all_vms.some((vm) => vm.vm_id === selectedVM.vm_id)) {
+        if (selectedVM && !data.all_vms.some((vm) => vm.internalVmName === selectedVM.internalVmName)) {
           setSelectedVM(null);
         }
         setSelectedVM((prev) => {
-          const foundVm = data.all_vms.find((vm) => vm.vm_id === prev?.vm_id);
+          const foundVm = data.all_vms.find((vm) => vm.internalVmName === prev?.internalVmName);
           return foundVm || null;
         }
         );
@@ -74,7 +74,7 @@ const ClientServices = () => {
   };
 
   const handleSelectVM = (vm) => {
-    if (vm?.vm_id === selectedVM?.vm_id) {
+    if (vm?.internalVmName === selectedVM?.internalVmName) {
       setSelectedVM(null);
       return;
     }
@@ -92,9 +92,9 @@ const ClientServices = () => {
     if (!selectedVM) return;
 
     const endpointMap = {
-      start: `/vms/start?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
-      stop: `/vms/stop?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
-      delete: `/vms/remove?vm_id=${selectedVM.vm_id}&provider_id=${selectedVM.provider_id}`,
+      start: "/vms/start",
+      stop: "/vms/stop",
+      delete: "/vms/remove",
     };
 
     const actionVerb = {
@@ -105,8 +105,12 @@ const ClientServices = () => {
 
     try {
       setIsLoadingVmCrud(true);
-      showToast(`${actionVerb[type]} VM: ${selectedVM.vm_name}`, "info");
-      const data = await apiCall("get", endpointMap[type]);
+      showToast(`${actionVerb[type]} VM: ${selectedVM.vmName}`, "info");
+      const payload = {
+        vm_id: selectedVM.internalVmName,
+        provider_id: selectedVM.providerId,
+      };
+      const data = await apiCall("post", endpointMap[type], payload);
       showToast(data.message || `${type} succeeded`, "success");
       fetchVMs();
     } catch (error) {
@@ -149,39 +153,44 @@ const ClientServices = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {!isLoadingVmCrud && vms.length === 0 ? (
+                  {!isLoadingVmCrud && vms.filter(vm => !vm.vmDeleted).length === 0 ?(
                     <tr>
                       <td colSpan={5} className="text-center text-gray-500 py-4">
                         No VMs available
                       </td>
                     </tr>
                   ) : (
-                    vms.map((vm, index) => (
-                    <tr
-                      key={index}
-                      className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${selectedVM?.vm_id === vm.vm_id ? 'bg-lime-50' : ''
-                        }`}
-                      onClick={() => handleSelectVM(vm)}
-                    >
-                      <td className="px-4 py-3">
-                        <input
-                          type="radio"
-                          name="selectedVM"
-                          checked={selectedVM?.vm_id === vm.vm_id}
-                          onChange={() => handleSelectVM(vm)}
-                          onClick={(e) => e.stopPropagation()}
-                          className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
-                          readOnly
-                        />
-                      </td>
-                      <td className="px-4 py-3 max-w-[150px] truncate" title={vm.provider_name}>
-                        {vm.provider_name}
-                      </td>
-                      <td className="px-4 py-3">{vm.vm_name}</td>
-                      {/* <td className="px-4 py-3">{vm.wireguard_ip}</td> */}
-                      <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
-                    </tr>
-                  )))}
+                      vms.map((vm, index) => 
+                        !selectedVM?.vmDeleted &&
+                          (
+                          <tr
+                            key={index}
+                            className={`border-t border-gray-100 hover:bg-lime-50 cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? '' : 'bg-lime-100'
+                              }`}
+                            onClick={() => handleSelectVM(vm)}
+                          >
+                            <td className="px-4 py-3">
+                              <input
+                                type="radio"
+                                name="selectedVM"
+                                checked={selectedVM?.internalVmName === vm.internalVmName}
+                                onChange={() => handleSelectVM(vm)}
+                                onClick={(e) => e.stopPropagation()}
+                                className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
+                                readOnly
+                              />
+                            </td>
+                            {/* <td className="px-4 py-3 max-w-[150px] truncate" title={vm.providerName || 'N/A'}>
+                          {vm.providerName || 'N/A'} */}
+                            <td className="px-4 py-3 max-w-[150px] truncate" title={vm.providerId || 'N/A'}>
+                              {vm.providerId || 'N/A'}
+                            </td>
+                            <td className="px-4 py-3">{vm.vmName}</td>
+                            {/* <td className="px-4 py-3">{vm.wireguard_ip}</td> */}
+                            <td className="px-4 py-3">{vm.status === 'active' ? '✅' : '❌'}</td>
+                          </tr>
+                        )
+                      ))}
                 </tbody>
               </table>
             </div>
@@ -194,10 +203,10 @@ const ClientServices = () => {
               </div>
             )}
             <h2 className='text-lg font-semibold text-gray-800 mb-4'>VM Details</h2>
-            {selectedVM ? (
+            {selectedVM && !selectedVM?.vmDeleted ? (
               <>
                 <div className='vm-detail mb-4 space-y-2'>
-                  <p><span className='font-medium text-gray-700'>vCPUs: </span>{selectedVM.vcpu}</p>
+                  <p><span className='font-medium text-gray-700'>vCPUs: </span>{selectedVM.vcpus}</p>
                   <p><span className='font-medium text-gray-700'>RAM: </span>{selectedVM.ram}</p>
                   <p><span className='font-medium text-gray-700'>Storage: </span>{selectedVM.storage}</p>
                 </div>

@@ -5,10 +5,15 @@ metadata:
   namespace: computekart
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - computekart.com
+      secretName: computekart-tls
   rules:
-    - host: computekart.com   # <-- Change this to your domain or use your cluster's IP for testing
+    - host: computekart.com
       http:
         paths:
           - path: /
@@ -16,5 +21,5 @@ spec:
             backend:
               service:
                 name: compute-kart-frntnd
-                port: 
+                port:
                   number: 80

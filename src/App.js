@@ -24,25 +24,94 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/dashboard" element={<PageWrapper><Dashboard /></PageWrapper>} />
-            <Route path="/dashboard/view" element={<PageWrapper><DashboardView /></PageWrapper>} />
-            <Route path="/dashboard/graph" element={<PageWrapper><GraphService /></PageWrapper>} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
-            <Route path="/providersList" element={<PageWrapper><ProvidersList /></PageWrapper>} />
-            <Route path="/client/services" element={<PageWrapper><ClientServices /></PageWrapper>} />
-            <Route path="/manage/providers" element={<PageWrapper><ManageProviders /></PageWrapper>} />
-            <Route path="/manage/clients" element={<PageWrapper><ManageClients /></PageWrapper>} />
-            <Route path="/buckets" element={<PageWrapper><Buckets /></PageWrapper>} />
-            <Route path="/docs" element={<PageWrapper><DocsMainPage /></PageWrapper>} />
-            
+            <Route
+              path="/profile"
+              element={
+                <PageWrapper>
+                  <Profile />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/providersList"
+              element={
+                <PageWrapper>
+                  <ProvidersList />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/client/services"
+              element={
+                <PageWrapper>
+                  <ClientServices />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/manage/providers"
+              element={
+                <PageWrapper>
+                  <ManageProviders />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/manage/clients"
+              element={
+                <PageWrapper>
+                  <ManageClients />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/buckets"
+              element={
+                <PageWrapper>
+                  <Buckets />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/docs"
+              element={
+                <PageWrapper>
+                  <DocsMainPage />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <PageWrapper>
+                  <Dashboard />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/dashboard/view"
+              element={
+                <PageWrapper>
+                  <DashboardView />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/dashboard/graph"
+              element={
+                <PageWrapper>
+                  <GraphService />
+                </PageWrapper>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>
     </div>
-  );
+  )
 }
 
 export default App;

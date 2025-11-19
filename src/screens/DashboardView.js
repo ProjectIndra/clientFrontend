@@ -1,40 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { GraphView } from "../components/GraphView";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Trash2 } from "lucide-react";
-import { listGraphsForDashboard } from "../apiServices";
+import React, { useEffect, useState } from 'react'
+import { GraphView } from '../components/GraphView'
+import DashboardCreateModal from '../components/DashboardCreateModal'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Trash2 } from 'lucide-react'
+import { listGraphsForDashboard } from '../apiServices'
 
 export const DashboardView = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const dashboardId = searchParams.get("id");
-  const [graphs, setGraphs] = useState([]);
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const dashboardId = searchParams.get('id')
+  const [graphs, setGraphs] = useState([])
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   useEffect(() => {
     if (dashboardId) {
       listGraphsForDashboard(dashboardId)
         .then((res) => {
-          setGraphs(Array.isArray(res) ? res : []);
+          setGraphs(Array.isArray(res) ? res : [])
         })
         .catch((err) => {
-          console.error("Error loading graphs:", err);
-          setGraphs([]);
-        });
+          console.error('Error loading graphs:', err)
+          setGraphs([])
+        })
     }
-  }, [dashboardId]);
+  }, [dashboardId])
 
   const handleGraphClick = (graphId) => {
-    navigate(`/dashboard/graph?id=${graphId}`);
-  };
+    navigate(`/dashboard/graph?id=${graphId}`)
+  }
 
   const deleteGraph = (graphId) => {
-    setGraphs((prev) => prev.filter((g) => g.graphId !== graphId));
-  };
+    setGraphs((prev) => prev.filter((g) => g.graphId !== graphId))
+  }
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen overflow-y-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          <h5 className="text-2xl font-bold text-gray-900">Manage Graphs</h5>
+          <p className="text-gray-400">
+            Create and manage your graphs for better insights
+          </p>
+        </div>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="bg-lime-400 text-black font-medium px-4 py-2 rounded-lg hover:bg-lime-500 transition"
+        >
+          Create Graph
+        </button>
       </div>
 
       {graphs.length === 0 && (
@@ -46,12 +59,12 @@ export const DashboardView = () => {
           const parsedSettings = g.settings
             ? (() => {
                 try {
-                  return JSON.parse(g.settings);
+                  return JSON.parse(g.settings)
                 } catch {
-                  return {};
+                  return {}
                 }
               })()
-            : {};
+            : {}
 
           return (
             <div
@@ -61,8 +74,8 @@ export const DashboardView = () => {
               {/* Delete button */}
               <button
                 onClick={(e) => {
-                  e.stopPropagation();
-                  deleteGraph(g.graphId);
+                  e.stopPropagation()
+                  deleteGraph(g.graphId)
                 }}
                 className="absolute top-2 right-2 p-2 rounded-full bg-red-50 hover:bg-red-100 transition"
               >
@@ -72,8 +85,8 @@ export const DashboardView = () => {
               <div onClick={() => handleGraphClick(g.graphId)}>
                 <h2 className="text-lg font-semibold mb-2">{g.graphName}</h2>
                 <p className="text-sm text-gray-600 mb-4">
-                  {g.graphType || "Unknown type"} • Time range:{" "}
-                  {g.defaultTimeRange || "Not specified"}
+                  {g.graphType || 'Unknown type'} • Time range:{' '}
+                  {g.defaultTimeRange || 'Not specified'}
                 </p>
 
                 {/* Render GraphView only if series data exists */}
@@ -90,9 +103,19 @@ export const DashboardView = () => {
                 )}
               </div>
             </div>
-          );
+          )
         })}
       </div>
+      {/* Create Graph Modal */}
+      <DashboardCreateModal
+        visible={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        dashboardId={dashboardId}
+        onCreated={(created) => {
+          // If API returns created graph object, append it to the list
+          if (created) setGraphs((prev) => [created, ...prev])
+        }}
+      />
     </div>
-  );
-};
+  )
+}

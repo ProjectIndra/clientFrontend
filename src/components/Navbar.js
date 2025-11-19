@@ -99,7 +99,7 @@ const Navbar = () => {
     <header
       ref={navRef}
       className={`w-full px-6 md:px-20 py-4 bg-white flex flex-col md:flex-row justify-between items-start md:items-center fixed top-0 z-50 transition-transform duration-300 ${
-        showNavbar ? "translate-y-0" : "-translate-y-full"
+        showNavbar ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
       {/* Left section */}
@@ -110,11 +110,7 @@ const Navbar = () => {
             className="text-2xl md:text-3xl font-bold text-[#0a1d39]"
             to="/home"
           >
-            <img
-              src="/img/logo-Navbar.svg"
-              alt=""
-              className="h-4 md:h-8"
-            />
+            <img src="/img/logo-Navbar.svg" alt="" className="h-4 md:h-8" />
           </Link>
 
           <button
@@ -150,22 +146,52 @@ const Navbar = () => {
         {/* Navigation */}
         <nav
           className={`${
-            mobileMenuOpen ? "flex" : "hidden"
+            mobileMenuOpen ? 'flex' : 'hidden'
           } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-10 text-sm mt-4 md:mt-0 ml-12`}
         >
+          {/* Analytics */}
+          <div className="relative group">
+            <button
+              onMouseOver={() => togglePopup('analytics')}
+              className={`${
+                activePopup === 'analytics'
+                  ? 'text-[#0a1d39] font-semibold'
+                  : 'text-[#475569]'
+              } hover:text-[#0a1d39] text-left w-full`}
+              onClick={() => (window.location.href = '/dashboard')}
+            >
+              Analytics
+            </button>
+            {/* {activePopup === 'analytics' && showNavbar && (
+              <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
+                <Link
+                  className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
+                  to="/client/services"
+                >
+                  Virtual Machines
+                </Link>
+                <Link
+                  className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
+                  to="/providersList"
+                >
+                  Providers
+                </Link>
+              </div>
+            )} */}
+          </div>
           {/* Services */}
           <div className="relative group">
             <button
-              onMouseOver={() => togglePopup("services")}
+              onMouseOver={() => togglePopup('services')}
               className={`${
-                activePopup === "services"
-                  ? "text-[#0a1d39] font-semibold"
-                  : "text-[#475569]"
+                activePopup === 'services'
+                  ? 'text-[#0a1d39] font-semibold'
+                  : 'text-[#475569]'
               } hover:text-[#0a1d39] text-left w-full`}
             >
               Services
             </button>
-            {activePopup === "services" && showNavbar && (
+            {activePopup === 'services' && showNavbar && (
               <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
                 <Link
                   className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
@@ -192,16 +218,16 @@ const Navbar = () => {
           {/* Manage */}
           <div className="relative group">
             <button
-              onMouseOver={() => togglePopup("manage")}
+              onMouseOver={() => togglePopup('manage')}
               className={`${
-                activePopup === "manage"
-                  ? "text-[#0a1d39] font-semibold"
-                  : "text-[#475569]"
+                activePopup === 'manage'
+                  ? 'text-[#0a1d39] font-semibold'
+                  : 'text-[#475569]'
               } hover:text-[#0a1d39] text-left w-full`}
             >
               Manage
             </button>
-            {activePopup === "manage" && showNavbar && (
+            {activePopup === 'manage' && showNavbar && (
               <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
                 {/* <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/docs">
                   Setup
@@ -224,11 +250,11 @@ const Navbar = () => {
 
           {/* Documentation */}
           <button
-            onClick={() => (window.location.href = "/docs")}
+            onClick={() => (window.location.href = '/docs')}
             className={`${
-              activePopup === "docs"
-                ? "text-[#0a1d39] font-semibold"
-                : "text-[#475569]"
+              activePopup === 'docs'
+                ? 'text-[#0a1d39] font-semibold'
+                : 'text-[#475569]'
             } hover:text-[#0a1d39] text-left w-full whitespace-nowrap`}
           >
             Documentation
@@ -263,7 +289,7 @@ const Navbar = () => {
         <div className="relative">
           <div
             className="w-10 aspect-square bg-[#004d3c] text-white flex items-center justify-center rounded-full font-bold shrink-0 cursor-pointer overflow-hidden"
-            onClick={() => togglePopup("avatar")}
+            onClick={() => togglePopup('avatar')}
           >
             {account.profile_image ? (
               <img
@@ -275,19 +301,19 @@ const Navbar = () => {
               initials
             )}
           </div>
-          {activePopup === "avatar" && (
+          {activePopup === 'avatar' && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
               <button
                 className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-lime-100"
-                onClick={() => (window.location.href = "/profile")}
+                onClick={() => (window.location.href = '/profile')}
               >
                 Profile
               </button>
               <button
                 className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                 onClick={() => {
-                  sessionStorage.removeItem("token");
-                  window.location.href = "/login";
+                  sessionStorage.removeItem('token')
+                  window.location.href = '/login'
                 }}
               >
                 Logout
@@ -297,7 +323,7 @@ const Navbar = () => {
         </div>
       </div>
     </header>
-  );
+  )
 };
 
 export default Navbar;

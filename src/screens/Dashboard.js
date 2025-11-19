@@ -76,9 +76,12 @@ export const Dashboard = () => {
 
   return (
     <div className="p-8 bg-white min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900">Manage Dashboards</h1>
 
-      <div className="mb-6">
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          <h5 className="text-2xl font-bold text-gray-900">Manage Dashboards</h5>
+          <p className="text-gray-400">Create and manage your dashboards for better insights</p>
+        </div>
         <button
           onClick={() => handleOpenModal(false)}
           className="bg-lime-400 text-black font-medium px-4 py-2 rounded-lg hover:bg-lime-500 transition"

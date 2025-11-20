@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { createGraph } from '../apiServices'
 import { TextInput, NumberInput, DropdownSelect } from './FormControls'
+import Toast from './ToastService'
 
 const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   const [form, setForm] = useState({
     graphName: '',
     graphType: 'time_series',
-    defaultTimeRange: '',
+    defaultTimeRange: 60,
     refreshIntervalSeconds: 30,
     settings: '',
     series: [
@@ -23,6 +24,17 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [toast, setToast] = useState({
+    message: '',
+    type: 'info',
+    visible: false,
+  })
+
+  const showToast = (message, type = 'info') => {
+    setToast({ message, type, visible: true })
+  }
+
+  const closeToast = () => setToast((p) => ({ ...p, visible: false }))
 
   if (!visible) return null
 
@@ -71,17 +83,56 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
     e.preventDefault()
     setError(null)
 
-    // Basic validation
+    // Basic validation (use toast for user-visible validation)
     if (!form.graphName) {
-      setError('Graph name is required')
+      showToast('Graph name is required', 'error')
       return
     }
+    if(!form.graphType) {
+      showToast('Graph type is required', 'error')
+      return
+    }
+    if(form.defaultTimeRange <= 0) {
+      showToast('Default time range must be positive', 'error')
+      return
+    }
+    if(form.refreshIntervalSeconds <= 0) {
+      showToast('Refresh interval must be positive', 'error')
+      return
+    }
+    if (form.series.length === 0) {
+      showToast('At least one series is required', 'error')
+      return
+    }
+    for (let i = 0; i < form.series.length; i++) {
+      const s = form.series[i]
+      if (!s.metricName) {
+        showToast(`Metric name is required for series #${i + 1}`, 'error')
+        return
+      }
+      if (!s.entityType) {
+        showToast(`Entity type is required for series #${i + 1}`, 'error')
+        return
+      }
+      if (!s.aggregation) {
+        showToast(`Aggregation is required for series #${i + 1}`, 'error')
+        return
+      }
+      if (!s.filters.entity_name) {
+        showToast(`Entity name filter is required for series #${i + 1}`, 'error')
+        return
+      }
+      
+    }
+    // current time in epoch value through epoch conversion
+    const endTime = Date.now()
+    const startTime = endTime - form.defaultTimeRange * 60 * 1000
 
     const payload = {
       dashboardId,
       graphName: form.graphName,
       graphType: form.graphType,
-      defaultTimeRange: form.defaultTimeRange,
+      defaultTimeRange: `${startTime}|${endTime}`,
       refreshIntervalSeconds: Number(form.refreshIntervalSeconds) || 30,
       // send stringified empty JSON for settings as requested
       settings: JSON.stringify({}),
@@ -101,10 +152,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       setLoading(true)
       const res = await createGraph(payload)
       if (onCreated) onCreated(res)
+      showToast('Graph created successfully', 'success')
       onClose()
     } catch (err) {
       console.error(err)
-      setError(err?.message || 'Failed to create graph')
+      showToast('Failed to create graph. Please try again.', 'error')
     } finally {
       setLoading(false)
     }
@@ -224,15 +276,10 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                   options={['AVG']}
                 />
 
-                <TextInput
-                  label="Provider ID (filter)"
-                  value={s.filters.provider_id}
-                  onChange={(v) => updateSeriesFilter(idx, 'provider_id', v)}
-                  placeholder="provider_id"
-                />
-
                 <DropdownSelect
-                  label={`Entity Name ${s.entityType ? `(${s.entityType})` : ''}`}
+                  label={`Entity Name ${
+                    s.entityType ? `(${s.entityType})` : ''
+                  }`}
                   value={s.filters.entity_name}
                   onChange={(v) => updateSeriesFilter(idx, 'entity_name', v)}
                   options={['', 'entity1', 'entity2', 'entity3']} // example
@@ -260,12 +307,17 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           <button
             type="submit"
             disabled={loading}
+            onClick={handleSubmit}
             className="px-4 py-2 bg-lime-500 text-white rounded"
           >
             {loading ? 'Creating...' : 'Create & Submit'}
           </button>
         </div>
       </form>
+      {/* Toast (local to modal) */}
+      {toast.visible && (
+        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      )}
     </div>
   )
 }

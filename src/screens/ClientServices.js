@@ -161,7 +161,7 @@ const ClientServices = () => {
                     </tr>
                   ) : (
                       vms.map((vm, index) => 
-                        !selectedVM?.vmDeleted &&
+                        !vm?.vmDeleted &&
                           (
                           <tr
                             key={index}

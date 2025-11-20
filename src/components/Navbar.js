@@ -185,6 +185,12 @@ const Navbar = () => {
                 >
                   Storage
                 </Link> */}
+                <Link
+                  className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
+                  to="/tunnels"
+                >
+                  Tunnels
+                </Link>
               </div>
             )}
           </div>

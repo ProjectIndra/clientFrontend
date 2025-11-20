@@ -10,7 +10,8 @@ import ManageProviders from "./screens/ManageProviders";
 import Buckets from "./screens/Buckets";
 import DocsMainPage from "./docs/components/docsMainPage.js";
 import ManageClients from "./screens/ManageClients.js";
-import PageWrapper from "./components/PageWrapper"; // Add this line
+import PageWrapper from "./components/PageWrapper"; 
+import Tunnels from "./screens/Tunnels";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/manage/providers" element={<PageWrapper><ManageProviders /></PageWrapper>} />
             <Route path="/manage/clients" element={<PageWrapper><ManageClients /></PageWrapper>} />
             <Route path="/buckets" element={<PageWrapper><Buckets /></PageWrapper>} />
+            <Route path="/tunnels" element={<PageWrapper><Tunnels /></PageWrapper>} />
             <Route path="/docs" element={<PageWrapper><DocsMainPage /></PageWrapper>} />
           </Route>
         </Routes>

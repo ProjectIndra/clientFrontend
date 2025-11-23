@@ -6,85 +6,54 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  BarChart,
-  Bar,
-  ResponsiveContainer
-} from "recharts";
+  ResponsiveContainer,
+} from 'recharts'
+import dayjs from 'dayjs'
 
-export const GraphView = ({
-  graphid,
-  graph_type,
-  tittle,
-  h,
-  w,
-  start_x,
-  end_y,
-  x_axis,
-  y_axis,
-  points
-}) => {
-  // Safely handle missing or empty points
-  const parsedData =
-    typeof points === "string" && points.trim() !== ""
-      ? points.split(",").map((p) => {
-          const [x, y] = p.split(":");
-          return { [x_axis]: x, [y_axis]: Number(y) };
-        })
-      : [];
+export const GraphView = ({ type, series, settings }) => {
+  if (!Array.isArray(series) || series.length === 0) {
+    return <p className="text-gray-400 italic">No graph data available</p>
+  }
 
-  const renderGraph = () => {
-    if (!parsedData.length) {
-      return <p className="text-gray-500 italic">No graph data available</p>;
-    }
+  // Convert your API format into Recharts-friendly array
+  const mergedData = {}
 
-    if (graph_type === "line") {
-      return (
-        <LineChart
-          data={parsedData}
-          margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis dataKey={x_axis} stroke="#6b7280" />
-          <YAxis stroke="#6b7280" />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey={y_axis}
-            stroke="#84cc16"
-            strokeWidth={3}
-            dot={{ r: 5, fill: "#84cc16" }}
-            activeDot={{ r: 8 }}
-          />
-        </LineChart>
-      );
-    } else if (graph_type === "bar") {
-      return (
-        <BarChart
-          data={parsedData}
-          margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis dataKey={x_axis} stroke="#6b7280" />
-          <YAxis stroke="#6b7280" />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey={y_axis} fill="#84cc16" />
-        </BarChart>
-      );
-    } else {
-      return <p className="text-gray-500">Unsupported graph type</p>;
-    }
-  };
+  series.forEach((s) => {
+    s.data.forEach(([timestamp, value]) => {
+      const t = dayjs(timestamp).format('HH:mm') // format for X-axis
+
+      if (!mergedData[t]) mergedData[t] = { timestamp: t }
+      mergedData[t][s.metricName] = Number(value)
+    })
+  })
+
+  const parsedData = Object.values(mergedData)
 
   return (
     <div className="p-4 border border-lime-300 rounded-lg shadow-sm bg-white">
-      {tittle && (
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">{tittle}</h2>
-      )}
-      <ResponsiveContainer width={w || "100%"} height={h || 400}>
-        {renderGraph()}
+      <ResponsiveContainer width="100%" height={350}>
+        <LineChart
+          data={parsedData}
+          margin={{ top: 20, right: 10, left: -25, bottom: 10 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <XAxis dataKey="timestamp" stroke="#6b7280" />
+          <YAxis stroke="#6b7280" />
+          <Tooltip />
+          <Legend />
+
+          {series.map((s, idx) => (
+            <Line
+              key={s.seriesId}
+              type="monotone"
+              dataKey={s.metricName}
+              strokeWidth={2}
+              stroke={['#0ea5e9', '#84cc16', '#f97316', '#a855f7'][idx % 4]}
+              dot={false}
+            />
+          ))}
+        </LineChart>
       </ResponsiveContainer>
     </div>
-  );
-};
+  )
+}

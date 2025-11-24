@@ -5,6 +5,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Trash2 } from 'lucide-react'
 import Toast from '../components/ToastService'
 import ActionConfirmModal from '../components/actionConfirmModal'
+import {LargeGraphModal} from '../components/largeGraphModal'
+import { epochToReadable } from '../helper'
 
 import { listGraphsForDashboard, deleteGraph, getGraphPoints } from '../apiServices'
 
@@ -23,6 +25,8 @@ export const DashboardView = () => {
     visible: false,
     graphId: null,
   })
+  const [selectedGraph, setSelectedGraph] = useState(null)
+
 
 
   useEffect(() => {
@@ -102,9 +106,10 @@ export const DashboardView = () => {
   const closeToast = () => setToast((p) => ({ ...p, visible: false }))
 
 
-  const handleGraphClick = (graphId) => {
-    navigate(`/dashboard/graph?id=${graphId}`)
+  const handleGraphClick = (graphObject) => {
+    setSelectedGraph(graphObject)
   }
+
 
   const handleConfirmDelete = () => {
     const id = confirmDelete.graphId
@@ -129,12 +134,6 @@ export const DashboardView = () => {
     setConfirmDelete({ visible: false, graphId: null })
   }
 
-
-  // convert epoch to readable time
-  const epochToReadable = (epoch) => {
-    const date = new Date(epoch * 1000)
-    return date.toLocaleString()
-  }
   return (
     <div className="p-6 bg-gray-50 min-h-screen overflow-y-auto">
       <div className="mb-6 flex justify-between items-center">
@@ -187,8 +186,10 @@ export const DashboardView = () => {
                 <Trash2 size={20} className="text-red-500" />
               </button>
 
-              <div onClick={() => handleGraphClick(g.graphId)}>
-                <h2 className="text-lg font-semibold mb-2">{g.graphName}</h2>
+              <div onClick={() => handleGraphClick(g)}>
+                <h2 className="text-lg font-semibold mb-2 cursor-pointer">
+                  {g.graphName}
+                </h2>
                 <p className="text-sm text-gray-600 mb-4">
                   {g.graphType || 'Unknown type'} • Time range:{' '}
                   {epochToReadable(g.defaultTimeRange?.split('|')[0])} -{' '}
@@ -216,6 +217,8 @@ export const DashboardView = () => {
                     type={g.graphType}
                     series={g.series}
                     settings={parsedSettings}
+                    height={350}
+                    width={'100%'}
                   />
                 ) : (
                   <p className="text-gray-400 italic">
@@ -227,6 +230,14 @@ export const DashboardView = () => {
           )
         })}
       </div>
+      {/* Large Graph Modal */}
+      {selectedGraph && (
+        <LargeGraphModal
+          graph={selectedGraph}
+          onClose={() => setSelectedGraph(null)}
+        />
+      )}
+
       {/* Create Graph Modal */}
       <DashboardCreateModal
         visible={showCreateModal}

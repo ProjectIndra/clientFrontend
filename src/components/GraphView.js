@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine,
 } from 'recharts'
 import dayjs from 'dayjs'
 
@@ -28,14 +29,37 @@ export const GraphView = ({
 
   series.forEach((s) => {
     s.data.forEach(([timestamp, value]) => {
-      const t = dayjs(timestamp).format('HH:mm')
+      const d = dayjs(timestamp)
+      const dateKey = d.format('YYYY-MM-DD') // full date
+      const timeKey = d.format('HH:mm') // time only
 
-      if (!mergedData[t]) mergedData[t] = { timestamp: t }
-      mergedData[t][s.metricName] = Number(value)
+      const xKey = `${timeKey}` // combined X-axis label
+
+      if (!mergedData[xKey]) {
+        mergedData[xKey] = {
+          timestamp: xKey,
+          date: dateKey,
+          time: timeKey,
+        }
+      }
+
+      mergedData[xKey][s.metricName] = Number(value)
     })
+
   })
 
   const parsedData = Object.values(mergedData)
+
+  const dateChangeMarkers = []
+  for (let i = 1; i < parsedData.length; i++) {
+    if (parsedData[i].date !== parsedData[i - 1].date) {
+      dateChangeMarkers.push({
+        x: parsedData[i].timestamp,
+        date: parsedData[i].date,
+      })
+    }
+  }
+
 
   const colors = ['#0ea5e9', '#84cc16', '#f97316', '#a855f7']
 
@@ -51,7 +75,10 @@ export const GraphView = ({
             margin={{ top: 20, right: 10, left: -25, bottom: 10 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+
+            {/* FIX: Use time string directly as X-axis, no formatter */}
             <XAxis dataKey="timestamp" stroke="#6b7280" />
+
             <YAxis stroke="#6b7280" />
             <Tooltip />
             <Legend
@@ -66,10 +93,26 @@ export const GraphView = ({
                 type="monotone"
                 dataKey={s.metricName}
                 stroke={colors[idx % colors.length]}
-                fill={colors[idx % colors.length] + '55'} // light fill
+                fill={colors[idx % colors.length] + '55'}
                 strokeWidth={2}
                 dot={false}
                 fillOpacity={0.3}
+              />
+            ))}
+
+            {/* Reference lines same as LineChart */}
+            {dateChangeMarkers.map((d, idx) => (
+              <ReferenceLine
+                key={idx}
+                x={d.x}
+                stroke="#9ca3af"
+                strokeDasharray="4 4"
+                label={{
+                  value: dayjs(d.date).format('DD MMM'),
+                  position: 'top',
+                  fill: '#374151',
+                  fontSize: 12,
+                }}
               />
             ))}
           </AreaChart>
@@ -95,6 +138,20 @@ export const GraphView = ({
                 stroke={colors[idx % colors.length]}
                 strokeWidth={2}
                 dot={false}
+              />
+            ))}
+            {dateChangeMarkers.map((d, idx) => (
+              <ReferenceLine
+                key={idx}
+                x={d.x}
+                stroke="#9ca3af"
+                strokeDasharray="4 4"
+                label={{
+                  value: dayjs(d.date).format('DD MMM'),
+                  position: 'top',
+                  fill: '#374151',
+                  fontSize: 12,
+                }}
               />
             ))}
           </LineChart>

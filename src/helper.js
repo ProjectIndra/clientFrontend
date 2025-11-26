@@ -1,6 +1,8 @@
-
-// convert epoch to readable time
 export const epochToReadable = (epoch) => {
-  const date = new Date(epoch * 1000)
+
+  const cleanEpoch = Number(epoch) // convert safely
+
+  const date = new Date(cleanEpoch)
+
   return date.toLocaleString()
 }

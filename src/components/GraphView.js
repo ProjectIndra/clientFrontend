@@ -40,8 +40,10 @@ export const GraphView = ({
           timestamp: xKey,
           date: dateKey,
           time: timeKey,
+          fullTimestamp: d.format('YYYY-MM-DD HH:mm:ss'), // ← Add this
         }
       }
+
 
       mergedData[xKey][s.metricName] = Number(value)
     })
@@ -60,11 +62,29 @@ export const GraphView = ({
     }
   }
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (!active || !payload || payload.length === 0) return null
+
+    const full = payload[0]?.payload?.fullTimestamp
+
+    return (
+      <div className="bg-white p-3 border rounded shadow text-sm">
+        <p className="font-semibold text-gray-700">{full}</p>
+        {payload.map((item, idx) => (
+          <p key={idx} style={{ color: item.color }}>
+            {item.name}: {item.value}
+          </p>
+        ))}
+      </div>
+    )
+  }
+
+
 
   const colors = ['#0ea5e9', '#84cc16', '#f97316', '#a855f7']
 
   return (
-    <div className="p-4 border border-lime-300 rounded-lg shadow-sm bg-white">
+    <div className="p-4 border border-lime-300 rounded-lg shadow-sm bg-white cursor-pointer">
       <ResponsiveContainer width={width} height={height}>
         {graphType === 'area' ? (
           // ------------------------------------
@@ -80,7 +100,7 @@ export const GraphView = ({
             <XAxis dataKey="timestamp" stroke="#6b7280" />
 
             <YAxis stroke="#6b7280" />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Legend
               formatter={(value) => (
                 <span style={{ marginLeft: 10, marginRight: 40 }}>{value}</span>
@@ -127,7 +147,8 @@ export const GraphView = ({
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis dataKey="timestamp" stroke="#6b7280" />
             <YAxis stroke="#6b7280" />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
+
             <Legend />
 
             {series.map((s, idx) => (

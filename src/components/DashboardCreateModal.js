@@ -16,8 +16,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
         metricId: '',
         metricName: '',
         entityType: 'vm',
-        aggregation: 'AVG',
-        filters: { provider_id: '', entity_name: '' },
+        aggregation: 'sum',
+        filters: {
+          provider_id: "",
+          entity_name: "all_vms",
+        },
         groupBy: [],
         yAxisPosition: 'left',
       },
@@ -31,7 +34,6 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
     visible: false,
   })
 
-  // useEffect to load the entity names and build options for dropdowns
   const [entityOptions, setEntityOptions] = useState({
     hisVms: [],
     hisProviders: [],
@@ -48,26 +50,61 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
 
         const hisVms = Array.isArray(services.hisvms)
           ? services.hisvms.map((vm) => ({
-            label: vm?.vmName || vm?.internalVmName,
-            value: vm?.internalVmName,
-            provider_id: vm?.providerId,
-          }))
+              label: vm?.vmName || vm?.internalVmName,
+              value: vm?.internalVmName,
+              provider_id: vm?.providerId,
+            }))
           : []
 
         const hisProviders = Array.isArray(services.hisproviders)
           ? services.hisproviders.map((provider) => ({
-            label: provider?.providerName,
-            value: provider?.providerId,
-            allVms: Array.isArray(provider.vmsInThisProvider)
-              ? provider.vmsInThisProvider.map((vm) => ({
-                vm_id: vm?.vmId,
-                vm_name: vm?.vmName || vm?.vmId,
-              }))
-              : [],
-          }))
+              label: provider?.providerName,
+              value: provider?.providerId,
+              allVms: Array.isArray(provider.vmsInThisProvider)
+                ? provider.vmsInThisProvider.map((vm) => ({
+                    vm_id: vm?.vmId,
+                    vm_name: vm?.vmName || vm?.vmId,
+                  }))
+                : [],
+            }))
           : []
 
         setEntityOptions({ hisVms, hisProviders })
+
+        // Set default selections after data is loaded
+        setForm((prevForm) => ({
+          ...prevForm,
+          series: prevForm.series.map((s) => {
+            if (s.entityType === 'vm') {
+              const providerIdsSet = new Set(
+                hisVms.map((v) => v.provider_id)
+              )
+              const providerIds = Array.from(providerIdsSet)
+              return {
+                ...s,
+                filters: {
+                  ...s.filters,
+                  provider_id: providerIds,
+                  entity_name: "all_vms",
+                },
+              }
+            } else if (s.entityType === 'provider' && !s.filters.provider_id) {
+              const providerIdsSet = new Set(
+                hisProviders.map((p) => p.value)
+              )
+              const providerIds = Array.from(providerIdsSet)
+              return {
+                ...s,
+                filters: {
+                  ...s.filters,
+                  provider_id: providerIds,
+                },
+              }
+            }
+            return s
+          }),
+        }))
+
         setEntityLoading(false)
       } catch (err) {
         console.error('Failed to fetch entity names', err)
@@ -90,6 +127,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   if (!visible) return null
 
   const updateField = (name, value) => setForm((p) => ({ ...p, [name]: value }))
+
   const updateSeriesField = (idx, name, value) => {
     setForm((p) => {
       const s = [...p?.series]
@@ -106,9 +144,13 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
     })
   }
 
-  // groupBy and metricId are not taken from user now; we keep internal defaults
-
   const addSeries = () => {
+    // Determine defaults based on entity type
+    const vmsProviderIdsSet = new Set(
+      entityOptions.hisVms.map((v) => v.provider_id)
+    )
+    const providerIds = Array.from(vmsProviderIdsSet)
+
     setForm((p) => ({
       ...p,
       series: [
@@ -117,8 +159,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           metricId: '',
           metricName: '',
           entityType: 'vm',
-          aggregation: 'AVG',
-          filters: { provider_id: '', entity_name: '' },
+          aggregation: 'sum',
+          filters: {
+            provider_id: providerIds,
+            entity_name: "all_vms",
+          },
           groupBy: [],
           yAxisPosition: 'left',
         },
@@ -131,7 +176,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   }
 
   const handleCancel = () => {
-    // reset form
+    const vmsProviderIdsSet = new Set(
+      entityOptions.hisVms.map((v) => v.provider_id)
+    )
+    const providerIds = Array.from(vmsProviderIdsSet)
+
     setForm({
       graphName: '',
       graphType: 'time_series',
@@ -143,8 +192,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           metricId: '',
           metricName: '',
           entityType: 'vm',
-          aggregation: 'AVG',
-          filters: { provider_id: '', entity_name: '' },
+          aggregation: 'sum',
+          filters: {
+            provider_id: providerIds,
+            entity_name: "all_vms",
+          },
           groupBy: [],
           yAxisPosition: 'left',
         },
@@ -152,10 +204,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
     })
     onClose()
   }
+
   const handleSubmit = async (e) => {
-    e.preventDefault()  
+    e.preventDefault()
     setError(null)
-    // Basic validation (use toast for user-visible validation)
+
     if (!form.graphName) {
       showToast('Graph name is required', 'error')
       return
@@ -176,26 +229,21 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       showToast('At least one series is required', 'error')
       return
     }
+
     for (let i = 0; i < form.series?.length; i++) {
       const s = form.series[i]
       if (!s.entityType) {
         showToast(`Entity type is required for series ${i + 1}`, 'error')
         return
       }
-      if (!s.filters?.entity_name) {
-        showToast(
-          `VM is required for series ${i + 1}`,
-          'error'
-        )
-        return
-      }
-      if (!s.filters?.provider_id) {
-        showToast(
-          `Provider ID filter is required for series ${i + 1}`,
-          'error'
-        )
-        return
-      }
+      // if (!s.filters?.entity_name && s.entityType !== 'provider') {
+      //   showToast(`VM is required for series ${i + 1}`, 'error')
+      //   return
+      // }
+      // if (!s.filters?.provider_id) {
+      //   showToast(`Provider ID filter is required for series ${i + 1}`, 'error')
+      //   return
+      // }
       if (!s.metricName) {
         showToast(`Metric name is required for series ${i + 1}`, 'error')
         return
@@ -205,34 +253,56 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
         return
       }
     }
-    // current time in epoch value through epoch conversion
+
     const endTime = Date.now()
     const startTime = endTime - form.defaultTimeRange * 60 * 1000
+
+    // all provider IDs of the user
+    const userProviderIdsSet = new Set(
+      entityOptions.hisProviders.map((p) => p.value)
+    )
+    const userProviderIds = Array.from(userProviderIdsSet)
+
+    // all VM provider IDs of the user where he/she has created vm
+    const vmsProviderIdsSet = new Set(
+      entityOptions.hisVms.map((p) => p.provider_id)
+    )
+    const vmsProviderIds = Array.from(vmsProviderIdsSet)
+
+    console.log("filters before submit",form.series[0].filters)
 
     const payload = {
       dashboardId,
       graphName: form?.graphName,
       graphType: form?.graphType,
       defaultTimeRange: `${startTime}|${endTime}`,
-      // defaultTimeRange: '1756835615|1756846615',
       refreshIntervalSeconds: Number(form?.refreshIntervalSeconds) || 30,
-      // send stringified empty JSON for settings as requested
       settings: JSON.stringify({}),
       series: form?.series.map((s) => ({
-        // metricId and groupBy should be empty as requested
         metricId: '',
         metricName: s?.metricName,
         entityType: s?.entityType,
         aggregation: s?.aggregation,
-        filters: s?.filters,
-        // filters: {
-        // "provider_id": "736f2ffd-cfdd-45d1-9dce-5bec637ecfaa",
-        // "entity_name": "736f2ffd-cfdd-45d1-9dce-5bec637ecfaa"
-        // },
+        filters: {
+          provider_id: s?.filters?.provider_id ==='all_providers'
+              ? userProviderIds : s?.filters?.entity_name ==='all_vms'
+              ? vmsProviderIds :
+               s?.filters?.provider_id ,
+          // if entity_name is all_vms, then we don't need any key named entity_name in filters
+          ...(s?.filters?.entity_name &&
+          s?.filters?.entity_name !== 'all_vms' &&
+          s?.filters?.provider_id &&
+          s?.filters?.provider_id !== 'all_providers'
+            ? { entity_name: s?.filters?.entity_name }
+            : {}),
+        },
         groupBy: [],
         yAxisPosition: s?.yAxisPosition,
       })),
     }
+
+    console.log('Submitting form:', payload)
+    return
 
     try {
       setLoading(true)
@@ -240,7 +310,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       if (onCreated) onCreated(res)
       showToast('Graph created successfully', 'success')
       onClose()
-      //reset form
+
+    const vmsProviderIdsSet = new Set(
+      entityOptions.hisVms.map((v) => v.provider_id)
+    )
+    const providerIds = Array.from(vmsProviderIdsSet)
       setForm({
         graphName: '',
         graphType: 'time_series',
@@ -252,14 +326,17 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
             metricId: '',
             metricName: '',
             entityType: 'vm',
-            aggregation: 'AVG',
-            filters: { provider_id: '', entity_name: '' },
+            aggregation: 'sum',
+            filters: {
+              provider_id: providerIds,
+              entity_name: "all_vms",
+            },
             groupBy: [],
             yAxisPosition: 'left',
           },
         ],
       })
-      // reload the page to reflect new graph
+
       window.location.reload()
     } catch (err) {
       console.error(err)
@@ -269,11 +346,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
     }
   }
 
-  const graphTypeOptions = [
-    { label: 'Time series', value: 'time_series' },
-    // { label: 'Gauge', value: 'gauge' },
-    // { label: 'Bar', value: 'bar' },
-  ]
+  const graphTypeOptions = [{ label: 'Time series', value: 'time_series' }]
 
   const entityTypeOptions = [
     { label: 'Network', value: 'network' },
@@ -286,7 +359,6 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       { label: 'Active Network', value: 'network_active' },
       { label: 'Inactive Network', value: 'network_inactive' },
     ],
-
     vm: [
       { label: 'CPU Used', value: 'vm_cpu_used' },
       { label: 'RAM Allocated', value: 'vm_ram_allocated' },
@@ -294,7 +366,6 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       { label: 'RAM Used', value: 'vm_ram_used' },
       { label: 'State', value: 'vm_state' },
     ],
-
     provider: [
       { label: 'Active VMs', value: 'active_vms' },
       { label: 'Inactive VMs', value: 'inactive_vms' },
@@ -303,12 +374,12 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   }
 
   const aggregationOptions = [
-    { label: 'Average', value: 'AVG' },
-    // { label: 'SUM', value: 'SUM' },
-    // { label: 'MIN', value: 'MIN' },
-    // { label: 'MAX', value: 'MAX' },
-    // { label: 'COUNT', value: 'COUNT' },
+    { label: 'Average', value: 'avg' },
+    { label: 'Sum', value: 'sum' },
+    // { label: 'Minimum', value: 'min' },
+    // { label: 'Maximum', value: 'max' },
   ]
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <form
@@ -352,8 +423,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
             label="Graph Type"
             value={form?.graphType}
             onChange={(v) => updateField('graphType', v)}
-            // options={["time_series", "gauge", "bar"]}
-            options={graphTypeOptions} // limited to time_series per request
+            options={graphTypeOptions}
           />
 
           <NumberInput
@@ -369,7 +439,6 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
             onChange={(v) => updateField('refreshIntervalSeconds', v)}
             placeholder="30"
           />
-          {/* settings removed per request - we send stringified empty JSON in payload */}
         </div>
 
         <div className="mt-4">
@@ -400,112 +469,159 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {/* metricId and groupBy are not editable per request; metricName kept */}
-                {/* <TextInput
-                  label="Metric Name"
-                  value={s.metricName}
-                  onChange={(v) => updateSeriesField(idx, 'metricName', v)}
-                  placeholder="metricName"
-                /> */}
-
                 <DropdownSelect
                   label="Entity Type"
                   value={s?.entityType}
                   onChange={(v) => {
                     updateSeriesField(idx, 'entityType', v)
-                    updateSeriesFilter(idx, 'provider_id', '')
-                    updateSeriesFilter(idx, 'entity_name', '')
+
+                    // Set defaults based on entity type
+                    if (v === 'vm') {
+                      const providerIds = entityOptions.hisVms.map(
+                        (vm) => vm.provider_id
+                      )
+                      updateSeriesField(idx, 'filters', {})
+                      updateSeriesFilter(idx, 'provider_id', providerIds)
+                      updateSeriesFilter(idx, 'entity_name', 'all_vms')
+                      updateSeriesField(idx, 'entity_name', '')
+                    } else if (v === 'provider') {
+                      const providerIds = entityOptions.hisProviders.map(
+                        (p) => p.value
+                      )
+                      updateSeriesField(idx, 'filters', {})
+                      updateSeriesFilter(idx, 'provider_id', providerIds)
+                      updateSeriesField(idx, 'metricName', '')
+                    } else {
+                      updateSeriesFilter(idx, 'provider_id', '')
+                      updateSeriesFilter(idx, 'entity_name', '')
+                      updateSeriesField(idx, 'metricName', '')
+                    }
                   }}
                   options={entityTypeOptions}
                 />
 
-                {/* Entity Name dropdown: options depend on selected entityType */}
                 <DropdownSelect
                   label={`Select ${s?.entityType}`}
-                  value={s?.entityType === 'provider'
-                    ? s?.filters.provider_id
-                    : s?.filters.entity_name
+                  value={
+                    s?.entityType === 'provider' ? s?.filters?.provider_id
+                     : s?.filters?.entity_name
                   }
                   onChange={(val) => {
                     if (s?.entityType === 'vm') {
-                      // find provider_id for selected vm
-                      const found = entityOptions.hisVms?.find(
+                      if (val === 'all_vms') {
+                        updateSeriesField(idx, 'filters', {})
+                        updateSeriesFilter(idx, 'entity_name', 'all_vms')
+                        updateSeriesField(idx, 'aggregation', 'sum')
+                        // updating aggregation to sum in the form
+                        // setForm((p) => ({
+                        //   // Add parentheses around the object
+                        //   ...p,
+                        //   series: p.series.map((ser, sidx) => {
+                        //     if (sidx === idx) {
+                        //       return {
+                        //         ...ser,
+                        //         aggregation: 'sum',
+                        //         filters:
+                        //       }
+                        //     }
+                        //     return ser
+                        //   }),
+                        // }))
+                        return
+                      }
+
+                      const found = entityOptions.hisVms.find(
                         (v) => v.value === val
                       )
+                      updateSeriesField(idx, 'aggregation', 'avg')
                       const providerId = found ? found.provider_id : ''
                       updateSeriesFilter(idx, 'provider_id', providerId)
                       updateSeriesFilter(idx, 'entity_name', val)
+                      
                     } else if (s?.entityType === 'provider') {
+                      updateSeriesField(idx, 'filters', {})
+                      if (val === 'all_providers') {
+                        updateSeriesFilter(idx, 'provider_id', 'all_providers')
+                        updateSeriesField(idx, 'aggregation', 'sum')
+                        return
+                      }
+                      updateSeriesField(idx, 'aggregation', 'sum')
                       updateSeriesFilter(idx, 'provider_id', val)
-                      updateSeriesFilter(idx, 'entity_name', '')
                     }
                   }}
                   options={[
-                    { label: '', value: '' },
+                    {
+                      label: `All ${s?.entityType}s`,
+                      value: `all_${s?.entityType}s`,
+                    },
                     ...(s?.entityType === 'vm'
-                      ? entityOptions.hisVms?.map((v) => ({
-                        label: v.label,
-                        value: v.value,
-                      }))
+                      ? entityOptions.hisVms.map((v) => ({
+                          label: v.label,
+                          value: v.value,
+                        }))
                       : s?.entityType === 'provider'
-                        ? entityOptions.hisProviders?.map((p) => ({
+                      ? entityOptions.hisProviders.map((p) => ({
                           label: p.label,
                           value: p.value,
                         }))
-                        : []),
+                      : []),
                   ]}
                   loading={entityLoading}
                 />
 
-                {/*  Conditional VM List dropdown for provider entity type */}
-                {
-                  s?.entityType === 'provider' ?
-                    (() => {
-                      const provider = entityOptions.hisProviders?.find(
-                        (p) => p.value === s?.filters.provider_id
-                      )
-                      const vmOptions = provider
-                        ? provider.allVms?.map((vm) => ({
+                {/* Conditional VM List dropdown for provider entity type */}
+                {s?.entityType === 'provider' &&
+                  !Array.isArray(s?.filters.provider_id) &&
+                  s?.filters.provider_id !== 'all_providers' &&
+                  (() => {
+                    const provider = entityOptions.hisProviders.find(
+                      (p) => p.value === s?.filters.provider_id
+                    )
+                    const vmOptions = provider
+                      ? provider.allVms.map((vm) => ({
                           label: vm.vm_name,
                           value: vm.vm_id,
                         }))
-                        : []
-                      return (
-                        <DropdownSelect
-                          label="Select vm"
-                          value={s?.filters.entity_name}
-                          onChange={(val) => {
-                            // set entity_name as vm_id and keep provider_id
-                            updateSeriesFilter(idx, 'entity_name', val)
-                          }}
-                          options={[{ label: '', value: '' }, ...vmOptions]}
-                          loading={entityLoading}
-                        />
-                      )
-                    })()
-                    : <></>
-                }
+                      : []
+                    return (
+                      <DropdownSelect
+                        label="Select VM"
+                        value={s?.filters.entity_name || 'all_vms'}
+                        onChange={(val) => {
+                          if (val === 'all_vms') {
+                            updateSeriesFilter(idx, 'entity_name', 'all_vms')
+                            updateSeriesField(idx, 'aggregation', 'sum')
+                            return
+                          }
+                          updateSeriesField(idx, 'aggregation', 'avg')
+                          updateSeriesFilter(idx, 'entity_name', val)
+                        }}
+                        options={[
+                          { label: 'All VMs', value: 'all_vms' },
+                          ...vmOptions,
+                        ]}
+                        loading={entityLoading}
+                      />
+                    )
+                  })()}
 
                 <DropdownSelect
                   label="Metric Name"
                   value={s?.metricName}
                   onChange={(v) => updateSeriesField(idx, 'metricName', v)}
-                  options={[{ label: '', value: '' }, ...metric_name_entity_type_mapping[s?.entityType] || []]}
+                  options={[
+                    { label: '', value: '' },
+                    ...(metric_name_entity_type_mapping[s?.entityType] || []),
+                  ]}
                 />
 
                 <DropdownSelect
                   label="Aggregation"
                   value={s?.aggregation}
+                  disabled={!s?.metricName}
                   onChange={(v) => updateSeriesField(idx, 'aggregation', v)}
                   options={aggregationOptions}
                 />
-
-                {/* <DropdownSelect
-                  label="Y Axis Position"
-                  value={s.yAxisPosition}
-                  onChange={(v) => updateSeriesField(idx, 'yAxisPosition', v)}
-                  options={["left", "right"]}
-                /> */}
               </div>
             </div>
           ))}
@@ -522,16 +638,19 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           <button
             type="submit"
             disabled={loading}
-            onClick={handleSubmit}
             className="px-4 py-2 bg-lime-500 text-white rounded"
           >
             {loading ? 'Creating...' : 'Create & Submit'}
           </button>
         </div>
       </form>
-      {/* Toast (local to modal) */}
+
       {toast?.visible && (
-        <Toast message={toast?.message} type={toast?.type} onClose={closeToast} />
+        <Toast
+          message={toast?.message}
+          type={toast?.type}
+          onClose={closeToast}
+        />
       )}
     </div>
   )

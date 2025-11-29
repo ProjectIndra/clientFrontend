@@ -234,6 +234,7 @@ export const DashboardView = () => {
       {selectedGraph && (
         <LargeGraphModal
           graph={selectedGraph}
+          setGraphs={setGraphs}
           onClose={() => setSelectedGraph(null)}
         />
       )}

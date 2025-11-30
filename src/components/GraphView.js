@@ -92,7 +92,7 @@ export const GraphView = ({
           // ------------------------------------
           <AreaChart
             data={parsedData}
-            margin={{ top: 20, right: 10, left: -25, bottom: 10 }}
+            margin={{ top: 20, right: 20, left: -10, bottom: 10 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
 
@@ -142,7 +142,7 @@ export const GraphView = ({
           // ------------------------------------
           <LineChart
             data={parsedData}
-            margin={{ top: 20, right: 10, left: -25, bottom: 10 }}
+            margin={{ top: 20, right: 20, left: -10, bottom: 10 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis dataKey="timestamp" stroke="#6b7280" />

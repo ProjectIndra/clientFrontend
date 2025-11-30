@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { GraphView } from '../components/GraphView'
 import DashboardCreateModal from '../components/DashboardCreateModal'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -26,14 +26,17 @@ export const DashboardView = () => {
     graphId: null,
   })
   const [selectedGraph, setSelectedGraph] = useState(null)
+  const [isDashboardLoading, setIsDashboardLoading] = useState(false)
+
 
 
 
   useEffect(() => {
-    if (!dashboardId) return
+    if (!dashboardId) return    
 
     let mounted = true
-
+    setIsDashboardLoading(true)
+    
     const init = async () => {
       try {
         const res = await listGraphsForDashboard(dashboardId)
@@ -87,6 +90,8 @@ export const DashboardView = () => {
         console.error('Error loading graphs:', err)
         if (!mounted) return
         setGraphs([])
+      } finally {
+        setIsDashboardLoading(false)
       }
     }
 
@@ -151,8 +156,12 @@ export const DashboardView = () => {
         </button>
       </div>
 
-      {graphs.length === 0 && (
+      {graphs.length === 0 && !isDashboardLoading && (
         <p className="text-gray-500">No graphs available for this dashboard.</p>
+      )}
+
+      {isDashboardLoading && (
+        <div className="w-48 h-12">Loading Dashboard...</div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -199,6 +208,7 @@ export const DashboardView = () => {
 
                 {/* Per-graph loading indicator while points are being fetched */}
                 {g.pointsLoading ? (
+                  // ---------------- LOADING ----------------
                   <div className="relative">
                     <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                       <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
@@ -208,22 +218,32 @@ export const DashboardView = () => {
                     </div>
                   </div>
                 ) : g.pointsError ? (
+                  // ---------------- ERROR ----------------
                   <div className="text-sm text-red-600">{g.pointsError}</div>
-                ) : Array.isArray(g.series) &&
-                  g.series.some(
-                    (s) => Array.isArray(s.data) && s.data.length > 0
-                  ) ? (
-                  <GraphView
-                    type={g.graphType}
-                    series={g.series}
-                    settings={parsedSettings}
-                    height={350}
-                    width={'100%'}
-                  />
                 ) : (
-                  <p className="text-gray-400 italic">
-                    No graph data available
-                  </p>
+                  // ---------------- DATA (INCLUDING EMPTY) ----------------
+                  <>
+                    {/* Show this message if ALL series have empty data arrays */}
+                    {Array.isArray(g.series) &&
+                      g.series.length > 0 &&
+                      g.series.every(
+                        (s) => Array.isArray(s.data) && s.data.length === 0
+                      ) && (
+                        <p className="text-gray-400 italic">
+                          No results for this time range. Adjust the time filter
+                          to view results.
+                        </p>
+                      )}
+
+                    {/* Still render the graph (empty graph allowed) */}
+                    <GraphView
+                      type={g.graphType}
+                      series={g.series}
+                      settings={parsedSettings}
+                      height={350}
+                      width={'100%'}
+                    />
+                  </>
                 )}
               </div>
             </div>

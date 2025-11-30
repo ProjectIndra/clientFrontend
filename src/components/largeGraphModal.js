@@ -1,35 +1,44 @@
-import React,{ useState } from 'react'
+import React,{ useState, useEffect } from 'react'
 import { GraphView } from './GraphView'
 import { epochToReadable }  from '../helper'
 import {getGraphPoints} from '../apiServices'
 
-export const LargeGraphModal = ({ graph, onClose, setGraphs }) => {
-  const parsedSettings = graph.settings
+export const LargeGraphModal = ({ graph, onClose }) => {
+  
+  const [selectedGraphData, setSelectedGraphData] = useState({});
+
+  const [graphType, setGraphType] = useState("area");
+  
+  const today = new Date()
+  const defaultDate = today.toISOString().split('T')[0] // yyyy-mm-dd
+  const defaultTime = '00:00' // 12:00 AM in 24-hr format
+  // ("00:00" = 12:00 AM)
+  
+  const [startDate, setStartDate] = useState(defaultDate)
+  const [startTime, setStartTime] = useState(defaultTime)
+  
+  const [endDate, setEndDate] = useState(defaultDate)
+  const [endTime, setEndTime] = useState(defaultTime)
+
+  const [isApplyingFilter, setIsApplyingFilter] = useState(false)
+
+  
+  const parsedSettings = selectedGraphData.settings
     ? (() => {
         try {
-          return JSON.parse(graph.settings)
+          return JSON.parse(selectedGraphData.settings)
         } catch {
           return {}
         }
       })()
     : {}
-  console.log('LargeGraphModal - graph data:', graph)
-  const [graphType, setGraphType] = useState("area");
-
-  const today = new Date()
-  const defaultDate = today.toISOString().split('T')[0] // yyyy-mm-dd
-  const defaultTime = '00:00' // 12:00 AM in 24-hr format
-  // ("00:00" = 12:00 AM)
-
-  const [startDate, setStartDate] = useState(defaultDate)
-  const [startTime, setStartTime] = useState(defaultTime)
-
-  const [endDate, setEndDate] = useState(defaultDate)
-  const [endTime, setEndTime] = useState(defaultTime)
-
-
+  
+  useEffect(() => {
+    setSelectedGraphData(graph);
+  }, []);
 
   const handleApplyFilter = async () => {
+    setIsApplyingFilter(true);
     const startLocal = new Date(`${startDate}T${startTime}:00`)
     const endLocal = new Date(`${endDate}T${endTime}:00`)
 
@@ -38,7 +47,7 @@ export const LargeGraphModal = ({ graph, onClose, setGraphs }) => {
 
     try {
       const payload = {
-        ...graph,
+        ...selectedGraphData,
         defaultTimeRange: `${startUTC}|${endUTC}`,
       }
 
@@ -51,20 +60,18 @@ export const LargeGraphModal = ({ graph, onClose, setGraphs }) => {
       // setFilteredSettings(filteredData.settings || {})
 
       // Update the graph inside parent DashboardView
-      setGraphs((prev) =>
-        prev.map((g) =>
-          g.graphId === graph.graphId
-            ? {
-                ...g,
-                series: filteredData.series || [],
-                settings: filteredData.settings || {},
-                defaultTimeRange: `${startUTC}|${endUTC}`,
-              }
-            : g
-        )
-      )
+      setSelectedGraphData((prev) => ({
+        ...prev,
+        series: filteredData.series || [],
+        settings: filteredData.settings || {},
+        defaultTimeRange: `${startUTC}|${endUTC}`,
+      }))
+
     } catch (err) {
       console.error('Error applying filter:', err)
+    }
+    finally {
+      setIsApplyingFilter(false)
     }
   }
 
@@ -105,12 +112,14 @@ export const LargeGraphModal = ({ graph, onClose, setGraphs }) => {
           Switch to {graphType === 'line' ? 'Area' : 'Line'} Graph
         </button>
 
-        <h2 className="text-xl font-semibold mb-2">{graph.graphName}</h2>
-        {/* <p className="text-sm text-gray-600 mb-4">• {graph.graphType}</p> */}
+        <h2 className="text-xl font-semibold mb-2">
+          {selectedGraphData.graphName}
+        </h2>
+        {/* <p className="text-sm text-gray-600 mb-4">• {selectedGraphData.graphType}</p> */}
         <p className="text-sm text-gray-600 mb-4">
           <b>• Time range :</b>{' '}
-          {epochToReadable(graph.defaultTimeRange?.split('|')[0])} -{' '}
-          {epochToReadable(graph.defaultTimeRange?.split('|')[1]) ||
+          {epochToReadable(selectedGraphData.defaultTimeRange?.split('|')[0])} -{' '}
+          {epochToReadable(selectedGraphData.defaultTimeRange?.split('|')[1]) ||
             'Not specified'}
         </p>
 
@@ -173,9 +182,16 @@ export const LargeGraphModal = ({ graph, onClose, setGraphs }) => {
             <div className="flex items-end">
               <button
                 onClick={handleApplyFilter}
-                className="px-4 py-2 bg-lime-400 hover:bg-lime-500 text-black rounded-lg font-medium transition"
+                disabled={isApplyingFilter}
+                className={`px-4 py-2 bg-lime-400 hover:bg-lime-500 text-black rounded-lg font-medium transition flex items-center justify-center w-20 h-10 ${
+                  isApplyingFilter ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
               >
-                Apply
+                {isApplyingFilter ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  'Apply'
+                )}
               </button>
             </div>
           </div>
@@ -186,7 +202,7 @@ export const LargeGraphModal = ({ graph, onClose, setGraphs }) => {
         <div className="h-[550px] w-[100%]">
           <GraphView
             graphType={graphType}
-            series={graph.series}
+            series={selectedGraphData.series}
             settings={parsedSettings}
             height={500}
             width={'100%'}

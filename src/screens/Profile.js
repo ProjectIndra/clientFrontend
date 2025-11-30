@@ -167,8 +167,8 @@ function Profile() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {isProvider
-                ? providers.map((provider) => (
-                    <ProviderCard provider={provider} />
+                  ? providers.map((provider, idxx) => (
+                    <div key={idxx}><ProviderCard provider={provider} /></div>                    
                   ))
                 : wg.map((client) => (
                     <div

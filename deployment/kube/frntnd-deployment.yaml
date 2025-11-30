@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: compute-kart-frntnd
+  namespace: computekart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: compute-kart-frntnd
+  template:
+    metadata:
+      labels:
+        app: compute-kart-frntnd
+    spec:
+      containers:
+        - name: frontend
+          image: hj1243/computekart-frontend:v0.0.12
+          ports:
+            - containerPort: 80

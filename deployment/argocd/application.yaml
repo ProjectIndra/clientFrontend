@@ -1,0 +1,12 @@
+project: computekart
+source:
+  repoURL: https://github.com/ProjectIndra/clientFrontend.git
+  path: deployment/kube
+  targetRevision: feature/uiux-improvment
+destination:
+  server: https://kubernetes.default.svc
+  namespace: computekart
+syncPolicy:
+  automated:
+    selfHeal: true
+    enabled: true

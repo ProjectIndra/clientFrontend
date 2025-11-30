@@ -14,6 +14,7 @@ import PageWrapper from "./components/PageWrapper"; // Add this line
 import {Dashboard} from "./screens/Dashboard";
 import {DashboardView} from "./screens/DashboardView";  
 import {GraphService} from "./screens/GraphService";
+import Tunnels from "./screens/Tunnels";
 
 function App() {
   return (
@@ -107,6 +108,7 @@ function App() {
                 </PageWrapper>
               }
             />
+            <Route path="/tunnels" element={<PageWrapper><Tunnels /></PageWrapper>} />
           </Route>
         </Routes>
       </BrowserRouter>

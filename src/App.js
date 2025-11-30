@@ -10,7 +10,10 @@ import ManageProviders from "./screens/ManageProviders";
 import Buckets from "./screens/Buckets";
 import DocsMainPage from "./docs/components/docsMainPage.js";
 import ManageClients from "./screens/ManageClients.js";
-import PageWrapper from "./components/PageWrapper"; 
+import PageWrapper from "./components/PageWrapper"; // Add this line
+import {Dashboard} from "./screens/Dashboard";
+import {DashboardView} from "./screens/DashboardView";  
+import {GraphService} from "./screens/GraphService";
 import Tunnels from "./screens/Tunnels";
 
 function App() {
@@ -25,19 +28,92 @@ function App() {
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
-            <Route path="/providersList" element={<PageWrapper><ProvidersList /></PageWrapper>} />
-            <Route path="/client/services" element={<PageWrapper><ClientServices /></PageWrapper>} />
-            <Route path="/manage/providers" element={<PageWrapper><ManageProviders /></PageWrapper>} />
-            <Route path="/manage/clients" element={<PageWrapper><ManageClients /></PageWrapper>} />
-            <Route path="/buckets" element={<PageWrapper><Buckets /></PageWrapper>} />
+            <Route
+              path="/profile"
+              element={
+                <PageWrapper>
+                  <Profile />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/providersList"
+              element={
+                <PageWrapper>
+                  <ProvidersList />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/client/services"
+              element={
+                <PageWrapper>
+                  <ClientServices />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/manage/providers"
+              element={
+                <PageWrapper>
+                  <ManageProviders />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/manage/clients"
+              element={
+                <PageWrapper>
+                  <ManageClients />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/buckets"
+              element={
+                <PageWrapper>
+                  <Buckets />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/docs"
+              element={
+                <PageWrapper>
+                  <DocsMainPage />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <PageWrapper>
+                  <Dashboard />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/dashboard/view"
+              element={
+                <PageWrapper>
+                  <DashboardView />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/dashboard/graph"
+              element={
+                <PageWrapper>
+                  <GraphService />
+                </PageWrapper>
+              }
+            />
             <Route path="/tunnels" element={<PageWrapper><Tunnels /></PageWrapper>} />
-            <Route path="/docs" element={<PageWrapper><DocsMainPage /></PageWrapper>} />
           </Route>
         </Routes>
       </BrowserRouter>
     </div>
-  );
+  )
 }
 
 export default App;

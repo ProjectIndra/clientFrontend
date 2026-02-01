@@ -73,7 +73,6 @@ const Providers = () => {
       }
     } catch (error) {
       console.log(error);
-      // alert("Error: " + error);
       setToast({ message: "Error fetching providers!", type: "error", visible: true });
     } finally {
       setIsLoading(false);
@@ -83,7 +82,7 @@ const Providers = () => {
   // Fetch providers when debouncedSearch value changes
   useEffect(() => {
     fetchProviders();
-  }, [fetchProviders]);
+  }, [debouncedSearch]);
 
   // Updated runQuery using POST and sending provider_user_id
   async function runQuery(formData, selectedProvider) {
@@ -97,8 +96,6 @@ const Providers = () => {
       provider_user_id: selectedProvider.user_id,
     })
       .then((data) => {
-        // alert("Can Create VM: " + data.can_create);
-        // use the actionConfirm modal to show the message
         setActionConfirm({
           visible: true,
           type: "query",
@@ -111,8 +108,7 @@ const Providers = () => {
       })
       .catch((error) => {
         console.log(error);
-        // alert("Error: " + error);
-        setToast({ message: "Quering Server Error", type: "error", visible: true });
+        setToast({ message: error, type: "error", visible: true });
       }).finally(() => {
         setIsLoading(false);
       }
@@ -133,7 +129,6 @@ const Providers = () => {
       provider_name: selectedProvider.provider_name,
     })
       .then((data) => {
-        // alert(data.message);
         setActionConfirm({
           visible: true,
           message: "Let's Go 🚀 VM has been created in the provider.",
@@ -145,8 +140,7 @@ const Providers = () => {
       })
       .catch((error) => {
         console.log(error);
-        // alert("Error: " + error);
-        setToast({ message: "Server Error while Running Request ", type: "error", visible: true });
+        setToast({ message: error, type: "error", visible: true });
       })
       .finally(() => {
         setIsLoading(false);
@@ -156,11 +150,29 @@ const Providers = () => {
 
   // Update selected provider and adjust formData accordingly
   const handleProviderSelect = (provider) => {
-    setSelectedProvider(provider);
-    setFormData((prev) => ({
-      ...prev,
-      provider_id: provider.providerId.toString(),
-    }));
+    setSelectedProvider((prev) => {
+      // If same provider clicked → deselect
+      if (prev?.providerId === provider.providerId) {
+        setFormData({
+          vcpus: "",
+          ram: "",
+          vm_image: "",
+          remarks: "",
+          provider_id: "",
+          vm_name: "",
+          client_id: "1",
+          storage: "",
+        });
+        return null;
+      }
+
+      // Otherwise select new provider
+      setFormData((prevForm) => ({
+        ...prevForm,
+        provider_id: provider.providerId.toString(),
+      }));
+      return provider;
+    });
   };
 
   // Handle changes for text and select inputs
@@ -203,10 +215,6 @@ const Providers = () => {
     setSearchInput(e.target.value);
   };
 
-  // const showToast = (message, type = "info") => {
-  //   setToast({ message, type, visible: true });
-  // };
-
   const closeToast = () => {
     setToast(prev => ({ ...prev, visible: false }));
   };
@@ -220,7 +228,7 @@ const Providers = () => {
 
   return (
     <div className="p-6 font-sans mt-16">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">
         Providers
       </h2>
       <div className="flex flex-col md:flex-row w-full gap-10">

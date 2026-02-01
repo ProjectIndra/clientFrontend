@@ -17,8 +17,8 @@ const ProviderCard = ({ provider, isActive = false }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={`w-full flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden  
-          ${isHovered ? "bg-lime-50 scale-103 cursor-pointer" : "bg-white"}
-        }`}
+          ${isHovered ? "bg-lime-50 cursor-pointer" : "bg-white"} 
+          ${isActive ? "border-lime-500 border-2" : "border-gray-300"}`}
       >
         {/* Left: Icon + Details */}
         <div className="flex flex-col p-4 flex-1" >
@@ -47,15 +47,15 @@ const ProviderCard = ({ provider, isActive = false }) => {
           <div className="grid grid-cols-2 gap-4 text-sm whitespace-nowrap">
             {provider?.providerAllowedVcpu && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Max vCPUs</span>
-              <span className="font-semibold">{provider?.providerAllowedVcpu}</span>
+              <span className="font-semibold">{provider?.providerAllowedVcpu} vCPUs</span>
             </div>}
             {provider?.providerAllowedRam && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Max RAM</span>
-              <span className="font-semibold">{provider?.providerAllowedRam}</span>
+              <span className="font-semibold">{provider?.providerAllowedRam} GB</span>
             </div>}
             {provider?.providerAllowedStorage && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Max Storage</span>
-              <span className="font-semibold">{provider?.providerAllowedStorage}</span>
+              <span className="font-semibold">{provider?.providerAllowedStorage} GB</span>
             </div>}
             {provider?.providerStatus && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Status</span>
@@ -63,11 +63,11 @@ const ProviderCard = ({ provider, isActive = false }) => {
             </div>}
             {provider?.providerAllowedNetworks && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Max Networks</span>
-              <span className="font-semibold">{provider?.providerAllowedNetworks}</span>
+              <span className="font-semibold">{provider?.providerAllowedNetworks} Networks</span>
             </div>}
             {provider?.providerAllowedVms && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Max VMs</span>
-              <span className="font-semibold">{provider?.providerAllowedVms}</span>
+              <span className="font-semibold">{provider?.providerAllowedVms} VMs</span>
             </div>}
             {provider?.providerRamCapacity && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">RAM Capacity (GB)</span>
@@ -81,29 +81,12 @@ const ProviderCard = ({ provider, isActive = false }) => {
               <span className="text-gray-500 font-medium">Storage Capacity (GB)</span>
               <span className="font-semibold">{provider?.providerStorageCapacity}</span>
             </div>}
-            {/* {provider?.providerUrl && <div className="flex flex-col">
-              <span className="text-gray-500 font-medium">Provider URL</span>
-              <span className="font-semibold truncate">{provider?.providerUrl}</span>
-            </div>}
-            {provider?.verificationToken && <div className="flex flex-col">
-              <span className="text-gray-500 font-medium">Verification Token</span>
-              <span className="font-semibold truncate">{provider?.verificationToken}</span>
-            </div>}
-            {provider?.providerId && <div className="flex flex-col">
-              <span className="text-gray-500 font-medium">Provider ID</span>
-              <span className="font-semibold truncate">{provider?.providerId}</span>
-            </div>}
-            {provider?.providerUserId && <div className="flex flex-col">
-              <span className="text-gray-500 font-medium">User ID</span>
-              <span className="font-semibold truncate">{provider?.providerUserId}</span>
-            </div>} */}
           </div>
         </div>
 
         {/* Right status bar */}
         <div
-          className={`w-6 h-full ${provider?.providerStatus ? "bg-lime-300" : "bg-red-300"
-            }`}
+          className={`w-6 h-full ${provider?.providerStatus ? "bg-lime-300" : "bg-red-300"}`}
         />
       </div>
     </div>

@@ -14,12 +14,12 @@ const ActionConfirmModal = ({ visible, type="", onConfirm, onCancel, message, co
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded shadow max-w-sm text-center">
+            <div className="bg-white p-6 rounded shadow text-center">
                 <p className="text-lg font-semibold text-gray-800 mb-4">
                     {message || `Are you sure you want to ${type} this VM?`}
                 </p>
                 {copyToken && (
-                <div className="mt-2 bg-white border border-gray-300 rounded-xl px-4 py-2 max-w-[250px] md:max-w-[400px] flex items-center justify-between text-left shadow-sm whitespace-nowrap overflow-x-auto mb-4">
+                <div className="mt-2 bg-white border border-gray-300 rounded-xl px-4 py-2 max-w-[250px] md:max-w-[400px] flex items-center justify-between text-left shadow-sm whitespace-nowrap mb-4">
                     <code className="text-sm text-gray-800 break-all">
                         {bashScript}
                     </code>

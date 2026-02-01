@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Api";
-import Navbar from "../components/Navbar";
 import ActionConfirmModal from "../components/actionConfirmModal";
 import Toast from '../components/ToastService';
 
@@ -110,7 +109,7 @@ export default function ManageClients() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Manage CLIs</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Manage CLIs</h1>
         {isLoading && (
               <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                 <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>

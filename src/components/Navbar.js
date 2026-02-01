@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { apiCall } from "../Api";
 
@@ -10,29 +10,12 @@ const Navbar = () => {
   });
   const navRef = useRef();
 
-  const [user, setUser] = useState(() => {
-    const token = sessionStorage.getItem("token");
-    if (!token) return null;
-
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload;
-    } catch (err) {
-      console.error("Invalid token", err);
-      return null;
-    }
-  });
-
-  const [initials, setInitials] = useState(() => {
-    if (user?.username) return user.username.slice(0, 2).toUpperCase();
-    return "";
-  });
-
   useEffect(() => {
     const fetchAccountDetails = async () => {
       // check if the user is logged in or not , if not then just return
-      if (!user) return;
-      
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+
       const cachedProfile = localStorage.getItem("indra_profile");
 
       if (cachedProfile) {
@@ -80,27 +63,34 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  const controlNavbar = () => {
+  const controlNavbar = useCallback(() => {
     if (typeof window !== "undefined") {
       if (window.scrollY < lastScrollY) setShowNavbar(true);
       else setShowNavbar(false);
       setLastScrollY(window.scrollY);
     }
-  };
+  }, [lastScrollY]); // Memoized controlNavbar with useCallback
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", controlNavbar);
-      return () => window.removeEventListener("scroll", controlNavbar);
-    }
-  }, [lastScrollY]);
+    const handleScroll = () => {
+      controlNavbar();
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [controlNavbar]); // Added controlNavbar to the dependency array
+
+  const initials = account?.username
+    ? account.username.slice(0, 2).toUpperCase()
+    : "User"; // Define initials based on the username or fallback to 'N/A'
 
   return (
     <header
       ref={navRef}
-      className={`w-full px-6 md:px-20 py-4 bg-white flex flex-col md:flex-row justify-between items-start md:items-center fixed top-0 z-50 transition-transform duration-300 ${
-        showNavbar ? 'translate-y-0' : '-translate-y-full'
-      }`}
+      className={`w-full px-6 md:px-20 py-4 bg-white flex flex-col md:flex-row justify-between items-start md:items-center fixed top-0 z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'
+        }`}
     >
       {/* Left section */}
       <div className="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0">
@@ -145,19 +135,17 @@ const Navbar = () => {
 
         {/* Navigation */}
         <nav
-          className={`${
-            mobileMenuOpen ? 'flex' : 'hidden'
-          } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-10 text-sm mt-4 md:mt-0 ml-12`}
+          className={`${mobileMenuOpen ? 'flex' : 'hidden'
+            } md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-10 text-sm mt-4 md:mt-0 ml-12`}
         >
           {/* Analytics */}
           <div className="relative group">
             <button
               onMouseOver={() => togglePopup('analytics')}
-              className={`${
-                activePopup === 'analytics'
-                  ? 'text-[#0a1d39] font-semibold'
-                  : 'text-[#475569]'
-              } hover:text-[#0a1d39] text-left w-full`}
+              className={`${activePopup === 'analytics'
+                ? 'text-[#0a1d39] font-semibold'
+                : 'text-[#475569]'
+                } hover:text-[#0a1d39] text-left w-full`}
               onClick={() => (window.location.href = '/dashboard')}
             >
               Analytics
@@ -183,11 +171,10 @@ const Navbar = () => {
           <div className="relative group">
             <button
               onMouseOver={() => togglePopup('services')}
-              className={`${
-                activePopup === 'services'
-                  ? 'text-[#0a1d39] font-semibold'
-                  : 'text-[#475569]'
-              } hover:text-[#0a1d39] text-left w-full`}
+              className={`${activePopup === 'services'
+                ? 'text-[#0a1d39] font-semibold'
+                : 'text-[#475569]'
+                } hover:text-[#0a1d39] text-left w-full`}
             >
               Services
             </button>
@@ -225,11 +212,10 @@ const Navbar = () => {
           <div className="relative group">
             <button
               onMouseOver={() => togglePopup('manage')}
-              className={`${
-                activePopup === 'manage'
-                  ? 'text-[#0a1d39] font-semibold'
-                  : 'text-[#475569]'
-              } hover:text-[#0a1d39] text-left w-full`}
+              className={`${activePopup === 'manage'
+                ? 'text-[#0a1d39] font-semibold'
+                : 'text-[#475569]'
+                } hover:text-[#0a1d39] text-left w-full`}
             >
               Manage
             </button>
@@ -257,13 +243,12 @@ const Navbar = () => {
           {/* Documentation */}
           <button
             onClick={() => (window.location.href = '/docs')}
-            className={`${
-              activePopup === 'docs'
-                ? 'text-[#0a1d39] font-semibold'
-                : 'text-[#475569]'
-            } hover:text-[#0a1d39] text-left w-full whitespace-nowrap`}
+            className={`${activePopup === 'docs'
+              ? 'text-[#0a1d39] font-semibold'
+              : 'text-[#475569]'
+              } hover:text-[#0a1d39] text-left w-full whitespace-nowrap`}
           >
-            Documentation
+            Docs
           </button>
         </nav>
       </div>

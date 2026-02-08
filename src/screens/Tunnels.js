@@ -85,7 +85,7 @@ function Tunnels() {
 
 	return <div className="p-6 font-sans mt-16">
 		<div className="flex items-center justify-between">
-			<h1 className="text-2xl font-bold text-gray-800">Tunnels</h1>
+			<h1 className="text-2xl font-bold text-gray-900">Tunnels</h1>
 			<div>
 				<button
 					onClick={handleAddTunnel}

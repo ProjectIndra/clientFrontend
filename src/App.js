@@ -10,7 +10,7 @@ import ManageProviders from "./screens/ManageProviders";
 import Buckets from "./screens/Buckets";
 import DocsMainPage from "./docs/components/docsMainPage.js";
 import ManageClients from "./screens/ManageClients.js";
-import PageWrapper from "./components/PageWrapper"; // Add this line
+import PageWrapper from "./components/PageWrapper";
 import {Dashboard} from "./screens/Dashboard";
 import {DashboardView} from "./screens/DashboardView";  
 import {GraphService} from "./screens/GraphService";

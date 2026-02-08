@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { apiCall } from "../Api";
 import ProviderCard from "../components/ProviderCard";
 import ActionConfirmModal from "../components/actionConfirmModal";
@@ -23,11 +23,11 @@ export default function ManageProviders() {
   const [isVerificationTokenLoading, setIsVerificationTokenLoading] =
     useState(false);
 
-  const vcpus = [1, 2, 4, 8, 16, 32, 64];
-  const rams = [2048, 4096, 8192, 16384, 32768, 65536];
-  const storage = [2, 10, 20, 50, 100, 200, 500];
-  const networks = [1, 2, 3, 4, 5, 6];
-  const vms = [1, 2, 3, 4, 5, 6];
+  const vcpus = ["1 vCPU", "2 vCPUs", "4 vCPUs", "8 vCPUs", "16 vCPUs", "32 vCPUs", "64 vCPUs"];
+  const rams = ["2 GB", "4 GB", "8 GB", "16 GB", "32 GB", "64 GB"];
+  const storage = ["2 GB", "10 GB", "20 GB", "50 GB", "100 GB", "200 GB", "500 GB"];
+  const networks = ["1 Network", "2 Networks", "3 Networks", "4 Networks", "5 Networks", "6 Networks"];
+  const vms = ["1 VM", "2 VMs", "3 VMs", "4 VMs", "5 VMs", "6 VMs"];
 
   const [actionConfirm, setActionConfirm] = useState({
     type: null,
@@ -53,12 +53,15 @@ export default function ManageProviders() {
 
 
   const handleProviderSelect = (provider) => {
-    console.log("Selected Provider:", provider);
-    setSelectedProvider(provider);
-    setFormData((prev) => ({
-      ...prev,
-      providerId: provider?.providerId?.toString(),
-    }));
+    if (selectedProvider?.providerId === provider?.providerId) {
+      setSelectedProvider(null); // Deselect if the same provider is clicked again
+    } else {
+      setSelectedProvider(provider); // Select the clicked provider
+      setFormData((prev) => ({
+        ...prev,
+        providerId: provider?.providerId?.toString(),
+      }));
+    }
   };
 
   const handleChange = (e) => {
@@ -69,71 +72,69 @@ export default function ManageProviders() {
     });
   };
 
-  const fetchProviders = async () => {
+  const fetchProviders = useCallback(async () => {
     setIsLoadingProviders(true);
-    await apiCall("get", "/ui/providers/userProviderDetails")
-      .then((data) => {
-        if (data.all_providers && Array.isArray(data.all_providers)) {
-          setProviders(data.all_providers);
-          setSelectedProvider(data.all_providers[0]);
-        } else
-          throw new Error("all_providers key not present in response data");
-      })
-      .catch((error) => {
-        console.log(error);
-        // alert("Error: " + error);
-        showToast("Failed to load providers", "error");
-
-      }).finally(() => {
-        setIsLoadingProviders(false);
+    try {
+      const data = await apiCall("get", "/ui/providers/userProviderDetails");
+      if (data.all_providers && Array.isArray(data.all_providers)) {
+        setProviders(data.all_providers);
+        setSelectedProvider(data.all_providers[0]);
+      } else {
+        throw new Error("Response not suitable.");
       }
-      );
-  };
+    } catch (error) {
+      console.error(error);
+      showToast("Failed to load providers", "error");
+    } finally {
+      setIsLoadingProviders(false);
+    }
+  }, []); // Memoized fetchProviders
 
-  const fetchActiveUsers = async () => {
+  const fetchActiveUsers = useCallback(async () => {
     setIsLoadingClients(true);
-    await apiCall("get", "/ui/providers/providerClientDetails")
-      .then((data) => {
-        if (data.client_details && Array.isArray(data.client_details)) {
-          setActiveUsers(data.client_details);
-        } else
-          throw new Error("client_details key not present in response data");
-      })
-      .catch((error) => {
-        console.log(error);
-        // alert("Error: " + error);
-        showToast("Failed to load active users", "error");
-      }).finally(() => {
-        setIsLoadingClients(false);
+    try {
+      const data = await apiCall("get", "/ui/providers/providerClientDetails");
+      if (data.client_details && Array.isArray(data.client_details)) {
+        setActiveUsers(data.client_details);
+      } else {
+        throw new Error("Response not suitable.");
       }
-      );
-  };
+    } catch (error) {
+      console.error(error);
+      showToast("Failed to load active users", "error");
+    } finally {
+      setIsLoadingClients(false);
+    }
+  }, []); // Memoized fetchActiveUsers
 
   useEffect(() => {
-    fetchProviders();
-    fetchActiveUsers();
-  }, []);
+    const fetchData = async () => {
+      await fetchProviders();
+      await fetchActiveUsers();
+    };
+
+    fetchData();
+  }, [fetchProviders, fetchActiveUsers]); // Added dependencies to the useEffect array
 
   const handleSaveProvider = () => {
-    apiCall("post", "ui/providers/update_config", formData)
+    apiCall("post", "/ui/providers/update_config", formData)
       .then((data) => {
-        if (data.status === "success") {
-          alert("Provider created successfully");
-          setFormData({
-            providerName: "",
-            providerId: "",
-            providerAllowedVcpu: "",
-            providerAllowedRam: "",
-            providerAllowedNetworks: "",
-            providerAllowedVms: "",
-            providerAllowedStorage: "",
-          });
-          setSelectedProvider(null);
-        } else throw new Error("Error creating provider");
+        console.log(data);
+        setFormData({
+          providerName: "",
+          providerId: "",
+          providerAllowedVcpu: "",
+          providerAllowedRam: "",
+          providerAllowedNetworks: "",
+          providerAllowedVms: "",
+          providerAllowedStorage: "",
+        });
+        setSelectedProvider(null);
+        showToast("Provider updated successfully", "success");
+        fetchProviders();
       })
       .catch((error) => {
         console.log(error);
-        // alert("Error: " + error);
         showToast("Error creating provider: " + error.message, "error");
       });
   };
@@ -147,33 +148,51 @@ export default function ManageProviders() {
       console.log("req data", requestData);
 
       let response = await apiCall("POST", "/providerServer/getProviderVerificationToken", requestData);
-      // console.log(response);
       if (response && response.cli_verification_token === undefined) {
-        // alert("Error: No verification token returned");
         showToast("Error: No verification token returned", "error");
         return;
       }
-      // alert(
-      //   "use this Verification Token in cli to verfiy: " +
-      //     response.cli_verification_token
-      // );
       setActionConfirm({
-        // type: "error",
         visible: true,
-        // command: `sudo apt install mega -y && printf '%s\n' "${response.cli_verification_token}" "your-ngrok-auth" "your-ngrok-url" "qemu:///system"}`,
         message: "copy & paste the token to add new provider",
         command: `${response.cli_verification_token}`,
         isConfirmButtonVisible: false,
         isCancelButtonVisible: true,
         cancelButtonName: "Done",
       });
-      // console.log(actionConfirm);
     } catch (error) {
       console.error("Error adding client:", error);
       showToast("Error adding client: " + error.message, "error");
     }
     finally {
       setIsVerificationTokenLoading(false)
+    }
+  };
+
+  const handleDeleteProvider = async () => {
+    if (!selectedProvider) {
+      showToast("Please select a provider to delete", "error");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the provider: ${selectedProvider.providerName}?`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const response = await apiCall("delete", `/ui/providers/${selectedProvider.providerId}`);
+      if (response.status === "success") {
+        showToast("Provider deleted successfully", "success");
+        setProviders((prev) => prev.filter((p) => p.providerId !== selectedProvider.providerId));
+        setSelectedProvider(null);
+      } else {
+        throw new Error("Failed to delete provider");
+      }
+    } catch (error) {
+      console.error("Error deleting provider:", error);
+      showToast("Error deleting provider: " + error.message, "error");
     }
   };
 
@@ -191,7 +210,7 @@ export default function ManageProviders() {
   }, []);
 
   return (
-    <div className="relative max-w-7xl mx-auto p-6">
+    <div className="relative mx-auto p-6">
       {
         isVerificationTokenLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
@@ -203,11 +222,20 @@ export default function ManageProviders() {
         <h2 className="text-2xl font-semibold text-slate-800 mb-6">
           Manage Providers
         </h2>
-        <button
-          className="px-4 py-2 bg-lime-500 hover:bg-lime-600 text-white rounded-md transition-colors"
-          onClick={handleAddNewProvider}
-        >
-          Add new Provider</button>
+        <div className="flex gap-4">
+          <button
+            className="px-4 py-2 bg-lime-500 hover:bg-lime-600 text-white rounded-md transition-colors"
+            onClick={handleAddNewProvider}
+          >
+            Add new Provider
+          </button>
+          <button
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors"
+            onClick={handleDeleteProvider}
+          >
+            Delete Provider
+          </button>
+        </div>
       </div>
 
 
@@ -216,7 +244,7 @@ export default function ManageProviders() {
         {/* LEFT side - Provider List */}
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-medium text-slate-800 mb-4">Providers</h3>
-          <div className="relative space-y-4 h-[500px] overflow-y-auto">
+          <div className="relative space-y-4 h-[500px] overflow-y-auto px-3 py-0">
             {isLoadingFirst && (
               <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                 <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
@@ -229,7 +257,7 @@ export default function ManageProviders() {
                 <div
                   key={idx}
                   onClick={() => handleProviderSelect(provider)}
-                  className={`provider-card ${provider?.providerId === selectedProvider?.providerId ? "border-lime-500 border-2 rounded-lg p-1" : ""}`}
+                  className={`provider-card ${provider?.providerId === selectedProvider?.providerId ? "border-lime-500 border-xl rounded-lg " : ""}`}
                 >
                   <ProviderCard
                     provider={provider}
@@ -271,7 +299,7 @@ export default function ManageProviders() {
                   >
                     <option value="">Select</option>
                     {vcpus.map((cpu, idx) => (
-                      <option key={idx} value={cpu}>
+                      <option key={idx} value={cpu.split(' ')[0]}>
                         {cpu}
                       </option>
                     ))}
@@ -290,7 +318,7 @@ export default function ManageProviders() {
                   >
                     <option value="">Select</option>
                     {rams.map((ram, idx) => (
-                      <option key={idx} value={ram}>
+                      <option key={idx} value={ram.split(' ')[0]}>
                         {ram}
                       </option>
                     ))}
@@ -309,7 +337,7 @@ export default function ManageProviders() {
                   >
                     <option value="">Select</option>
                     {storage.map((disk, idx) => (
-                      <option key={idx} value={disk}>
+                      <option key={idx} value={disk.split(' ')[0]}>
                         {disk}
                       </option>
                     ))}
@@ -328,7 +356,7 @@ export default function ManageProviders() {
                   >
                     <option value="">Select</option>
                     {networks.map((network, idx) => (
-                      <option key={idx} value={network}>
+                      <option key={idx} value={network.split(' ')[0]}>
                         {network}
                       </option>
                     ))}
@@ -347,7 +375,7 @@ export default function ManageProviders() {
                   >
                     <option value="">Select</option>
                     {vms.map((vm, idx) => (
-                      <option key={idx} value={vm}>
+                      <option key={idx} value={vm.split(' ')[0]}>
                         {vm}
                       </option>
                     ))}

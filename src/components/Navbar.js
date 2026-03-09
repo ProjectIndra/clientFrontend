@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { apiCall } from "../Api";
+import { AuthHandler } from "../utils/authHandler";
 
 const Navbar = () => {
   const [activePopup, setActivePopup] = useState(null);
@@ -303,8 +304,7 @@ const Navbar = () => {
               <button
                 className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                 onClick={() => {
-                  sessionStorage.removeItem('token')
-                  window.location.href = '/login'
+                 AuthHandler.logout();
                 }}
               >
                 Logout

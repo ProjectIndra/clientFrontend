@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -16,18 +17,30 @@ function Footer() {
       <footer className="bg-[#0D1A33] text-white px-4 py-6 flex flex-col md:flex-row justify-between items-center">
         <div>
           <p className="font-bold text-lg">ComputeKart</p>
-          <p className="text-xs mt-1">©2025. ComputeKart. All Rights Reserved.</p>
+          <p className="text-xs mt-1">
+            ©2025. ComputeKart. All Rights Reserved.
+          </p>
         </div>
+
         <ul className="flex gap-4 mt-4 md:mt-0 text-sm">
-          <li>Home</li>
-          <li>Installation Guide</li>
-          <li>Profile</li>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/installation">Installation Guide</Link>
+          </li>
+          <li>
+            <Link to="/profile">Profile</Link>
+          </li>
         </ul>
+
         <div className="text-xs mt-4 md:mt-0">
-          <a href="#" className="mr-4">
+          <Link to="/terms" className="mr-4">
             Terms of Service
-          </a>
-          <a href="#">Privacy Policy</a>
+          </Link>
+          <Link to="/privacy">
+            Privacy Policy
+          </Link>
         </div>
       </footer>
     </div>

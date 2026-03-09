@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GraphView } from '../components/GraphView'
 import DashboardCreateModal from '../components/DashboardCreateModal'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { Trash2 } from 'lucide-react'
 import Toast from '../components/ToastService'
 import ActionConfirmModal from '../components/actionConfirmModal'
@@ -11,7 +11,6 @@ import { epochToReadable } from '../helper'
 import { listGraphsForDashboard, deleteGraph, getGraphPoints } from '../apiServices'
 
 export const DashboardView = () => {
-  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const dashboardId = searchParams.get('id')
   const [graphs, setGraphs] = useState([])

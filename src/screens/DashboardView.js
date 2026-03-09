@@ -352,7 +352,7 @@ export const DashboardView = () => {
                 }}
                 className="absolute top-2 right-2 p-2 rounded-full bg-red-50 hover:bg-red-100 transition"
               >
-                <Trash2 size={20} className="text-red-500" />
+                <Trash2 size={20} className="text-red-500" cursor="pointer"/>
               </button>
 
               <div onClick={() => handleGraphClick(g)}>

@@ -16,9 +16,9 @@ const ProviderCard = ({ provider, isActive = false }) => {
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`w-full flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden  
+        className={`w-full flex rounded-xl shadow-md border transition-all duration-300 overflow-hidden 
           ${isHovered ? "bg-lime-50 cursor-pointer" : "bg-white"} 
-          ${isActive ? "border-lime-500 border-2" : "border-gray-300"}`}
+          ${isActive ? "border-lime-500 border-2" : "border-gray-300 border-2 "}`}
       >
         {/* Left: Icon + Details */}
         <div className="flex flex-col p-4 flex-1" >

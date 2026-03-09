@@ -35,10 +35,10 @@ function Footer() {
         </ul>
 
         <div className="text-xs mt-4 md:mt-0">
-          <Link to="/terms" className="mr-4">
+          <Link to="#" className="mr-4">
             Terms of Service
           </Link>
-          <Link to="/privacy">
+          <Link to="#">
             Privacy Policy
           </Link>
         </div>

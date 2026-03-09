@@ -7,9 +7,6 @@ import useNavbarScroll from "../hooks/useNavbarScroll";
 import { getInitials } from "../utils/userUtils";
 import useClickOutside from "../hooks/useClickOutside";
 
-import { apiCall } from "../Api";
-import { AuthHandler } from "../utils/authHandler";
-
 const Navbar = () => {
   const [activePopup, setActivePopup] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -107,40 +104,6 @@ const Navbar = () => {
         {/* Avatar */}
         <AvatarMenu account={account} initials={initials} togglePopup={togglePopup} activePopup={activePopup} />
 
-        <div className="relative">
-          <div
-            className="w-10 aspect-square bg-[#004d3c] text-white flex items-center justify-center rounded-full font-bold shrink-0 cursor-pointer overflow-hidden"
-            onClick={() => togglePopup('avatar')}
-          >
-            {account.profile_image ? (
-              <img
-                src={account?.profile_image}
-                alt="Avatar"
-                className="w-full h-full object-cover border-2 border-lime-300 rounded-full"
-              />
-            ) : (
-              initials
-            )}
-          </div>
-          {activePopup === 'avatar' && (
-            <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
-              <button
-                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-lime-100"
-                onClick={() => (window.location.href = '/profile')}
-              >
-                Profile
-              </button>
-              <button
-                className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                onClick={() => {
-                 AuthHandler.logout();
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
       </div>
     </header>
   )

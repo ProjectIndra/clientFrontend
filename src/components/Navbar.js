@@ -7,7 +7,6 @@ import useNavbarScroll from "../hooks/useNavbarScroll";
 import { getInitials } from "../utils/userUtils";
 import useClickOutside from "../hooks/useClickOutside";
 
-
 const Navbar = () => {
   const [activePopup, setActivePopup] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

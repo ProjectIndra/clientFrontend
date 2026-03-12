@@ -14,7 +14,7 @@ if (!version) {
 }
 
 try {
-  execSync(`docker build -t kumarsubrato/computekart-frontend:${version} -f deployment/docker/Dockerfile .`, { stdio: 'inherit' });
+  execSync(`docker build -t ${docker_username}/computekart-frontend:${version} -f deployment/docker/Dockerfile .`, { stdio: 'inherit' });
   execSync(`docker push ${docker_username}/computekart-frontend:${version}`, { stdio: 'inherit' });
   execSync('git add .', { stdio: 'inherit' });
   execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' });

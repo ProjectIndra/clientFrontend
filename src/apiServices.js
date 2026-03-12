@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const MONITORING_SERVER = process.env.REACT_APP_MONITORING_SERVER
+const MONITORING_SERVER = process.env.REACT_APP_MG_SERVER
 
 const api = axios.create({
   baseURL: MONITORING_SERVER,

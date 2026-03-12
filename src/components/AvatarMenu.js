@@ -1,3 +1,5 @@
+import { AuthHandler } from "../utils/authHandler";
+
 function AvatarMenu({ account, initials, togglePopup, activePopup }) {
 	return (
 		<div className="relative">
@@ -28,8 +30,7 @@ function AvatarMenu({ account, initials, togglePopup, activePopup }) {
 					<button
 						className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
 						onClick={() => {
-							sessionStorage.removeItem("token");
-							window.location.href = "/login";
+							 AuthHandler.logout();
 						}}
 					>
 						Logout

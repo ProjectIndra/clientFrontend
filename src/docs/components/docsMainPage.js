@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import Navbar from '../../components/Navbar';
 import Sidebar from './sidebar';
 import ShowDocumentation from './showDocumentation';
 import Mainheadings from './mainheadings';
 import "../css/docsMainPage.css";
-import { file } from 'jszip';
 
 const DocsMainPage = () => {
 

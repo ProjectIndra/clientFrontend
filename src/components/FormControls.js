@@ -91,4 +91,10 @@ export const DropdownSelect = ({
   )
 }
 
-export default { TextInput, NumberInput, DropdownSelect }
+const FormControls = {
+  TextInput,
+  NumberInput,
+  DropdownSelect,
+}
+
+export default FormControls

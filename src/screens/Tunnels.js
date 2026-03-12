@@ -3,7 +3,6 @@ import { apiCall } from "../Api";
 import Toast from "../components/ToastService";
 
 function Tunnels() {
-
   const [tunnels, setTunnels] = useState([]);
   const [selectedTunnel, setSelectedTunnel] = useState(null);
 
@@ -14,7 +13,7 @@ function Tunnels() {
   const [toast, setToast] = useState({
     message: "",
     type: "info",
-    visible: false
+    visible: false,
   });
 
   useEffect(() => {
@@ -26,7 +25,7 @@ function Tunnels() {
   };
 
   const closeToast = () => {
-    setToast(prev => ({ ...prev, visible: false }));
+    setToast((prev) => ({ ...prev, visible: false }));
   };
 
   const copyToClipboard = (text) => {
@@ -35,27 +34,19 @@ function Tunnels() {
   };
 
   async function fetchTunnels() {
-
     try {
-
       const response = await apiCall("POST", "/ui/getUserClients");
 
       setTunnels(response || []);
-
     } catch (error) {
-
       showToast("Failed to fetch tunnels", "error");
-
     }
-
   }
 
   async function handleAddTunnel() {
-
     try {
-
       await apiCall("POST", "/ui/createTunnelClient", {
-        tunnelName: tunnelName
+        tunnelName: tunnelName,
       });
 
       showToast("Tunnel created successfully", "success");
@@ -64,22 +55,16 @@ function Tunnels() {
       setTunnelName("");
 
       fetchTunnels();
-
     } catch (error) {
-
       showToast("Failed to create tunnel", "error");
-
     }
-
   }
 
   async function editTunnel(tunnelNo) {
-
     try {
-
       await apiCall("POST", "/ui/editTunnel", {
         tunnelNo: tunnelNo,
-        tunnelName: tunnelName
+        tunnelName: tunnelName,
       });
 
       showToast("Tunnel updated successfully", "success");
@@ -89,44 +74,29 @@ function Tunnels() {
       setSelectedTunnel(null);
 
       fetchTunnels();
-
     } catch (error) {
-
       showToast("Failed to update tunnel", "error");
-
     }
-
   }
 
   async function deleteTunnel(tunnelNo) {
-
     try {
-
       await apiCall("POST", "/ui/deleteTunnel", {
-        tunnelNo: String(tunnelNo)
+        tunnelNo: String(tunnelNo),
       });
 
       showToast("Tunnel deleted", "success");
 
       fetchTunnels();
-
     } catch (error) {
-
       showToast("Failed to delete tunnel", "error");
-
     }
-
   }
 
   return (
-
     <div className="p-8 mt-16">
-
       <div className="flex justify-between items-center mb-6">
-
-        <h1 className="text-2xl font-bold text-gray-900">
-          Tunnels
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900">Tunnels</h1>
 
         <button
           onClick={() => {
@@ -138,15 +108,11 @@ function Tunnels() {
         >
           Add Client
         </button>
-
       </div>
 
       <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-
         <table className="min-w-full">
-
           <thead className="bg-gray-50 text-gray-700 text-sm">
-
             <tr>
               <th className="px-4 py-3 text-left">Tunnel No</th>
               <th className="px-4 py-3 text-left">Tunnel Name</th>
@@ -154,34 +120,23 @@ function Tunnels() {
               <th className="px-4 py-3 text-left">URL</th>
               <th className="px-4 py-3 text-left">Actions</th>
             </tr>
-
           </thead>
 
           <tbody>
-
             {tunnels.map((tunnel) => {
-
               const url = `https://${tunnel?.tunnelNo}-${tunnel?.username}.computekart.com`;
 
               return (
-
                 <tr
                   key={tunnel?.tunnelNo}
                   className="border-t hover:bg-gray-50 transition"
                 >
+                  <td className="px-4 py-3 font-medium">{tunnel?.tunnelNo}</td>
 
-                  <td className="px-4 py-3 font-medium">
-                    {tunnel?.tunnelNo}
-                  </td>
-
-                  <td className="px-4 py-3">
-                    {tunnel?.tunnelName || "-"}
-                  </td>
+                  <td className="px-4 py-3">{tunnel?.tunnelName || "-"}</td>
 
                   <td className="px-4 py-3">
-
                     <div className="flex items-center gap-3">
-
                       <span className="font-mono text-sm truncate max-w-[260px]">
                         {tunnel?.tunnelToken}
                       </span>
@@ -192,15 +147,11 @@ function Tunnels() {
                       >
                         Copy
                       </button>
-
                     </div>
-
                   </td>
 
                   <td className="px-4 py-3">
-
                     <div className="flex items-center gap-3">
-
                       <a
                         href={url}
                         target="_blank"
@@ -216,15 +167,11 @@ function Tunnels() {
                       >
                         Copy
                       </button>
-
                     </div>
-
                   </td>
 
                   <td className="px-4 py-3">
-
                     <div className="flex gap-2">
-
                       <button
                         onClick={() => {
                           setSelectedTunnel(tunnel?.tunnelNo);
@@ -243,43 +190,24 @@ function Tunnels() {
                       >
                         Delete
                       </button>
-
                     </div>
-
                   </td>
-
                 </tr>
-
               );
-
             })}
-
           </tbody>
-
         </table>
-
       </div>
 
       {toast.visible && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={closeToast}
-        />
+        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
       )}
 
       {popupVisible && (
-
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
-
           <div className="bg-white rounded-lg p-6 w-96 shadow">
-
             <h2 className="text-lg font-bold mb-4">
-
-              {popupType === "add"
-                ? "Add Tunnel"
-                : "Edit Tunnel"}
-
+              {popupType === "add" ? "Add Tunnel" : "Edit Tunnel"}
             </h2>
 
             <input
@@ -291,7 +219,6 @@ function Tunnels() {
             />
 
             <div className="flex justify-end gap-3">
-
               <button
                 onClick={() => setPopupVisible(false)}
                 className="px-4 py-2 bg-gray-200 rounded"
@@ -301,7 +228,6 @@ function Tunnels() {
 
               <button
                 onClick={() => {
-
                   if (!tunnelName.trim()) {
                     showToast("Tunnel name is required", "error");
                     return;
@@ -312,7 +238,6 @@ function Tunnels() {
                   } else {
                     editTunnel(selectedTunnel);
                   }
-
                 }}
                 disabled={!tunnelName.trim()}
                 className={`px-4 py-2 rounded text-white ${
@@ -323,17 +248,11 @@ function Tunnels() {
               >
                 Save
               </button>
-
             </div>
-
           </div>
-
         </div>
-
       )}
-
     </div>
-
   );
 }
 

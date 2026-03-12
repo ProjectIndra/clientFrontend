@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { AuthHandler } from './utils/authHandler';
 
 const MG_SERVER = process.env.REACT_APP_MG_SERVER;
 
@@ -21,7 +22,7 @@ export const apiCall = async (method, endpoint, data = null) => {
 			data,
 			headers: {
 				...api.defaults.headers,
-				Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+				Authorization: `Bearer ${AuthHandler.getToken()}`,
 				"ngrok-skip-browser-warning": "69420",
 			},
 		});

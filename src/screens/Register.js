@@ -3,6 +3,8 @@ import { apiCall } from "../Api";
 import { useState } from "react";
 import { logger } from "../utils/logger";
 import { validators } from "../utils/validators";
+import {AuthHandler} from "../utils/authHandler";
+
 
 function Register() {
 const [error, setError] = useState(null);
@@ -41,7 +43,7 @@ const handleSubmit = async (event) => {
   try {
     setIsLoading(true);
 
-    await apiCall("post", "/register", {
+   const res = await apiCall("post", "/register", {
       email: emailValue,
       username: usernameValue,
       password: passwordValue,
@@ -49,7 +51,7 @@ const handleSubmit = async (event) => {
 
     logger.success("Registered successfully");
 
-    window.location.replace("/login");
+    AuthHandler.login(res.token);
   } catch (err) {
     const message =
       err ||

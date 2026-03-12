@@ -46,8 +46,6 @@ function Login() {
       AuthHandler.login(res.token);
 
       logger.success("Login successful");
-
-      window.location.href = "/home";
     } catch (err) {
       const message =
         err ||

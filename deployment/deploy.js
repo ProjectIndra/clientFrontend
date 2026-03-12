@@ -11,6 +11,7 @@ if (!version) {
 try {
   execSync(`sudo docker build -t kumarsubrato/computekart-frontend:${version} -f deployment/docker/Dockerfile .`, { stdio: 'inherit' });
   execSync(`docker push kumarsubrato/computekart-frontend:${version}`, { stdio: 'inherit' });
+  // change in frntnd-deployment.yaml
   execSync('git add .', { stdio: 'inherit' });
   execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' });
   execSync('git push', { stdio: 'inherit' });

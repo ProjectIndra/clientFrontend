@@ -27,8 +27,8 @@ export const GraphView = ({
   // Convert API data → Recharts-friendly
   const mergedData = {}
 
-  series.forEach((s) => {
-    s.data.forEach(([timestamp, value]) => {
+  series?.forEach((s) => {
+    s?.data?.forEach(([timestamp, value]) => {
       const d = dayjs(timestamp)
       const dateKey = d.format('YYYY-MM-DD') // full date
       const timeKey = d.format('HH:mm') // time only
@@ -70,9 +70,9 @@ export const GraphView = ({
     return (
       <div className="bg-white p-3 border rounded shadow text-sm">
         <p className="font-semibold text-gray-700">{full}</p>
-        {payload.map((item, idx) => (
-          <p key={idx} style={{ color: item.color }}>
-            {item.name}: {item.value}
+        {payload?.map((item, idx) => (
+          <p key={idx} style={{ color: item?.color }}>
+            {item?.name}: {item?.value}
           </p>
         ))}
       </div>
@@ -107,7 +107,7 @@ export const GraphView = ({
               )}
             />
 
-            {series.map((s, idx) => (
+            {series?.map((s, idx) => (
               <Area
                 key={s.seriesId}
                 type="monotone"
@@ -121,7 +121,7 @@ export const GraphView = ({
             ))}
 
             {/* Reference lines same as LineChart */}
-            {dateChangeMarkers.map((d, idx) => (
+            {dateChangeMarkers?.map((d, idx) => (
               <ReferenceLine
                 key={idx}
                 x={d.x}
@@ -151,7 +151,7 @@ export const GraphView = ({
 
             <Legend />
 
-            {series.map((s, idx) => (
+            {series?.map((s, idx) => (
               <Line
                 key={s.seriesId}
                 type="monotone"
@@ -161,7 +161,7 @@ export const GraphView = ({
                 dot={false}
               />
             ))}
-            {dateChangeMarkers.map((d, idx) => (
+            {dateChangeMarkers?.map((d, idx) => (
               <ReferenceLine
                 key={idx}
                 x={d.x}

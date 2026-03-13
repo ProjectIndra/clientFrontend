@@ -29,12 +29,12 @@ function ProfileTabs({ isProvider, setIsProvider, providers, wg }) {
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 				{isProvider
-					? providers.map((provider, idxx) => (
+					? providers?.map((provider, idxx) => (
 							<div key={idxx}>
 								<ProviderCard provider={provider} />
 							</div>
 						))
-					: wg.map((client) => (
+					: wg?.map((client) => (
 							<div
 								key={client.cli_id}
 								className={`p-4 border rounded cursor-pointer`}

@@ -11,6 +11,7 @@ const Providers = () => {
   const vcpus = [2, 4, 8, 16, 32, 64];
   const rams = [2048, 4096, 8192, 16384, 32768, 65536];
   const images = ["linux"]
+  const storageOptions = [2, 5, 10, 20, 50, 100, 200, 500, 1000]; 
 
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [searchInput, setSearchInput] = useState("");
@@ -216,6 +217,7 @@ const Providers = () => {
               vcpus={vcpus}
               rams={rams}
               images={images}
+              storageOptions={storageOptions}
             />
           ) : (
             <div className="flex flex-col items-center justify-center h-full">

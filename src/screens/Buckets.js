@@ -251,7 +251,7 @@ const Buckets = () => {
 				  </tr>
 				</thead>
 				<tbody className={`divide-y divide-gray-100 ${loading ? 'pointer-events-none opacity-50' : ''}`}>
-				  {entries.map((entry, idx) => (
+				  {entries?.map((entry, idx) => (
 					<tr key={idx} className="hover:bg-gray-50"
 					>
 					  <td className="px-4 py-3">

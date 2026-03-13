@@ -15,13 +15,11 @@ import {Dashboard} from "./screens/Dashboard";
 import {DashboardView} from "./screens/DashboardView";  
 import {GraphService} from "./screens/GraphService";
 import Tunnels from "./screens/Tunnels";
-import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter basename={process.env.PUBLIC_URL}>
-       <Toaster position="bottom-right" />
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<Login />} />

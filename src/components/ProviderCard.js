@@ -51,11 +51,11 @@ const ProviderCard = ({ provider, isActive = false }) => {
             </div>}
             {provider?.providerAllowedRam && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Max RAM</span>
-              <span className="font-semibold">{provider?.providerAllowedRam} GB</span>
+              <span className="font-semibold">{provider?.providerAllowedRam/1024} GB</span>
             </div>}
             {provider?.providerAllowedStorage && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Max Storage</span>
-              <span className="font-semibold">{provider?.providerAllowedStorage} GB</span>
+              <span className="font-semibold">{provider?.providerAllowedStorage/1024} GB</span>
             </div>}
             {provider?.providerStatus && <div className="flex flex-col">
               <span className="text-gray-500 font-medium">Status</span>

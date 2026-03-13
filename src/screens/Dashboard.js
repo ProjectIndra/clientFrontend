@@ -94,7 +94,7 @@ export const Dashboard = () => {
         <p className="text-gray-500">No dashboards yet. Create one!</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {dashboards.map((dashboard) => (
+          {dashboards?.map((dashboard) => (
             <div
               key={dashboard.dashboardId}
               onClick={() => handleOpenDashboard(dashboard.dashboardId)}

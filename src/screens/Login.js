@@ -2,12 +2,20 @@ import { apiCall } from "../Api";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { validators } from "../utils/validators";
-import { logger } from "../utils/logger";
+import Toast from "../components/ToastService";
 import {AuthHandler} from "../utils/authHandler";
 
 function Login() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState({ message: "", type: "info", visible: false });
+  const showToast = (message, type = "info") => {
+    setToast({ message, type, visible: true });
+  };
+
+  const closeToast = () => {
+    setToast(prev => ({ ...prev, visible: false }));
+  };
 
   const handlesubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +38,7 @@ function Login() {
 
     if (validationError) {
       setError(validationError);
-      logger.error(validationError);
+      showToast(validationError, "error");
       return;
     }
 
@@ -45,14 +53,14 @@ function Login() {
 
       AuthHandler.login(res.token);
 
-      logger.success("Login successful");
+      showToast("Login successful!", "success");
     } catch (err) {
       const message =
         err ||
         "Login failed";
         
       setError(message);
-      logger.error(message);
+      showToast(message, "error");
 
     
     } finally {
@@ -127,6 +135,8 @@ function Login() {
             />
           </div>
         </div>
+        {/* Toast */}
+        {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
       </div>
     </>
   );

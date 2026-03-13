@@ -80,9 +80,9 @@ export const DropdownSelect = ({
         {loading ? (
           <option value="">Loading...</option>
         ) : (
-          options.map((opt, i) => (
-            <option key={i} value={typeof opt === 'string' ? opt : opt.value}>
-              {typeof opt === 'string' ? opt : opt.label}
+          options?.map((opt, i) => (
+            <option key={i} value={typeof opt === 'string' ? opt : opt?.value}>
+              {typeof opt === 'string' ? opt : opt?.label}
             </option>
           ))
         )}

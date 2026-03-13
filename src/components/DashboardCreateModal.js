@@ -50,7 +50,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
         const services = await listAllServices()
 
         const hisVms = Array.isArray(services.hisvms)
-          ? services.hisvms.map((vm) => ({
+          ? services?.hisvms?.map((vm) => ({
               label: vm?.vmName || vm?.internalVmName,
               value: vm?.internalVmName,
               provider_id: vm?.providerId,
@@ -58,11 +58,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           : []
 
         const hisProviders = Array.isArray(services.hisproviders)
-          ? services.hisproviders.map((provider) => ({
+          ? services?.hisproviders?.map((provider) => ({
               label: provider?.providerName,
               value: provider?.providerId,
               allVms: Array.isArray(provider.vmsInThisProvider)
-                ? provider.vmsInThisProvider.map((vm) => ({
+                ? provider?.vmsInThisProvider?.map((vm) => ({
                     vm_id: vm?.vmId,
                     vm_name: vm?.vmName || vm?.vmId,
                   }))
@@ -75,10 +75,10 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
         // Set default selections after data is loaded
         setForm((prevForm) => ({
           ...prevForm,
-          series: prevForm.series.map((s) => {
+          series: prevForm?.series?.map((s) => {
             if (s.entityType === 'vm') {
               const providerIdsSet = new Set(
-                hisVms.map((v) => v.provider_id)
+                hisVms?.map((v) => v.provider_id)
               )
               const providerIds = Array.from(providerIdsSet)
               return {
@@ -91,7 +91,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
               }
             } else if (s.entityType === 'provider' && !s.filters.provider_id) {
               const providerIdsSet = new Set(
-                hisProviders.map((p) => p.value)
+                hisProviders?.map((p) => p.value)
               )
               const providerIds = Array.from(providerIdsSet)
               return {
@@ -148,7 +148,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   const addSeries = () => {
     // Determine defaults based on entity type
     const vmsProviderIdsSet = new Set(
-      entityOptions.hisVms.map((v) => v.provider_id)
+      entityOptions?.hisVms?.map((v) => v.provider_id)
     )
     const providerIds = Array.from(vmsProviderIdsSet)
 
@@ -178,7 +178,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
 
   const handleCancel = () => {
     const vmsProviderIdsSet = new Set(
-      entityOptions.hisVms.map((v) => v.provider_id)
+      entityOptions?.hisVms?.map((v) => v.provider_id)
     )
     const providerIds = Array.from(vmsProviderIdsSet)
 
@@ -264,13 +264,13 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
 
     // all provider IDs of the user
     const userProviderIdsSet = new Set(
-      entityOptions.hisProviders.map((p) => p.value)
+      entityOptions?.hisProviders?.map((p) => p.value)
     )
     const userProviderIds = Array.from(userProviderIdsSet)
 
     // all VM provider IDs of the user where he/she has created vm
     const vmsProviderIdsSet = new Set(
-      entityOptions.hisVms.map((p) => p.provider_id)
+      entityOptions?.hisVms?.map((p) => p.provider_id)
     )
     const vmsProviderIds = Array.from(vmsProviderIdsSet)
 
@@ -281,7 +281,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       defaultTimeRange: `${form?.defaultTimeRange}|0`,
       refreshIntervalSeconds: Number(form?.refreshIntervalSeconds) || 30,
       settings: JSON.stringify({}),
-      series: form?.series.map((s) => ({
+      series: form?.series?.map((s) => ({
         metricId: '',
         metricName: s?.metricName,
         entityType: s?.entityType,
@@ -312,7 +312,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       onClose()
 
     const vmsProviderIdsSet = new Set(
-      entityOptions.hisVms.map((v) => v.provider_id)
+      entityOptions?.hisVms?.map((v) => v.provider_id)
     )
     const providerIds = Array.from(vmsProviderIdsSet)
       setForm({
@@ -453,11 +453,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
             </button>
           </div>
 
-          {form.series.map((s, idx) => (
+          {form?.series?.map((s, idx) => (
             <div key={idx} className="border rounded p-3 mb-3">
               <div className="flex justify-between items-center mb-2">
                 <div className="text-sm font-medium">Series {idx + 1}</div>
-                {form.series.length > 1 && (
+                {form?.series?.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeSeries(idx)}
@@ -477,7 +477,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
 
                     // Set defaults based on entity type
                     if (v === 'vm') {
-                      const providerIds = entityOptions.hisVms.map(
+                      const providerIds = entityOptions?.hisVms?.map(
                         (vm) => vm.provider_id
                       )
                       updateSeriesField(idx, 'filters', {})
@@ -486,7 +486,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                       updateSeriesField(idx, 'entity_name', '')
                       setEntityType('vm')
                     } else if (v === 'provider') {
-                      const providerIds = entityOptions.hisProviders.map(
+                      const providerIds = entityOptions.hisProviders?.map(
                         (p) => p.value
                       )
                       updateSeriesField(idx, 'filters', {})
@@ -544,12 +544,12 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                       value: `all_${s?.entityType}s`,
                     },
                     ...(s?.entityType === 'vm'
-                      ? entityOptions.hisVms.map((v) => ({
+                      ? entityOptions?.hisVms?.map((v) => ({
                           label: v.label,
                           value: v.value,
                         }))
                       : s?.entityType === 'provider'
-                      ? entityOptions.hisProviders.map((p) => ({
+                      ? entityOptions?.hisProviders?.map((p) => ({
                           label: p.label,
                           value: p.value,
                         }))
@@ -567,7 +567,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                       (p) => p.value === s?.filters.provider_id
                     )
                     const vmOptions = provider
-                      ? provider.allVms.map((vm) => ({
+                      ? provider?.allVms?.map((vm) => ({
                           label: vm.vm_name,
                           value: vm.vm_id,
                         }))

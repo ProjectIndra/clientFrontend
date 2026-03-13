@@ -253,7 +253,7 @@ export default function ManageProviders() {
             {providers?.length === 0 ? (
               <p className="text-gray-500 text-sm">You haven't created any provider yet.</p>
             ) : (
-              providers.map((provider, idx) => (
+              providers?.map((provider, idx) => (
                 <div
                   key={idx}
                   onClick={() => handleProviderSelect(provider)}
@@ -298,7 +298,7 @@ export default function ManageProviders() {
                     className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
                   >
                     <option value="">Select</option>
-                    {vcpus.map((cpu, idx) => (
+                    {vcpus?.map((cpu, idx) => (
                       <option key={idx} value={cpu.split(' ')[0]}>
                         {cpu}
                       </option>
@@ -317,7 +317,7 @@ export default function ManageProviders() {
                     className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
                   >
                     <option value="">Select</option>
-                    {rams.map((ram, idx) => (
+                    {rams?.map((ram, idx) => (
                       <option key={idx} value={ram.split(' ')[0]}>
                         {ram}
                       </option>
@@ -336,7 +336,7 @@ export default function ManageProviders() {
                     className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
                   >
                     <option value="">Select</option>
-                    {storage.map((disk, idx) => (
+                    {storage?.map((disk, idx) => (
                       <option key={idx} value={disk.split(' ')[0]}>
                         {disk}
                       </option>
@@ -355,7 +355,7 @@ export default function ManageProviders() {
                     className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
                   >
                     <option value="">Select</option>
-                    {networks.map((network, idx) => (
+                    {networks?.map((network, idx) => (
                       <option key={idx} value={network.split(' ')[0]}>
                         {network}
                       </option>
@@ -374,7 +374,7 @@ export default function ManageProviders() {
                     className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
                   >
                     <option value="">Select</option>
-                    {vms.map((vm, idx) => (
+                    {vms?.map((vm, idx) => (
                       <option key={idx} value={vm.split(' ')[0]}>
                         {vm}
                       </option>

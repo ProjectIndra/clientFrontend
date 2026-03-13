@@ -1,6 +1,4 @@
-import React from "react";
-
-function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQuery, handleSubmitRequest, vcpus, rams, images}) {
+function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQuery, handleSubmitRequest, vcpus, rams, images,storageOptions }) {
   return (
 		<>
 			<div className="flex justify-between items-center mb-4">
@@ -31,7 +29,7 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 							className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
 						>
 							<option value="">Select</option>
-							{vcpus.map((cpu, idx) => (
+							{vcpus?.map((cpu, idx) => (
 								<option key={idx} value={cpu}>
 									{cpu}
 								</option>
@@ -49,9 +47,9 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 							className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
 						>
 							<option value="">Select</option>
-							{rams.map((ram, idx) => (
+							{rams?.map((ram, idx) => (
 								<option key={idx} value={ram}>
-									{ram}
+									{ram / 1024} GB
 								</option>
 							))}
 						</select>
@@ -67,9 +65,9 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 							className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
 						>
 							<option value="">Select</option>
-							{rams.map((storage, idx) => (
+							{storageOptions?.map((storage, idx) => (
 								<option key={idx} value={storage}>
-									{storage}
+									{storage} GB
 								</option>
 							))}
 						</select>
@@ -86,7 +84,7 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 						className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
 					>
 						<option value="">Select</option>
-						{images.map((image, idx) => (
+						{images?.map((image, idx) => (
 							<option key={idx} value={image}>
 								{image}
 							</option>

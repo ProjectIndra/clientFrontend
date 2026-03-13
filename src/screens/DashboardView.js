@@ -197,11 +197,11 @@ export const DashboardView = () => {
         // initialize graph state with per-graph loading flag
         if (!mounted) return
         setGraphs(
-          list.map((g) => ({ ...g, pointsLoading: true, pointsError: null }))
+          list?.map((g) => ({ ...g, pointsLoading: true, pointsError: null }))
         )
 
         // fire off parallel requests to fetch points for each graph
-        list.forEach((g) => {
+        list?.forEach((g) => {
           // call getGraphPoints; update each graph as its response arrives
           getGraphPoints(g)
             .then((data) => {
@@ -215,7 +215,7 @@ export const DashboardView = () => {
               }
               if (!mounted) return
               setGraphs((prev) =>
-                prev.map((pg) =>
+                prev?.map((pg) =>
                   pg.graphId ===
                   (data && data.graphId ? data.graphId : g.graphId)
                     ? {
@@ -234,7 +234,7 @@ export const DashboardView = () => {
               console.error('Error fetching graph points for', g.graphId, err)
               if (!mounted) return
               setGraphs((prev) =>
-                prev.map((pg) =>
+                prev?.map((pg) =>
                   pg.graphId === g.graphId
                     ? {
                         ...pg,
@@ -325,7 +325,7 @@ export const DashboardView = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {graphs.map((g) => {
+        {graphs?.map((g) => {
           const parsedSettings = g.settings
             ? (() => {
                 try {

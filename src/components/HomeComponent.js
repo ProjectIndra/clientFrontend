@@ -209,7 +209,7 @@ export default function LockBoxLanding() {
           </h2>
         </div>
         <div className="max-w-3xl mx-auto space-y-4">
-          {faqs.map((faq, index) => (
+          {faqs?.map((faq, index) => (
             <div
               key={index}
               className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200 transition-none hover:scale-100"

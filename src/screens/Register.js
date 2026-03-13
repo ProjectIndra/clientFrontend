@@ -1,18 +1,27 @@
 import { Link } from "react-router-dom";
 import { apiCall } from "../Api";
 import { useState } from "react";
-import { logger } from "../utils/logger";
+import Toast from "../components/ToastService";
 import { validators } from "../utils/validators";
 import {AuthHandler} from "../utils/authHandler";
 
 
 function Register() {
 const [error, setError] = useState(null);
-const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState({ message: "", type: "info", visible: false });
+  const showToast = (message, type = "info") => {
+    setToast({ message, type, visible: true });
+  };
+
+  const closeToast = () => {
+    setToast(prev => ({ ...prev, visible: false }));
+  };
+  
 
 const handleError = (message) => {
   setError(message);
-  logger.error(message);
+  showToast(message, "error");
 };
 
 const handleSubmit = async (event) => {
@@ -49,7 +58,7 @@ const handleSubmit = async (event) => {
       password: passwordValue,
     });
 
-    logger.success("Registered successfully");
+    showToast("Registered successfully! Redirecting to login.", "success");
 
     AuthHandler.login(res.token);
   } catch (err) {
@@ -140,7 +149,10 @@ const handleSubmit = async (event) => {
           />
         </div>
       </div>
+      {/* Toast */}
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
     </div>
+    
   );
 }
 

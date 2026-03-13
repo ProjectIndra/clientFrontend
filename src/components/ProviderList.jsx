@@ -14,7 +14,7 @@ function ProviderList({ providers, selectedProvider, handleProviderSelect, isLoa
 					No provider is active
 				</div>
 			)}
-			{providers.map((provider, idx) => (
+			{providers?.map((provider, idx) => (
 				<div
 					className="w-full flex"
 					key={idx}

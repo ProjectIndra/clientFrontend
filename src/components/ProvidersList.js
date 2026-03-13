@@ -9,7 +9,7 @@ const ProvidersList = ({ providers }) => {
                 <button className='providers-list-search-button'>Search</button>
             </div>
             <div className="providers-list-main">
-                {providers.map((provider) => (
+                {providers?.map((provider) => (
                     <ProviderCard key={provider.id} provider={provider} />
                 ))}
             </div>

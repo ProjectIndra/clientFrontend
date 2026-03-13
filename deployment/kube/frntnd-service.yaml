@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: compute-kart-frntnd
+  namespace: computekart
+spec:
+  selector:
+    app: compute-kart-frntnd
+  ports:
+    - name: tcp
+      port: 80        # internal cluster port
+      targetPort: 80    # container port
+      nodePort: 30006   # external port for bare-metal / NodePort access
+  type: NodePort

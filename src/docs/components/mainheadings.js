@@ -14,7 +14,7 @@ const Mainheadings = ({ mdFile, setScrollToId }) => {
         const html = marked.parse(text);
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-        const found = Array.from(doc.querySelectorAll('h1, h2')).map((el) => ({
+        const found = Array.from(doc.querySelectorAll('h1, h2'))?.map((el) => ({
           id: el.textContent.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, ''),
           text: el.textContent,
         }));
@@ -25,7 +25,7 @@ const Mainheadings = ({ mdFile, setScrollToId }) => {
   return (
     <div className="mainheadings">
       <div className="toc-title">On this page</div>
-      {headings.map((h, i) => (
+      {headings?.map((h, i) => (
         <div
           key={i}
           className="toc-item"

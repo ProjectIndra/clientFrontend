@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { apiCall } from "../Api";
-import Navbar from "../components/Navbar";
 import ActionConfirmModal from "../components/actionConfirmModal";
 import Toast from '../components/ToastService';
 
@@ -11,17 +10,17 @@ export default function ManageClients() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [actionConfirm, setActionConfirm] = useState({
-        type: null, 
-        visible: false,
-        command: null,
-        message: null,
-        token: null,
-        isConfirmButtonVisible: true,
-        isCancelButtonVisible: true,
+    type: null,
+    visible: false,
+    command: null,
+    message: null,
+    token: null,
+    isConfirmButtonVisible: true,
+    isCancelButtonVisible: true,
   });
 
   const [toast, setToast] = useState({ message: "", type: "info", visible: false });
-  
+
 
   const showToast = (message, type = "info") => {
     setToast({ message, type, visible: true });
@@ -53,7 +52,7 @@ export default function ManageClients() {
     setSelectedClient(client);
   };
 
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     if (selectedClient) {
       try {
         setIsLoading(true)
@@ -66,7 +65,7 @@ export default function ManageClients() {
         console.error("Error deleting client:", error);
         showToast("Error deleting client: " + error.message, "error");
       }
-      finally{
+      finally {
         setIsLoading(false)
       }
     }
@@ -101,7 +100,7 @@ export default function ManageClients() {
       console.error("Error adding client:", error);
       showToast("Error adding client: " + error.message, "error");
     }
-    finally{
+    finally {
       setIsLoading(false)
     }
   };
@@ -110,11 +109,11 @@ export default function ManageClients() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Manage CLIs</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Manage CLIs</h1>
         {isLoading && (
-              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
-              </div>
+          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+            <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+          </div>
         )}
         <button
           onClick={handleAddClient}
@@ -130,19 +129,18 @@ export default function ManageClients() {
           {isLoading ? (
             // <p className="text-gray-500">Loading clients...</p>
             <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
-              </div>
+              <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+            </div>
           ) : clients.length === 0 ? (
             <p className="text-gray-500">No clients found.</p>
           ) : (
-            clients.map((client) => (
+            clients?.map((client) => (
               <div
                 key={client.cli_id}
-                className={`p-4 border rounded cursor-pointer ${
-                  selectedClient?.cli_id === client.cli_id
+                className={`p-4 border rounded cursor-pointer ${selectedClient?.cli_id === client.cli_id
                     ? "border-lime-500 bg-lime-50"
                     : "hover:bg-gray-50"
-                }`}
+                  }`}
                 onClick={() => handleSelectClient(client)}
               >
                 <h3 className="font-semibold text-gray-800">{client.cli_id}</h3>
@@ -204,7 +202,7 @@ export default function ManageClients() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-gray-500 text-center">Select any cli to view it's details</p>
+              <p className="text-gray-500 text-center">Select any cli to view it's details</p>
             </div>
           )}
         </div>

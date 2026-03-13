@@ -1,68 +1,57 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiCall } from "../Api";
-import ProviderCard from "../components/ProviderCard";
+import { getInitials } from "../utils/userUtils";
+import Toast from "../components/ToastService";
+import ProfileHeader from "../components/ProfileHeader";
+import useProfile from "../hooks/useProfile";
+import ProfileTabs from "../components/ProfileTabs";
+import EditProfileModal from "../components/EditProfileModal";
 
 function Profile() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [newProfileName, setNewProfileName] = useState("");
+  const [newProfileImage, setNewProfileImage] = useState("");
+  const [isProvider, setIsProvider] = useState(true); 
+  const [toast, setToast] = useState({ message: "", type: "info", visible: false });
+  const [updateName, setUpdateName] = useState(false);
+  const [updateImage, setUpdateImage] = useState(false);
 
-  const fetchUserDetails = async () => {
+  const { user, providers, wg, loading, fetchUserDetails } = useProfile();
+
+  const fileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 1024 * 1024) {
+        setToast({ message: "File size must be less than 1 MB", type: "error", visible: true });
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setNewProfileImage(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  const handleSave = async () => {
     try {
-      const data = await apiCall("get", "/ui/profile/getUserDetails");
-      setUser(data);
+      const requestBody = {};
+
+      if (updateName) { requestBody.profileName = newProfileName || null; }
+      if (updateImage) { requestBody.profileImage = newProfileImage || null; }
+
+      const response = await apiCall("put", "/ui/profile/updateUserDetails", requestBody);
+      setToast({ message: response.message || "Profile updated successfully", type: "success", visible: true });
+      setIsEditDialogOpen(false);
+      fetchUserDetails();
     } catch (error) {
-      console.error("Error fetching user details", error);
-    } finally {
-      setLoading(false);
+      console.error("Error updating user details", error);
+      setToast({ message: error.response?.data?.error || "An error occurred while updating user details.", type: "error", visible: true });
     }
   };
 
-  const [providers, setProviders] = useState([]);
-  const [wg, setWg] = useState([]);
-  // Fetch providers
-  const fetchProviders = async () => {
-    await apiCall("get", "/ui/providers/userProviderDetails")
-      .then((data) => {
-        if (data.all_providers && Array.isArray(data.all_providers)) {
-          setProviders(data.all_providers);
-        } else {
-          throw new Error("all_providers key not present in response data");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Error: " + error);
-      });
-  };
-
-  // Fetch client session details
-  const fetchClients = async () => {
-    await apiCall("get", "/ui/getAllCliSessionDetails")
-      .then((data) => {
-        console.log("Clients:", data);
-        setWg(data.cli_session_details);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Error: " + error);
-      });
-  };
-
-  useEffect(() => {
-    fetchUserDetails();
-    fetchProviders();
-    fetchClients();
-  }, []);
-
-  const getInitials = (name) =>
-    name
-      ?.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  const [isProvider, setIsProvider] = useState(true);
   return (
-    <div className="px-32 pt-16 bg-white max-w-6xljustify-center">
+    <div className="px-32 bg-white max-w-6xl justify-center">
       {loading ? (
         <div className="space-y-8">
           {/* Header Section */}
@@ -103,91 +92,46 @@ function Profile() {
           </div>
         </div>
       ) : (
-        <>
+          <>
+            <div className="p-6 font-sans mt-16">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Profile
+              </h2>
           {/* Actual Profile */}
-          <div className="flex flex-col md:flex-row md:items-start gap-6 items-start">
-            <div className="w-32 h-32 rounded-2xl overflow-hidden shrink-0">
-              {user.profile_image ? (
-                <img
-                  src={user.profile_image}
-                  alt="profile"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-teal-800 text-white flex items-center justify-center rounded-2xl text-3xl font-bold">
-                  {getInitials(user.profile_name || user.username)}
-                </div>
-              )}
-            </div>
-
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-semibold text-gray-800">
-                  {user.profile_name}
-                </h1>
-                <span className="text-xs font-medium bg-lime-200 text-lime-800 px-2 py-1 rounded-md">
-                  PRO
-                </span>
-              </div>
-              <p className="text-gray-500 mt-1">{user.email}</p>
-            </div>
-
-            <div className="flex items-center gap-6 mt-6 md:mt-0">
-              <Metric label="Hours" value="2,985" />
-              <Metric label="Clients" value="132" />
-              <Metric label="Ratings" value="4.3" />
-            </div>
-          </div>
+            <ProfileHeader
+              user={user}
+              getInitials={getInitials}
+              setIsEditDialogOpen={setIsEditDialogOpen}
+            />
 
           {/* Project List */}
-          <div className="mt-10">
-            <div className="flex space-x-8">
-              <h2
-                className={`text-lg mb-4 cursor-pointer ${
-                  isProvider
-                    ? "text-gray-800 font-semibold "
-                    : "text-gray-400 font-regular"
-                }`}
-                onClick={() => setIsProvider(true)}
-              >
-                Projects
-              </h2>
+            <ProfileTabs
+              isProvider={isProvider}
+              setIsProvider={setIsProvider}
+              providers={providers}
+              wg={wg}
+              />
+              </div>
+          {/* Modal */}
+          {isEditDialogOpen && (
+              <EditProfileModal
+                isOpen={isEditDialogOpen}
+                onClose={() => setIsEditDialogOpen(false)}
+                handleSave={handleSave}
+                fileUpload={fileUpload}
+                newProfileName={newProfileName}
+                setNewProfileName={setNewProfileName}
+                updateName={updateName}
+                setUpdateName={setUpdateName}
+                updateImage={updateImage}
+                setUpdateImage={setUpdateImage}
+              />
+          )}
 
-              <h2
-                className={`text-lg mb-4 cursor-pointer ${
-                  !isProvider
-                    ? "text-gray-800 font-semibold"
-                    : "text-gray-400 font-regular"
-                }`}
-                onClick={() => setIsProvider(false)}
-              >
-                Clients
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {isProvider
-                ? providers.map((provider) => (
-                    <ProviderCard provider={provider} />
-                  ))
-                : wg.map((client) => (
-                    <div
-                      key={client.cli_id}
-                      className={`p-4 border rounded cursor-pointer`}
-                    >
-                      <h3 className="font-semibold text-gray-800">
-                        {client.cli_id}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        Status:{" "}
-                        {client.cli_status ? "🟢 Active" : "🔴 Inactive"}
-                      </p>
-                    </div>
-                  ))}
-            </div>
-          </div>
         </>
       )}
+      {/* Toast */}
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={() => setToast(prev => ({ ...prev, visible: false }))} />}
     </div>
   );
 }

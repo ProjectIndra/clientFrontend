@@ -27,8 +27,8 @@ const getDefaultRange = () => {
   return `${now - 3600}|${now}`
 }
 
-export const isEpochFormat = (value) => {`
-  const num = Number(value)`
+export const isEpochFormat = (value) => {
+  const num = Number(value)
   if (Number.isNaN(num)) return false
   return String(Math.floor(num)).length >= 10
 }

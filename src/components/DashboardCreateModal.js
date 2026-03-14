@@ -284,7 +284,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       series: form?.series?.map((s) => ({
         metricId: '',
         metricName: s?.metricName,
-        entityType: s?.entityType,
+        entityType: s?.filters?.provider_id !=='all_providers' && s?.filters?.entity_name !== "provider_all_vms" ?"vm":s?.entityType,
         aggregation: s?.aggregation,
         filters: {
           provider_id: s?.filters?.provider_id ==='all_providers'
@@ -294,6 +294,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           // if entity_name is all_vms, then we don't need any key named entity_name in filters
           ...(s?.filters?.entity_name &&
           s?.filters?.entity_name !== 'all_vms' &&
+          s?.filters?.entity_name !== 'provider_all_vms' &&
           s?.filters?.provider_id &&
           s?.filters?.provider_id !== 'all_providers'
             ? { entity_name: s?.filters?.entity_name }
@@ -349,7 +350,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   const graphTypeOptions = [{ label: 'Time series', value: 'time_series' }]
 
   const entityTypeOptions = [
-    { label: 'Network', value: 'network' },
+    // { label: 'Network', value: 'network' },
     { label: 'VM', value: 'vm' },
     { label: 'Provider', value: 'provider' },
   ]

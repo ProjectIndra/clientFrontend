@@ -490,7 +490,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                         (p) => p.value
                       )
                       updateSeriesField(idx, 'filters', {})
-                      updateSeriesFilter(idx, 'provider_id', providerIds)
+                      updateSeriesFilter(idx, 'provider_id', "all_providers")
                       updateSeriesField(idx, 'metricName', '')
                       setEntityType('provider')
                     } else {
@@ -534,6 +534,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                         setEntityType('provider')
                         return
                       }
+                      updateSeriesFilter(idx, 'entity_name', 'provider_all_vms') // special value to indicate all vms of the selected provider
                       updateSeriesField(idx, 'aggregation', 'sum')
                       updateSeriesFilter(idx, 'provider_id', val)
                     }
@@ -574,11 +575,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                       : []
                     return (
                       <DropdownSelect
-                        label="Select VM"
+                        label="Select provider's VM"
                         value={s?.filters.entity_name || 'all_vms'}
                         onChange={(val) => {
-                          if (val === 'all_vms') {
-                            updateSeriesFilter(idx, 'entity_name', 'all_vms')
+                          if (val === 'provider_all_vms') {
+                            updateSeriesFilter(idx, 'entity_name', 'provider_all_vms') // special value to indicate all vms of the selected provider
                             updateSeriesField(idx, 'aggregation', 'sum')
                             setEntityType('provider')
                             return
@@ -588,7 +589,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                           updateSeriesFilter(idx, 'entity_name', val)
                         }}
                         options={[
-                          { label: 'All VMs', value: 'all_vms' },
+                          { label: 'All provider VMs ', value: 'provider_all_vms' }, // here provider_all_vms is a special value to indicate all vms of the selected provider
                           ...vmOptions,
                         ]}
                         loading={entityLoading}

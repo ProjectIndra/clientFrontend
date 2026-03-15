@@ -1,7 +1,7 @@
 import React,{ useState, useEffect } from 'react'
 import { GraphView } from './GraphView'
-import { epochToReadable }  from '../helper'
 import {getGraphPoints} from '../apiServices'
+import { getReadableTimeRange } from '../helper'
 
 export const LargeGraphModal = ({ graph, onClose }) => {
   
@@ -75,6 +75,8 @@ export const LargeGraphModal = ({ graph, onClose }) => {
     }
   }
 
+  const { startReadable, endReadable } = getReadableTimeRange(selectedGraphData.defaultTimeRange)
+
 
 
 
@@ -117,10 +119,7 @@ export const LargeGraphModal = ({ graph, onClose }) => {
         </h2>
         {/* <p className="text-sm text-gray-600 mb-4">• {selectedGraphData.graphType}</p> */}
         <p className="text-sm text-gray-600 mb-4">
-          <b>• Time range :</b>{' '}
-          {epochToReadable(selectedGraphData.defaultTimeRange?.split('|')[0])} -{' '}
-          {epochToReadable(selectedGraphData.defaultTimeRange?.split('|')[1]) ||
-            'Not specified'}
+          <b>• Time range :</b> {startReadable} - {endReadable}
         </p>
 
         {/* ------------------ FILTER BAR ------------------ */}

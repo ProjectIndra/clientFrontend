@@ -9,7 +9,6 @@ const ProtectedRoute = () => {
 	useEffect(() => {
 		const checkAuthStatus = async () => {
 			const tok =  AuthHandler.getToken();
-			console.log("here", tok);
 			if (!tok) {
 				setIsAuthenticated(false);
 			} else {

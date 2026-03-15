@@ -1,179 +1,259 @@
 import { useEffect, useState } from "react";
 import { apiCall } from "../Api";
-import Toast from '../components/ToastService';
-import ActionConfirmModal from '../components/actionConfirmModal';
+import Toast from "../components/ToastService";
 
 function Tunnels() {
-	const [isLoading, setIsLoading] = useState(false);
-	const [tunnels, setTunnels] = useState(null || []);
-	const [addedTunnel, setAddedTunnel] = useState(null || {});
-	const [selectedTunnel, setSelectedTunnel] = useState(null);
-  	const [toast, setToast] = useState({ message: "", type: "info", visible: false });
-	const [actionConfirm, setActionConfirm] = useState({
-		type: null,
-		visible: false,
-		command: null,
-		message: null,
-		token: null,
-		isConfirmButtonVisible: true,
-		isCancelButtonVisible: true,
-	});
+  const [tunnels, setTunnels] = useState([]);
+  const [selectedTunnel, setSelectedTunnel] = useState(null);
 
-	useEffect(() => {
-		fetchTunnels();
-	}, []);
-	const showToast = (message, type = "info") => {
-		setToast({ message, type, visible: true });
-	};
-	const closeToast = () => {
-		setToast(prev => ({ ...prev, visible: false }));
-	};
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupType, setPopupType] = useState(null);
+  const [tunnelName, setTunnelName] = useState("");
 
-	async function handleAddTunnel() {
-		try {
-			setIsLoading(true);
-			const response = await apiCall("POST", "/ui/createTunnelClient");
-			console.log("Tunnel client creation response:", response);
-			setAddedTunnel({ ...response?.tunnel_url, session_token: response?.session_token });
-			showToast("Tunnel client created successfully.", "success");
-			// setActionConfirm({
-			// 	// type: "error",
-			// 	visible: true,
-			// 	command: `${response.tunnel_url}`,
-			// 	message: "copy the below command and paste in the cli to verify",
-			// 	token: response.session_token,
-			// 	isConfirmButtonVisible: false,
-			// 	isCancelButtonVisible: true,
-			// 	cancelButtonName: "Done",
-			// });
-		} catch (error) {
-			console.error("Error creating tunnel client:", error);
-			showToast("Failed to create tunnel client. Please try again.", "error");
-		} finally {
-			setIsLoading(false);
-			fetchTunnels();
-		}
-	}
-	async function fetchTunnels() {
-		try {
-			setIsLoading(true);
-			const response = await apiCall("POST", "/ui/getUserClients");
-			console.log("Fetched tunnels:", response);
-			setTunnels(response);
-		} catch (error) {
-			console.error("Error fetching tunnels:", error);
-			showToast("Failed to fetch tunnels. Please try again.", "error");
-		} finally {
-			setIsLoading(false);
-		}
-	}
-	async function deleteTunnels(tunnelToken) {
-		try {
-			setIsLoading(true);
-			const response = await apiCall("POST", "/ui/deleteTunnel", { tunnel_id: String(tunnelToken) });
-			console.log("Deleted tunnel:", response);
-			showToast("Tunnel deleted successfully.", "success");
-			fetchTunnels();
-		} catch (error) {
-			console.error("Error deleting tunnel:", error);
-			showToast("Failed to delete tunnel. Please try again.", "error");
-		} finally {
-			setIsLoading(false);
-			fetchTunnels();
-		}
-	}
+  const [toast, setToast] = useState({
+    message: "",
+    type: "info",
+    visible: false,
+  });
 
-	return <div className="p-6 font-sans mt-16">
-		<div className="flex items-center justify-between">
-			<h1 className="text-2xl font-bold text-gray-900">Tunnels</h1>
-			<div>
-				<button
-					onClick={handleAddTunnel}
-					className="bg-lime-500 hover:bg-lime-600 text-white px-4 py-2 rounded shadow cursorpointer"
-				>
-					Add Client
-				</button>
-				<button
-					onClick={() => {
-						if (selectedTunnel) {
-							deleteTunnels(selectedTunnel);
-						}
-					}}
-					disabled={!selectedTunnel}
-					className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow cursorpointer ml-4 disabled:opacity-50 disabled:cursor-not-allowed"
-				>
-					Delete Selected
-				</button>
-			</div>
-		</div>
-		<div className="mt-6"></div>
-		{tunnels && tunnels.length > 0 ? (
-			<table className="min-w-full bg-white border border-gray-200">
-				<thead>
-					<tr>
-						<th className="py-2 px-4 border-b border-gray-200 text-left">Selected</th>
-						<th className="py-2 px-4 border-b border-gray-200 text-left">Tunnel No.</th>
-						<th className="py-2 px-4 border-b border-gray-200 text-left">Username</th>
-						<th className="py-2 px-4 border-b border-gray-200 text-left">Tunnel Token</th>
-						<th className="py-2 px-4 border-b border-gray-200 text-left">URL</th>
-					</tr>
-				</thead>
-				<tbody>
-					{tunnels?.map((tunnel, id) => (
-						<tr
-							key={id}
-							className={`hover:bg-lime-50 cursor-pointer ${selectedTunnel === tunnel?.tunnelNo ? 'bg-lime-100' : ''}`}
-							onClick={() => setSelectedTunnel(tunnel?.tunnelNo)}
-						>
-							<td className="py-2 px-4 border-b border-gray-200">
-								<input
-									type="radio"
-									name="selectedTunnel"
-									className="rounded"
-									checked={selectedTunnel === tunnel?.tunnelNo}
-									onChange={() => setSelectedTunnel(tunnel?.tunnelNo)}
-									onClick={(e) => e.stopPropagation()}
-								/>
-							</td>
-							<td className="py-2 px-4 border-b border-gray-200">{tunnel?.tunnelNo}</td>
-							<td className="py-2 px-4 border-b border-gray-200">{tunnel?.username}</td>
-							<td className="py-2 px-4 border-b border-gray-200">{tunnel?.tunnelToken}</td>
-							<td className="py-2 px-4 border-b border-gray-200">
-								<a
-									href={`https://${tunnel?.tunnelNo}-${tunnel?.username}.computekart.com`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-blue-500 hover:underline"
-								>
-									{`https://${tunnel?.tunnelNo}-${tunnel?.username}.computekart.com`}
-								</a>
-							</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-		) : (
-			<p className="text-gray-600">No tunnels available. Click "Add Client" to create one.</p>
-		)}
-		{/* T</td>oast */}
-		{toast?.visible && <Toast message={toast?.message} type={toast?.type} onClose={closeToast} />}
+  useEffect(() => {
+    fetchTunnels();
+  }, []);
 
-		{/* Action Confirmation Modal */}
-		<ActionConfirmModal
-			visible={actionConfirm.visible}
-			type={actionConfirm.type}
-			onConfirm={() => { }}
-			onCancel={() => setActionConfirm({ type: null, visible: false, command: null, message: null, token: null })}
-			message={actionConfirm.message}
-			copyToken={true}
-			command={actionConfirm.command}
-			token={actionConfirm.token}
-			isConfirmButtonVisible={actionConfirm.isConfirmButtonVisible}
-			isCancelButtonVisible={actionConfirm.isCancelButtonVisible}
-			confirmButtonName={actionConfirm.confirmButtonName}
-			cancelButtonName={actionConfirm.cancelButtonName}
-		/>
-	</div>;
+  const showToast = (message, type = "info") => {
+    setToast({ message, type, visible: true });
+  };
+
+  const closeToast = () => {
+    setToast((prev) => ({ ...prev, visible: false }));
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    showToast("Copied to clipboard", "success");
+  };
+
+  async function fetchTunnels() {
+    try {
+      const response = await apiCall("POST", "/ui/getUserClients");
+
+      setTunnels(response || []);
+    } catch (error) {
+      showToast("Failed to fetch tunnels", "error");
+    }
+  }
+
+  async function handleAddTunnel() {
+    try {
+      await apiCall("POST", "/ui/createTunnelClient", {
+        tunnelName: tunnelName,
+      });
+
+      showToast("Tunnel created successfully", "success");
+
+      setPopupVisible(false);
+      setTunnelName("");
+
+      fetchTunnels();
+    } catch (error) {
+      showToast("Failed to create tunnel", "error");
+    }
+  }
+
+  async function editTunnel(tunnelNo) {
+    try {
+      await apiCall("POST", "/ui/editTunnel", {
+        tunnelNo: tunnelNo,
+        tunnelName: tunnelName,
+      });
+
+      showToast("Tunnel updated successfully", "success");
+
+      setPopupVisible(false);
+      setTunnelName("");
+      setSelectedTunnel(null);
+
+      fetchTunnels();
+    } catch (error) {
+      showToast("Failed to update tunnel", "error");
+    }
+  }
+
+  async function deleteTunnel(tunnelNo) {
+    try {
+      await apiCall("POST", "/ui/deleteTunnel", {
+        tunnelNo: String(tunnelNo),
+      });
+
+      showToast("Tunnel deleted", "success");
+
+      fetchTunnels();
+    } catch (error) {
+      showToast("Failed to delete tunnel", "error");
+    }
+  }
+
+  return (
+    <div className="p-8 mt-16">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Tunnels</h1>
+
+        <button
+          onClick={() => {
+            setPopupType("add");
+            setTunnelName("");
+            setPopupVisible(true);
+          }}
+          className="bg-lime-500 hover:bg-lime-600 text-white px-5 py-2 rounded-lg shadow"
+        >
+          Add Client
+        </button>
+      </div>
+
+      <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+        <table className="min-w-full">
+          <thead className="bg-gray-50 text-gray-700 text-sm">
+            <tr>
+              <th className="px-4 py-3 text-left">Tunnel No</th>
+              <th className="px-4 py-3 text-left">Tunnel Name</th>
+              <th className="px-4 py-3 text-left">Token</th>
+              <th className="px-4 py-3 text-left">URL</th>
+              <th className="px-4 py-3 text-left">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {tunnels.map((tunnel) => {
+              const url = `https://${tunnel?.tunnelNo}-${tunnel?.username}.computekart.com`;
+
+              return (
+                <tr
+                  key={tunnel?.tunnelNo}
+                  className="border-t hover:bg-gray-50 transition"
+                >
+                  <td className="px-4 py-3 font-medium">{tunnel?.tunnelNo}</td>
+
+                  <td className="px-4 py-3">{tunnel?.tunnelName || "-"}</td>
+
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-sm truncate max-w-[260px]">
+                        {tunnel?.tunnelToken}
+                      </span>
+
+                      <button
+                        onClick={() => copyToClipboard(tunnel?.tunnelToken)}
+                        className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                      >
+                        Copy
+                      </button>
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {url}
+                      </a>
+
+                      <button
+                        onClick={() => copyToClipboard(url)}
+                        className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                      >
+                        Copy
+                      </button>
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-3">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedTunnel(tunnel?.tunnelNo);
+                          setTunnelName(tunnel?.tunnelName || "");
+                          setPopupType("edit");
+                          setPopupVisible(true);
+                        }}
+                        className="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded text-sm"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => deleteTunnel(tunnel?.tunnelNo)}
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {toast.visible && (
+        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      )}
+
+      {popupVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-lg p-6 w-96 shadow">
+            <h2 className="text-lg font-bold mb-4">
+              {popupType === "add" ? "Add Tunnel" : "Edit Tunnel"}
+            </h2>
+
+            <input
+              type="text"
+              value={tunnelName}
+              onChange={(e) => setTunnelName(e.target.value)}
+              placeholder="Tunnel Name"
+              className="w-full border rounded p-2 mb-4"
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setPopupVisible(false)}
+                className="px-4 py-2 bg-gray-200 rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => {
+                  if (!tunnelName.trim()) {
+                    showToast("Tunnel name is required", "error");
+                    return;
+                  }
+
+                  if (popupType === "add") {
+                    handleAddTunnel();
+                  } else {
+                    editTunnel(selectedTunnel);
+                  }
+                }}
+                disabled={!tunnelName.trim()}
+                className={`px-4 py-2 rounded text-white ${
+                  tunnelName.trim()
+                    ? "bg-lime-500 hover:bg-lime-600"
+                    : "bg-gray-300 cursor-not-allowed"
+                }`}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default Tunnels;

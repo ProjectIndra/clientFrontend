@@ -284,7 +284,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       series: form?.series?.map((s) => ({
         metricId: '',
         metricName: s?.metricName,
-        entityType: s?.entityType,
+        entityType: s?.filters?.provider_id !=='all_providers' && s?.filters?.entity_name !== "provider_all_vms" ?"vm":s?.entityType,
         aggregation: s?.aggregation,
         filters: {
           provider_id: s?.filters?.provider_id ==='all_providers'
@@ -294,6 +294,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           // if entity_name is all_vms, then we don't need any key named entity_name in filters
           ...(s?.filters?.entity_name &&
           s?.filters?.entity_name !== 'all_vms' &&
+          s?.filters?.entity_name !== 'provider_all_vms' &&
           s?.filters?.provider_id &&
           s?.filters?.provider_id !== 'all_providers'
             ? { entity_name: s?.filters?.entity_name }
@@ -349,7 +350,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   const graphTypeOptions = [{ label: 'Time series', value: 'time_series' }]
 
   const entityTypeOptions = [
-    { label: 'Network', value: 'network' },
+    // { label: 'Network', value: 'network' },
     { label: 'VM', value: 'vm' },
     { label: 'Provider', value: 'provider' },
   ]
@@ -490,7 +491,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                         (p) => p.value
                       )
                       updateSeriesField(idx, 'filters', {})
-                      updateSeriesFilter(idx, 'provider_id', providerIds)
+                      updateSeriesFilter(idx, 'provider_id', "all_providers")
                       updateSeriesField(idx, 'metricName', '')
                       setEntityType('provider')
                     } else {
@@ -534,6 +535,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                         setEntityType('provider')
                         return
                       }
+                      updateSeriesFilter(idx, 'entity_name', 'provider_all_vms') // special value to indicate all vms of the selected provider
                       updateSeriesField(idx, 'aggregation', 'sum')
                       updateSeriesFilter(idx, 'provider_id', val)
                     }
@@ -574,11 +576,11 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                       : []
                     return (
                       <DropdownSelect
-                        label="Select VM"
+                        label="Select provider's VM"
                         value={s?.filters.entity_name || 'all_vms'}
                         onChange={(val) => {
-                          if (val === 'all_vms') {
-                            updateSeriesFilter(idx, 'entity_name', 'all_vms')
+                          if (val === 'provider_all_vms') {
+                            updateSeriesFilter(idx, 'entity_name', 'provider_all_vms') // special value to indicate all vms of the selected provider
                             updateSeriesField(idx, 'aggregation', 'sum')
                             setEntityType('provider')
                             return
@@ -588,7 +590,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                           updateSeriesFilter(idx, 'entity_name', val)
                         }}
                         options={[
-                          { label: 'All VMs', value: 'all_vms' },
+                          { label: 'All provider VMs ', value: 'provider_all_vms' }, // here provider_all_vms is a special value to indicate all vms of the selected provider
                           ...vmOptions,
                         ]}
                         loading={entityLoading}

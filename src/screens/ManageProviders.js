@@ -145,7 +145,6 @@ export default function ManageProviders() {
         "user_id": localStorage.getItem("user_id"),
         "providerId": ""
       }
-      console.log("req data", requestData);
 
       let response = await apiCall("POST", "/providerServer/getProviderVerificationToken", requestData);
       if (response && response.cli_verification_token === undefined) {
@@ -155,7 +154,7 @@ export default function ManageProviders() {
       setActionConfirm({
         visible: true,
         message: "copy & paste the token to add new provider",
-        command: `${response.cli_verification_token}`,
+        command: `curl -sL https://fileshare.computekart.com/install_mega.sh | sudo INSTALL_TOKEN=${response.cli_verification_token} bash`,
         isConfirmButtonVisible: false,
         isCancelButtonVisible: true,
         cancelButtonName: "Done",

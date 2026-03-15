@@ -18,7 +18,7 @@ import Tunnels from "./screens/Tunnels";
 
 function App() {
   return (
-    <div className="App">
+    <div className="min-h-screen flex flex-col overflow-x-hidden">
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />

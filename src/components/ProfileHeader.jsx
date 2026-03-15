@@ -1,4 +1,4 @@
-import { Pencil } from "lucide-react";
+import { EditIcon } from "../utils/icons";
 
 function ProfileHeader({ user, getInitials, setIsEditDialogOpen }) {
   return (
@@ -29,12 +29,14 @@ function ProfileHeader({ user, getInitials, setIsEditDialogOpen }) {
 					</div>
 					<p className="text-gray-500 mt-1">{user.email}</p>
 				</div>
-				<div className=" cursor-pointer p-2">
-					<Pencil
-						size={20}
-						className="text-gray-500"
-						onClick={() => setIsEditDialogOpen(true)}
-					/>
+			  <div className="p-2">
+				  <button
+					  onClick={() => setIsEditDialogOpen(true)}
+					  className="text-gray-500 hover:text-gray-700 transition"
+				  >
+					<EditIcon className="h-5 w-5" />
+					
+					</button>
 				</div>
 			</div>
 

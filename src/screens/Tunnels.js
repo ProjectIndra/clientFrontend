@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 import { apiCall } from "../Api";
+import { DeleteIcon, EditIcon, CopyIcon } from "../utils/icons";
 import Toast from "../components/ToastService";
 
 function Tunnels() {
   const [tunnels, setTunnels] = useState([]);
-  const [selectedTunnel, setSelectedTunnel] = useState(null);
-
-  const [popupVisible, setPopupVisible] = useState(false);
-  const [popupType, setPopupType] = useState(null);
-  const [tunnelName, setTunnelName] = useState("");
-
+  const [popup, setPopup] = useState({
+    visible: false,
+    type: null,
+    tunnelId: null,
+    tunnelName: "",
+  });
   const [toast, setToast] = useState({
     message: "",
     type: "info",
     visible: false,
   });
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchTunnels();
-  }, []);
+
 
   const showToast = (message, type = "info") => {
     setToast({ message, type, visible: true });
@@ -28,68 +28,99 @@ function Tunnels() {
     setToast((prev) => ({ ...prev, visible: false }));
   };
 
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    showToast("Copied to clipboard", "success");
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("Copied to clipboard", "success");
+    } catch {
+      showToast("Failed to copy", "error");
+    }
   };
 
-  async function fetchTunnels() {
-    try {
-      const response = await apiCall("POST", "/ui/getUserClients");
+  useEffect(() => {
+    const fetchTunnels = async () => {
+      try {
+        setLoading(true);
+        const response = await apiCall("POST", "/ui/getUserClients");
+        setTunnels( response || []);
+      } catch (error) {
+        showToast("Failed to fetch tunnels", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchTunnels();
+  }, []);
+  
+  const refreshTunnels = async () => {
+    try {
+      setLoading(true);
+      const response = await apiCall("POST", "/ui/getUserClients");
       setTunnels(response || []);
-    } catch (error) {
+    } catch {
       showToast("Failed to fetch tunnels", "error");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   async function handleAddTunnel() {
     try {
+      if (loading) return;
+      setLoading(true);
       await apiCall("POST", "/ui/createTunnelClient", {
-        tunnelName: tunnelName,
+        tunnelName: popup?.tunnelName,
       });
 
       showToast("Tunnel created successfully", "success");
+      setPopup({ visible: false, type: null, tunnelId: null, tunnelName: "" });
 
-      setPopupVisible(false);
-      setTunnelName("");
-
-      fetchTunnels();
+      refreshTunnels();
     } catch (error) {
       showToast("Failed to create tunnel", "error");
+    }finally {
+      setLoading(false)
     }
   }
 
-  async function editTunnel(tunnelNo) {
+  async function editTunnel() {
     try {
-      await apiCall("POST", "/ui/editTunnel", {
-        tunnelNo: tunnelNo,
-        tunnelName: tunnelName,
+      if (loading) return;
+      setLoading(true);
+      const response = await apiCall("POST", "/ui/editTunnel", {
+        tunnelId: popup?.tunnelId,
+        tunnelName: popup?.tunnelName,
       });
-
+      if (!response?.message) {
+        throw new Error("Failed to update tunnel");
+      }
       showToast("Tunnel updated successfully", "success");
+      setPopup({ visible: false, type: null, tunnelId: null, tunnelName: "" });
 
-      setPopupVisible(false);
-      setTunnelName("");
-      setSelectedTunnel(null);
-
-      fetchTunnels();
+      refreshTunnels();
     } catch (error) {
       showToast("Failed to update tunnel", "error");
+    }finally {
+      setLoading(false)
     }
   }
 
-  async function deleteTunnel(tunnelNo) {
+  async function deleteTunnel(tunnelId) {
     try {
+      if (loading) return;
+      setLoading(true);
       await apiCall("POST", "/ui/deleteTunnel", {
-        tunnelNo: String(tunnelNo),
+        tunnelId: tunnelId,
       });
 
       showToast("Tunnel deleted", "success");
 
-      fetchTunnels();
+      refreshTunnels();
     } catch (error) {
       showToast("Failed to delete tunnel", "error");
+    }finally {
+      setLoading(false)
     }
   }
 
@@ -100,9 +131,12 @@ function Tunnels() {
 
         <button
           onClick={() => {
-            setPopupType("add");
-            setTunnelName("");
-            setPopupVisible(true);
+            setPopup({
+              visible: true,
+              type: "add",
+              tunnelId: null,
+              tunnelName: "",
+            });
           }}
           className="bg-lime-500 hover:bg-lime-600 text-white px-5 py-2 rounded-lg shadow"
         >
@@ -123,6 +157,13 @@ function Tunnels() {
           </thead>
 
           <tbody>
+            {!loading && tunnels.length === 0 && (
+              <tr>
+                <td colSpan="5" className="text-center py-6 text-gray-500">
+                  No tunnels found
+                </td>
+              </tr>
+            )}
             {tunnels.map((tunnel) => {
               const url = `https://${tunnel?.tunnelNo}-${tunnel?.username}.computekart.com`;
 
@@ -142,10 +183,11 @@ function Tunnels() {
                       </span>
 
                       <button
+                        aria-label="Copy token"
                         onClick={() => copyToClipboard(tunnel?.tunnelToken)}
                         className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
                       >
-                        Copy
+                        <CopyIcon className="h-4 w-4 text-gray-600" />
                       </button>
                     </div>
                   </td>
@@ -162,10 +204,11 @@ function Tunnels() {
                       </a>
 
                       <button
+                        aria-label="Copy token"
                         onClick={() => copyToClipboard(url)}
                         className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
                       >
-                        Copy
+                        <CopyIcon className="h-4 w-4 text-gray-600" />
                       </button>
                     </div>
                   </td>
@@ -173,22 +216,27 @@ function Tunnels() {
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
                       <button
+                        disabled={loading}
                         onClick={() => {
-                          setSelectedTunnel(tunnel?.tunnelNo);
-                          setTunnelName(tunnel?.tunnelName || "");
-                          setPopupType("edit");
-                          setPopupVisible(true);
+                          setPopup({
+                            visible: true,
+                            type: "edit",
+                            tunnelId: tunnel?.tunnelId,
+                            tunnelName: tunnel?.tunnelName || "",
+                          });
                         }}
                         className="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded text-sm"
                       >
-                        Edit
+                        <EditIcon className="h-4 w-4 text-white" />
                       </button>
 
                       <button
-                        onClick={() => deleteTunnel(tunnel?.tunnelNo)}
+                        disabled={loading}
+                        onClick={() => deleteTunnel(tunnel?.tunnelId)}
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
                       >
-                        Delete
+                      <DeleteIcon className="h-4 w-4" />
+                          
                       </button>
                     </div>
                   </td>
@@ -203,24 +251,26 @@ function Tunnels() {
         <Toast message={toast.message} type={toast.type} onClose={closeToast} />
       )}
 
-      {popupVisible && (
+      {popup?.visible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
           <div className="bg-white rounded-lg p-6 w-96 shadow">
             <h2 className="text-lg font-bold mb-4">
-              {popupType === "add" ? "Add Tunnel" : "Edit Tunnel"}
+              {popup?.type === "add" ? "Add Tunnel" : "Edit Tunnel"}
             </h2>
 
             <input
               type="text"
-              value={tunnelName}
-              onChange={(e) => setTunnelName(e.target.value)}
+              value={popup?.tunnelName}
+              onChange={(e) =>
+                setPopup((prev) => ({ ...prev, tunnelName: e.target.value }))
+              }
               placeholder="Tunnel Name"
               className="w-full border rounded p-2 mb-4"
             />
 
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => setPopupVisible(false)}
+                onClick={()=>setPopup({ visible: false, type: null, tunnelId: null, tunnelName: "" })}
                 className="px-4 py-2 bg-gray-200 rounded"
               >
                 Cancel
@@ -228,20 +278,20 @@ function Tunnels() {
 
               <button
                 onClick={() => {
-                  if (!tunnelName.trim()) {
+                  if (!popup?.tunnelName.trim()) {
                     showToast("Tunnel name is required", "error");
                     return;
                   }
 
-                  if (popupType === "add") {
+                  if (popup?.type === "add") {
                     handleAddTunnel();
                   } else {
-                    editTunnel(selectedTunnel);
+                    editTunnel();
                   }
                 }}
-                disabled={!tunnelName.trim()}
+                disabled={!popup?.tunnelName.trim() || loading}
                 className={`px-4 py-2 rounded text-white ${
-                  tunnelName.trim()
+                  popup?.tunnelName.trim()
                     ? "bg-lime-500 hover:bg-lime-600"
                     : "bg-gray-300 cursor-not-allowed"
                 }`}

@@ -6,6 +6,7 @@ import NavbarMenu from "./NavbarMenu";
 import useNavbarScroll from "../hooks/useNavbarScroll";
 import { getInitials } from "../utils/userUtils";
 import useClickOutside from "../hooks/useClickOutside";
+import {MenuIcon, CloseIcon} from "../utils/icons";
 
 const Navbar = () => {
   const [activePopup, setActivePopup] = useState(null);
@@ -16,21 +17,24 @@ const Navbar = () => {
 
   const initials = getInitials(account?.username);
   
-  useClickOutside(navRef, () => setActivePopup(null));
-
+  useClickOutside(navRef, () => {
+    setActivePopup(null);
+    setMobileMenuOpen(false);
+  });
 
   const togglePopup = (popupName) => {
     setActivePopup((prev) => (prev === popupName ? null : popupName));
   };
 
   return (
-    <header ref={navRef} className={`w-full px-6 md:px-20 py-4 bg-white flex flex-col md:flex-row justify-between items-start md:items-center fixed top-0 z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
-      
+    <header
+      ref={navRef}
+      className={`w-full px-6 md:px-20 py-4 bg-white flex flex-col md:flex-row md:items-center md:justify-between fixed top-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
+    >      
       {/* Left section */}
-      <div className="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0">
-        
+      <div className="flex flex-col md:flex-row md:items-center w-full md:w-auto gap-4 md:gap-8">        
         {/* Logo + Hamburger */}
-        <div className="w-full flex justify-between items-center md:mr-10">
+        <div className="w-full flex justify-between items-center">
           <Link
             className="text-2xl md:text-3xl font-bold text-[#0a1d39]"
             to="/home"
@@ -38,34 +42,26 @@ const Navbar = () => {
             <img src="/img/logo-Navbar.svg" alt="" className="h-4 md:h-8" />
           </Link>
 
-          <button
-            className="md:hidden text-[#0a1d39] focus:outline-none"
-            onClick={() => setMobileMenuOpen(prev => !prev)}
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          {/* Right side controls (mobile) */}
+          <div className="flex items-center gap-3 md:hidden">
+            <AvatarMenu
+              account={account}
+              initials={initials}
+              togglePopup={togglePopup}
+              activePopup={activePopup}
+            />
+
+            <button
+              className="text-[#0a1d39] focus:outline-none"
+              onClick={() => setMobileMenuOpen(prev => !prev)}
             >
               {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <CloseIcon size={24} />
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <MenuIcon size={24} />
               )}
-            </svg>
-          </button>
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -78,8 +74,7 @@ const Navbar = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-full md:w-auto flex justify-between md:justify-end items-center mt-4 md:mt-0 space-x-4 md:space-x-16 relative">
-
+      <div className="hidden md:flex items-center gap-12 relative">
         {/* Search Box */}
         {/* <div className="relative w-full max-w-sm md:max-w-[300px]">
           <input

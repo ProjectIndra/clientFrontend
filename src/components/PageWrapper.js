@@ -1,14 +1,22 @@
-import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 const PageWrapper = ({ children }) => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
+
+      {/* Header */}
       <Navbar />
-      <main className="min-h-screen mt-[80px]">{children}</main>
+
+      {/* Content */}
+      <main className="min-h-[calc(100vh-160px)] pt-[80px]">
+        {children}
+      </main>
+
+      {/* Footer */}
       <Footer />
-    </>
+
+    </div>
   );
 };
 

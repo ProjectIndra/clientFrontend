@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   createDashboard,
@@ -6,6 +6,7 @@ import {
   getAllDashboards,
   updateDashboard,
 } from "../apiServices";
+import { DeleteIcon, EditIcon } from "../utils/icons";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -116,7 +117,7 @@ export const Dashboard = () => {
                   }}
                   className="text-blue-500 hover:text-blue-700 text-sm font-semibold"
                 >
-                  Edit
+                  <EditIcon className="text-blue-500" />
                 </button>
                 <button
                   onClick={(e) => {
@@ -125,7 +126,7 @@ export const Dashboard = () => {
                   }}
                   className="text-red-500 hover:text-red-700 text-sm font-semibold"
                 >
-                  Delete
+                  <DeleteIcon className="text-red-500" />
                 </button>
               </div>
             </div>

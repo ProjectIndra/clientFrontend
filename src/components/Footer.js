@@ -1,9 +1,8 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <div className="relative z-10">
+    <div className="w-full">
       <section className="bg-[#0D1A33] text-white text-center py-12 px-4">
         <h2 className="text-2xl md:text-4xl font-semibold">
           Get Started with ComputeKart Today

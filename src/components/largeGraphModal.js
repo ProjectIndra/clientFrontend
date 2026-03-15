@@ -1,7 +1,8 @@
-import React,{ useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { GraphView } from './GraphView'
-import {getGraphPoints} from '../apiServices'
+import { getGraphPoints } from '../apiServices'
 import { getReadableTimeRange } from '../helper'
+import { CloseIcon } from '../utils/icons'
 
 export const LargeGraphModal = ({ graph, onClose }) => {
   
@@ -35,7 +36,7 @@ export const LargeGraphModal = ({ graph, onClose }) => {
   
   useEffect(() => {
     setSelectedGraphData(graph);
-  }, []);
+  }, [graph]);
 
   const handleApplyFilter = async () => {
     setIsApplyingFilter(true);
@@ -91,18 +92,8 @@ export const LargeGraphModal = ({ graph, onClose }) => {
           aria-label="Close"
           className="absolute top-3 right-3 hover:bg-gray-300 p-2 rounded-full text-gray-500 hover:text-gray-700 transition"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
+          {/* close icon */}
+          <CloseIcon />
         </button>
         {/* Toggle Button */}
         <button

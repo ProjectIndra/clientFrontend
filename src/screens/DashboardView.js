@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { getReadableTimeRange } from '../helper'
 import { GraphView } from '../components/GraphView'
-import DashboardCreateModal from '../components/DashboardCreateModal'
 import { useSearchParams } from 'react-router-dom'
-import { Trash2 } from 'lucide-react'
+import { LargeGraphModal } from '../components/largeGraphModal'
+import { listGraphsForDashboard, deleteGraph, getGraphPoints } from '../apiServices'
+import { DeleteIcon } from '../utils/icons'
 import Toast from '../components/ToastService'
 import ActionConfirmModal from '../components/actionConfirmModal'
-import {LargeGraphModal} from '../components/largeGraphModal'
-import { getReadableTimeRange } from '../helper'
-
-import { listGraphsForDashboard, deleteGraph, getGraphPoints } from '../apiServices'
+import DashboardCreateModal from '../components/DashboardCreateModal'
 
 export const DashboardView = () => {
   const [searchParams] = useSearchParams()
@@ -17,7 +16,7 @@ export const DashboardView = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [toast, setToast] = useState({
     message: '',
-    type: 'info', // 'success' | 'error' | 'info'
+    type: 'info',
     visible: false,
   })
   const [confirmDelete, setConfirmDelete] = useState({
@@ -191,7 +190,7 @@ export const DashboardView = () => {
                 }}
                 className="absolute top-2 right-2 p-2 rounded-full bg-red-50 hover:bg-red-100 transition"
               >
-                <Trash2 size={20} className="text-red-500" cursor="pointer"/>
+                <DeleteIcon className="text-red-500" />
               </button>
 
               <div onClick={() => handleGraphClick(g)}>

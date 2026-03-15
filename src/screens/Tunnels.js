@@ -185,7 +185,7 @@ function Tunnels() {
                       <button
                         aria-label="Copy token"
                         onClick={() => copyToClipboard(tunnel?.tunnelToken)}
-                        className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                        className="text-xs px-2 py-1"
                       >
                         <CopyIcon className="h-4 w-4 text-gray-600" />
                       </button>
@@ -206,7 +206,7 @@ function Tunnels() {
                       <button
                         aria-label="Copy token"
                         onClick={() => copyToClipboard(url)}
-                        className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                        className="text-xs px-2 py-1 "
                       >
                         <CopyIcon className="h-4 w-4 text-gray-600" />
                       </button>
@@ -225,15 +225,15 @@ function Tunnels() {
                             tunnelName: tunnel?.tunnelName || "",
                           });
                         }}
-                        className="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded text-sm"
+                        className="text-blue-500"
                       >
-                        <EditIcon className="h-4 w-4 text-white" />
+                        <EditIcon className="h-4 w-4 text-blue-500" />
                       </button>
 
                       <button
                         disabled={loading}
                         onClick={() => deleteTunnel(tunnel?.tunnelId)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                        className="text-red-500"
                       >
                       <DeleteIcon className="h-4 w-4" />
                           

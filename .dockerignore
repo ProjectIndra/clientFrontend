@@ -15,7 +15,6 @@ yarn-error.log*
 .gitignore
 .dockerignore
 
-.env*
 coverage
 build
 .DS_Store

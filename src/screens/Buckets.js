@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import JSZip from 'jszip';  // Import JSZip for zipping folders
+import JSZip from 'jszip';
 import { apiCall } from '../Api';
 
 const Buckets = () => {
@@ -57,7 +57,7 @@ const Buckets = () => {
 
 	const zipFolder = async (files) => {
 		const zip = new JSZip();
-		const folderName = path.split('/').pop(); // Folder name
+		// const folderName = path.split('/').pop(); // Folder name
 		const fileArray = Array.from(files); // ✅ Convert FileList to array
 		fileArray.forEach(file => {
 			// Add each file to the zip
@@ -251,7 +251,7 @@ const Buckets = () => {
 				  </tr>
 				</thead>
 				<tbody className={`divide-y divide-gray-100 ${loading ? 'pointer-events-none opacity-50' : ''}`}>
-				  {entries.map((entry, idx) => (
+				  {entries?.map((entry, idx) => (
 					<tr key={idx} className="hover:bg-gray-50"
 					>
 					  <td className="px-4 py-3">

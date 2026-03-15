@@ -30,6 +30,7 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+    color: black;
 }
 button:hover{
   cursor: pointer;
@@ -39,3 +40,7 @@ button:hover{
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+pre{
+  color: black;
+}

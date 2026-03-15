@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 
 export default function LockBoxLanding() {
   const [faqOpen, setFaqOpen] = useState(null);
@@ -39,15 +39,6 @@ export default function LockBoxLanding() {
         "You can find tutorials and guides in our documentation section, which covers everything from onboarding to advanced features or else you can check out the demo video our YouTube channel.",
     },
   ];
-
-  const [copied, setCopied] = useState(false);
-  const bashScript = `/bin/bash -c "$(curl -fsSL https://github.com/avinash84319/providerServer/install.sh)"`;
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(bashScript);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // reset after 2 seconds
-  };
 
   return (
     <div className="font-sans text-[#0D0D0D] bg-white w-full overflow-x-hidden">
@@ -218,7 +209,7 @@ export default function LockBoxLanding() {
           </h2>
         </div>
         <div className="max-w-3xl mx-auto space-y-4">
-          {faqs.map((faq, index) => (
+          {faqs?.map((faq, index) => (
             <div
               key={index}
               className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200 transition-none hover:scale-100"

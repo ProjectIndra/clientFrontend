@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import ProviderCard from "../components/ProviderCard";
+import { useEffect, useState } from "react";
 import { apiCall } from "../Api";
-
 import Toast from '../components/ToastService';
 import ActionConfirmModal from '../components/actionConfirmModal';
-import { isCancel } from "axios";
-
+import useProviders from "../hooks/useProviders";
+import ProviderList from "../components/ProviderList";
+import ProviderSearch from "../components/ProviderSearch";
+import VMConfigForm from "../components/VMConfigForm";
 
 const Providers = () => {
-  const vcpus = [ 2, 4, 8, 16, 32, 64];
+  const vcpus = [2, 4, 8, 16, 32, 64];
   const rams = [2048, 4096, 8192, 16384, 32768, 65536];
-  // const images = ["linux", "windows", "FreeBSD"];
   const images = ["linux"]
+  const storageOptions = [2, 5, 10, 20, 50, 100, 200, 500, 1000]; 
 
-  const [providers, setProviders] = useState([]);
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -28,7 +26,6 @@ const Providers = () => {
     client_id: "1",
     storage: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState({ message: "", type: "info", visible: false });
   const [actionConfirm, setActionConfirm] = useState({
     visible: false,
@@ -39,6 +36,7 @@ const Providers = () => {
     confirmButtonName: "",
     cancelButtonName: "",
   });
+  const { providers, loading: isLoading } = useProviders(debouncedSearch);
 
   // Debounce search input so we don't make too many API calls
   useEffect(() => {
@@ -48,47 +46,10 @@ const Providers = () => {
     return () => clearTimeout(handler);
   }, [searchInput]);
 
-  // Fetch providers when debouncedSearch value changes
-  useEffect(() => {
-    fetchProviders();
-  }, [debouncedSearch]);
 
-  const fetchProviders = async () => {
-    try {
-      setIsLoading(true);
-      const response = await apiCall(
-        "get",
-        `/providers/lists?provider_name=${debouncedSearch}`
-      );
-
-      if (response.all_providers && Array.isArray(response.all_providers)) {
-        const updatedProviders = response.all_providers;
-        setProviders(updatedProviders);
-
-        // Check if the selected provider still exists in updated list
-        if (
-          selectedProvider &&
-          !updatedProviders.some(
-            (provider) => provider.provider_id === selectedProvider.provider_id
-          )
-        ) {
-          setSelectedProvider(null);
-        }
-      } else {
-        throw new Error("all_providers key not present in response data");
-      }
-    } catch (error) {
-      console.log(error);
-      // alert("Error: " + error);
-      setToast({ message: "Error: " + error, type: "error", visible: true });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Updated runQuery using POST and sending provider_user_id
   async function runQuery(formData, selectedProvider) {
-    setIsLoading(true);
     apiCall("post", "/providers/query", {
       vcpus: formData.vcpus,
       ram: formData.ram,
@@ -98,12 +59,10 @@ const Providers = () => {
       provider_user_id: selectedProvider.user_id,
     })
       .then((data) => {
-        // alert("Can Create VM: " + data.can_create);
-        // use the actionConfirm modal to show the message
         setActionConfirm({
           visible: true,
           type: "query",
-          message: data.can_create  ? "Hurray 🥳 you can Create VM in the Provider." : "Oops 🥲 you cannot Create VM in the provider",
+          message: data.can_create ? "Hurray you can Create VM in the Provider." : "Oops you cannot Create VM in the provider",
           isCancelButtonVisible: false,
           isConfirmButtonVisible: true,
           confirmButtonName: "OK",
@@ -112,17 +71,13 @@ const Providers = () => {
       })
       .catch((error) => {
         console.log(error);
-        // alert("Error: " + error);
-        setToast({ message: "Error: " + error, type: "error", visible: true });
-      }).finally(() => {
-        setIsLoading(false);
+        setToast({ message: error, type: "error", visible: true });
       }
-      );
+    );
   }
 
   // Updated runRequest using POST and sending provider_user_id and provider_name
   async function runRequest(formData, selectedProvider) {
-    setIsLoading(true);    
     await apiCall("post", "/vms/launch", {
       vcpus: formData.vcpus,
       ram: formData.ram,
@@ -134,7 +89,6 @@ const Providers = () => {
       provider_name: selectedProvider.provider_name,
     })
       .then((data) => {
-        // alert(data.message);
         setActionConfirm({
           visible: true,
           message: "Let's Go 🚀 VM has been created in the provider.",
@@ -146,22 +100,35 @@ const Providers = () => {
       })
       .catch((error) => {
         console.log(error);
-        // alert("Error: " + error);
-        setToast({ message: "Error: " + error, type: "error", visible: true });
+        setToast({ message: error, type: "error", visible: true });
       })
-      .finally(() => {
-        setIsLoading(false);
-      });
-      
   }
 
   // Update selected provider and adjust formData accordingly
   const handleProviderSelect = (provider) => {
-    setSelectedProvider(provider);
-    setFormData((prev) => ({
-      ...prev,
-      provider_id: provider.provider_id.toString(),
-    }));
+    setSelectedProvider((prev) => {
+      // If same provider clicked → deselect
+      if (prev?.providerId === provider.providerId) {
+        setFormData({
+          vcpus: "",
+          ram: "",
+          vm_image: "",
+          remarks: "",
+          provider_id: "",
+          vm_name: "",
+          client_id: "1",
+          storage: "",
+        });
+        return null;
+      }
+
+      // Otherwise select new provider
+      setFormData((prevForm) => ({
+        ...prevForm,
+        provider_id: provider.providerId.toString(),
+      }));
+      return provider;
+    });
   };
 
   // Handle changes for text and select inputs
@@ -204,15 +171,11 @@ const Providers = () => {
     setSearchInput(e.target.value);
   };
 
-  const showToast = (message, type = "info") => {
-    setToast({ message, type, visible: true });
-  };
-
   const closeToast = () => {
     setToast(prev => ({ ...prev, visible: false }));
   };
 
-  const handleConfirmedAction = async(type) => {
+  const handleConfirmedAction = async (type) => {
     setActionConfirm({ visible: false, type: null });
     if (type === "launch") {
       await runRequest(formData, selectedProvider);
@@ -221,187 +184,64 @@ const Providers = () => {
 
   return (
     <div className="p-6 font-sans mt-16">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">
         Providers
       </h2>
       <div className="flex flex-col md:flex-row w-full gap-10">
         {/* Left Column: Search and Provider List */}
         <div className="w-full md:w-2/5">
-          <form onSubmit={(e) => e.preventDefault()} className="mb-4">
-            <input
-              type="search"
-              placeholder="Search by Provider Name"
-              className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
-              value={searchInput}
-              onChange={handleSearchInputChange}
-            />
-          </form>
-          <div className="flex flex-wrap justify-center gap-5 pt-5 h-[500px] overflow-y-auto py-4">
-            {isLoading && (
-              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
-              </div>
-            )}
-            {/* if there is no provider then mention No provider is active */}
-            {!isLoading && providers.length === 0 && (
-              <div className="text-center text-gray-500 w-full mt-10">
-                No provider is active
-              </div>
-            )}
-            {providers.map((provider, idx) => (
-              <div
-                className="w-full flex"
-                key={idx}
-                onClick={() => handleProviderSelect(provider)}
-              >
-                <ProviderCard
-                  provider={provider}
-                  isActive={selectedProvider?.provider_id === provider?.provider_id}
-                />
-              </div>
-            ))}
-          </div>
+
+          <ProviderSearch
+            value={searchInput}
+            onChange={handleSearchInputChange}
+          />
+
+          <ProviderList
+            providers={providers}
+            selectedProvider={selectedProvider}
+            handleProviderSelect={handleProviderSelect}
+            isLoading={isLoading}
+          />
+
         </div>
         {/* Right Column: Selected Provider & VM Setup */}
         <div className="w-full md:w-3/5">
+          
           {selectedProvider ? (
-            <>
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold">
-                  {selectedProvider.provider_name}
-                </h3>
-                {/* <button className="bg-lime-300 text-black font-medium rounded px-4 py-1 hover:brightness-110">
-                  Specs Sheet
-                </button> */}
-              </div>
-              <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
-                <input
-                  name="vm_name"
-                  placeholder="VM Name (not necessary for query request)"
-                  className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
-                  value={formData.vm_name}
-                  onChange={handleChange}
-                />
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex flex-col">
-                    <label className="mb-1 text-sm font-medium">
-                      Select vCPUs
-                    </label>
-                    <select
-                      name="vcpus"
-                      value={formData.vcpus}
-                      onChange={handleChange}
-                      className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
-                    >
-                      <option value="">Select</option>
-                      {vcpus.map((cpu, idx) => (
-                        <option key={idx} value={cpu}>
-                          {cpu}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex flex-col">
-                    <label className="mb-1 text-sm font-medium">
-                      Select RAM
-                    </label>
-                    <select
-                      name="ram"
-                      value={formData.ram}
-                      onChange={handleChange}
-                      className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
-                    >
-                      <option value="">Select</option>
-                      {rams.map((ram, idx) => (
-                        <option key={idx} value={ram}>
-                          {ram}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex flex-col">
-                    <label className="mb-1 text-sm font-medium">
-                      Select Storage
-                    </label>
-                    <select
-                      name="storage"
-                      value={formData.storage}
-                      onChange={handleChange}
-                      className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
-                    >
-                      <option value="">Select</option>
-                      {rams.map((storage, idx) => (
-                        <option key={idx} value={storage}>
-                          {storage}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="flex flex-col mt-4">
-                  <label className="mb-1 text-sm font-medium">
-                    Select Image
-                  </label>
-                  <select
-                    name="vm_image"
-                    value={formData.vm_image}
-                    onChange={handleChange}
-                    className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
-                  >
-                    <option value="">Select</option>
-                    {images.map((image, idx) => (
-                      <option key={idx} value={image}>
-                        {image}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex gap-4 pt-4">
-                  <button
-                    className="bg-lime-300 text-black font-medium rounded px-4 py-2 hover:brightness-110"
-                    onClick={handleSubmitQuery}
-                  >
-                    Query VM
-                  </button>
-                  <button
-                    className="bg-lime-300 text-black font-medium rounded px-4 py-2 hover:brightness-110"
-                    onClick={handleSubmitRequest}
-                  >
-                    Request VM
-                  </button>
-                </div>
-                <input
-                  name="remarks"
-                  placeholder="Remarks? (not necessary for query request)"
-                  className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
-                  value={formData.remarks}
-                  onChange={handleChange}
-                />
-              </div>
-            </>
+            <VMConfigForm
+              selectedProvider={selectedProvider}
+              formData={formData}
+              handleChange={handleChange}
+              handleSubmitQuery={handleSubmitQuery}
+              handleSubmitRequest={handleSubmitRequest}
+              vcpus={vcpus}
+              rams={rams}
+              images={images}
+              storageOptions={storageOptions}
+            />
           ) : (
             <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-gray-500 text-center">Select a provider to see it's details.</p>
+              <p className="text-gray-500 text-center">Select a provider to see it's details.</p>
             </div>
           )}
         </div>
       </div>
       {/* Toast */}
-            {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
-      
-            {/* Action Confirmation Modal */}
-            <ActionConfirmModal
-              visible={actionConfirm?.visible}
-              type={actionConfirm?.type}
-              onClose={() => setActionConfirm({ visible: false, type: null })}
-              onConfirm={() => handleConfirmedAction(actionConfirm?.type)}
-              onCancel={() => setActionConfirm({ type: null, visible: false })}
-              message={actionConfirm?.message}
-              isConfirmButtonVisible={actionConfirm?.isConfirmButtonVisible}
-              isCancelButtonVisible={actionConfirm?.isCancelButtonVisible}
-              confirmButtonName={actionConfirm?.confirmButtonName}
-              cancelButtonName={actionConfirm?.cancelButtonName}
-            />
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+
+      {/* Action Confirmation Modal */}
+      <ActionConfirmModal
+        visible={actionConfirm?.visible}
+        type={actionConfirm?.type}
+        onClose={() => setActionConfirm({ visible: false, type: null })}
+        onConfirm={() => handleConfirmedAction(actionConfirm?.type)}
+        onCancel={() => setActionConfirm({ type: null, visible: false })}
+        message={actionConfirm?.message}
+        isConfirmButtonVisible={actionConfirm?.isConfirmButtonVisible}
+        isCancelButtonVisible={actionConfirm?.isCancelButtonVisible}
+        confirmButtonName={actionConfirm?.confirmButtonName}
+        cancelButtonName={actionConfirm?.cancelButtonName}
+      />
     </div>
   );
 };

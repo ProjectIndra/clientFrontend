@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { apiCall } from "../Api";
 import ActionConfirmModal from "../components/actionConfirmModal";
 import Toast from '../components/ToastService';
@@ -77,7 +77,6 @@ export default function ManageClients() {
       let response = await apiCall("GET", "/ui/getCliVerificationToken");
       // console.log(response);
       if (response.cli_verification_token === undefined) {
-        // alert("Error: No verification token returned");
         showToast("Error: No verification token returned", "error");
         setIsLoading(false)
         return;

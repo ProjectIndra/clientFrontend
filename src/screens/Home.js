@@ -13,14 +13,13 @@ function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="w-full bg-white max-w-7xl ml-auto mt-16 px-6 md:px-12 py-16 flex flex-col-reverse md:flex-row items-center justify-between gap-10">
-        {/* Left Content */}
-        <div className="w-full md:w-1/2">
-          <h1 className="text-3xl md:text-5xl font-bold text-[#0D0D0D] mb-4">
+      <section className="px-6 md:px-20 py-12 md:py-20 flex flex-col md:flex-row items-center gap-10 md:gap-20 mt-16 h-screen">        {/* Left Content */}
+        <div className="w-full md:w-1/2 ">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-[#0D0D0D] mb-4">
             Turn your idle computer <br /> into a cloud provider
           </h1>
           <p className="text-gray-600 mb-6">
-            Earn by powering the cloud from your own device as a provider.<br/> Access high-performance computing at a fraction of the cost as a client.
+            Earn by powering the cloud from your own device as a provider.<br /> Access high-performance computing at a fraction of the cost as a client.
           </p>
 
           {/* Buttons */}
@@ -34,7 +33,7 @@ function Home() {
           </div>
 
           {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div className="border border-lime-200 p-4 rounded-lg">
               <h4 className="font-semibold mb-1">Power the Cloud with Your Idle Device</h4>
               <p className="text-gray-500">
@@ -50,8 +49,7 @@ function Home() {
             <div className="border border-lime-200 p-4 rounded-lg">
               <h4 className="font-semibold mb-1">Run Demanding Tasks. Rent or Provide Compute</h4>
               <p className="text-gray-500">Access affordable, scalable VMs or earn by sharing your idle hardware — we handle the rest.
-
-</p>
+              </p>
             </div>
             <div className="border border-lime-200 p-4 rounded-lg">
               <h4 className="font-semibold mb-1">The Cloud that Anyone Can Power and Use.</h4>
@@ -59,10 +57,11 @@ function Home() {
                 Earn from underused computers or spin up VMs on demand. No infrastructure needed.
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
 
-        {/* Right Hero Image */}
+        
+        {/* Right  Image */}
         <div className="w-full md:w-1/2 flex justify-center">
           <img
             src="/img/heroImg.png"

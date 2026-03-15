@@ -146,7 +146,7 @@ const Providers = () => {
     if (selectedProvider) {
       await runQuery(formData, selectedProvider);
     } else {
-      alert("Please select a provider.");
+      setToast({ message: "Please select a provider.", type: "error", visible: true });
     }
   };
 
@@ -163,7 +163,7 @@ const Providers = () => {
         cancelButtonName: "Cancel",
       });
     } else {
-      alert("Please select a provider.");
+      setToast({ message: "Please select a provider.", type: "error", visible: true }); 
     }
   };
 
@@ -183,7 +183,7 @@ const Providers = () => {
   };
 
   return (
-    <div className="p-6 font-sans mt-16">
+    <div className="p-6 font-sans">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">
         Providers
       </h2>

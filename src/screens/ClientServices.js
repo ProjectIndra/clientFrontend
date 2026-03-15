@@ -175,7 +175,7 @@ const ClientServices = () => {
                       (
                         <tr
                           key={index}
-                          className={`border-t border-gray-100 hover:bg-lime-100 cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? '' : 'bg-lime-100'
+                        className={`border-t border-gray-100 hover:bg-lime-100 cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? 'bg-lime-100' : ''
                             }`}
                           onClick={() => handleSelectVM(vm)}
                         >

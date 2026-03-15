@@ -3,7 +3,7 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import Home from "./screens/Home";
 import Profile from "./screens/Profile";
-import ProvidersList from "./screens/Providers";
+import Providers from "./screens/Providers";
 import ClientServices from "./screens/ClientServices";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ManageProviders from "./screens/ManageProviders";
@@ -40,7 +40,7 @@ function App() {
               path="/providersList"
               element={
                 <PageWrapper>
-                  <ProvidersList />
+                  <Providers />
                 </PageWrapper>
               }
             />

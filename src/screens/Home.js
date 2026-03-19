@@ -1,77 +1,61 @@
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 import LockBoxLanding from "../components/HomeComponent";
 
 function Home() {
   const handleGetStartedClick = () => {
-    // Handle the "Get Started" button click
     window.location.href = "/docs";
   };
+
   return (
     <div className="font-sans bg-pureWhite text-grayText">
-      {/* Navbar */}
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="px-6 md:px-20 py-12 md:py-20 flex flex-col md:flex-row items-center gap-10 md:gap-20 mt-16 h-screen">        {/* Left Content */}
-        <div className="w-full md:w-1/2 ">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-[#0D0D0D] mb-4">
-            Turn your idle computer <br /> into a cloud provider
+      {/* Hero Section with Background Video */}
+      <section className="relative w-full min-h-[80vh] md:h-screen flex items-center justify-center text-center overflow-hidden mt-16 px-4 md:px-6">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute top-0 left-0 w-full h-full object-cover home-video"
+        >
+          <source src="/computekart-bg-hero.mp4" type="video/mp4" />
+        </video>
+
+        {/* Dark Overlay (important for readability) */}
+        <div className="absolute inset-0 bg-black/60" />
+
+        {/* Content */}
+        <div className="relative z-10 max-w-3xl md:max-w-4xl mx-auto flex flex-col items-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight md:leading-snug mb-3 md:mb-4">
+            Turn your idle computer <br className="hidden sm:block" />
+            into a cloud provider
           </h1>
-          <p className="text-gray-600 mb-6">
-            Earn by powering the cloud from your own device as a provider.<br /> Access high-performance computing at a fraction of the cost as a client.
+
+          <p className="text-sm sm:text-base md:text-lg text-gray-200 max-w-2xl mx-auto mb-5 md:mb-6">
+            Earn by powering the cloud from your own device as a provider. Access high-performance computing at a fraction of the cost as a client.
           </p>
 
           {/* Buttons */}
-          <div className="flex gap-4 mb-10">
-            <button onClick={handleGetStartedClick} className="bg-lime-300 font-medium text-[#0D0D0D] px-6 py-2 rounded-md hover: transition">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-1 md:mt-2 mb-4 md:mb-6">
+            <button
+              onClick={handleGetStartedClick}
+              className="bg-lime-300 font-semibold text-[#0D0D0D] px-6 sm:px-7 md:px-8 py-2.5 md:py-3 rounded-md hover:opacity-90 transition text-sm sm:text-base shadow-md"
+            >
               Get Started
             </button>
-            <button className="text-[#0D0D0D] font-medium hover:underline">
-              See Demo →
+
+            <button className="text-white font-medium text-sm sm:text-base hover:underline/60 hover:underline-offset-4">
+              See Demo &gt;
             </button>
           </div>
-
-          {/* Features */}
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="border border-lime-200 p-4 rounded-lg">
-              <h4 className="font-semibold mb-1">Power the Cloud with Your Idle Device</h4>
-              <p className="text-gray-500">
-                Earn from underused laptops and desktops securely & effortlessly.
-              </p>
-            </div>
-            <div className="border border-lime-200 p-4 rounded-lg">
-              <h4 className="font-semibold mb-1">Host VMs. Earn Money. No Setup Hassle.</h4>
-              <p className="text-gray-500">
-                You provide the hardware. We handle the tech.
-              </p>
-            </div>
-            <div className="border border-lime-200 p-4 rounded-lg">
-              <h4 className="font-semibold mb-1">Run Demanding Tasks. Rent or Provide Compute</h4>
-              <p className="text-gray-500">Access affordable, scalable VMs or earn by sharing your idle hardware — we handle the rest.
-              </p>
-            </div>
-            <div className="border border-lime-200 p-4 rounded-lg">
-              <h4 className="font-semibold mb-1">The Cloud that Anyone Can Power and Use.</h4>
-              <p className="text-gray-500">
-                Earn from underused computers or spin up VMs on demand. No infrastructure needed.
-              </p>
-            </div>
-          </div> */}
-        </div>
-
-        
-        {/* Right  Image */}
-        <div className="w-full md:w-1/2 flex justify-center">
-          <img
-            src="/img/heroImg.png"
-            alt="Hero Illustration"
-            className="w-full max-w-2xl md:w-[600px] h-auto object-contain"
-          />
         </div>
       </section>
+
       <LockBoxLanding />
-      {/* Footer */}
       <Footer />
     </div>
   );

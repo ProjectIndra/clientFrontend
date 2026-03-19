@@ -8,30 +8,22 @@ function NavbarMenu({ mobileMenuOpen, activePopup, togglePopup, showNavbar }) {
 		>
 			{/* Analytics */}
 			<div className="relative group">
-				<button
-					onMouseOver={() => togglePopup("analytics")}
-					className={`${
-						activePopup === "analytics"
-							? "text-[#0a1d39] font-semibold"
-							: "text-[#475569]"
-					} hover:text-[#0a1d39] text-left w-full`}
-					onClick={() => (window.location.href = "/dashboard")}
+				<Link
+					className="text-left w-full font-semibold hover:bg-lime-300 px-2 py-1 text-gray-900 rounded"
+					to="/dashboard"
 				>
 					Analytics
-				</button>
+				</Link>
 			</div>
 			{/* Services */}
 			<div className="relative group">
-				<button
+				<Link
 					onMouseOver={() => togglePopup("services")}
-					className={`${
-						activePopup === "services"
-							? "text-[#0a1d39] font-semibold"
-							: "text-[#475569]"
-					} hover:text-[#0a1d39] text-left w-full`}
+					// to="/client/services"
+					className="text-left w-full font-semibold hover:bg-lime-300 px-2 py-1 text-gray-900 rounded"
 				>
 					Services
-				</button>
+				</Link>
 				{activePopup === "services" && showNavbar && (
 					<div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
 						<Link
@@ -64,16 +56,12 @@ function NavbarMenu({ mobileMenuOpen, activePopup, togglePopup, showNavbar }) {
 
 			{/* Manage */}
 			<div className="relative group">
-				<button
+				<Link
 					onMouseOver={() => togglePopup("manage")}
-					className={`${
-						activePopup === "manage"
-							? "text-[#0a1d39] font-semibold"
-							: "text-[#475569]"
-					} hover:text-[#0a1d39] text-left w-full`}
-				>
-					Manage
-				</button>
+					// to="/manage/providers"
+					className="text-left w-full font-semibold hover:bg-lime-300 px-2 py-1 text-gray-900 rounded"
+				>Manage
+				</Link>
 				{activePopup === "manage" && showNavbar && (
 					<div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
 						{/* <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/docs">
@@ -96,16 +84,9 @@ function NavbarMenu({ mobileMenuOpen, activePopup, togglePopup, showNavbar }) {
 			</div>
 
 			{/* Documentation */}
-			<button
-				onClick={() => (window.location.href = "/docs")}
-				className={`${
-					activePopup === "docs"
-						? "text-[#0a1d39] font-semibold"
-						: "text-[#475569]"
-				} hover:text-[#0a1d39] text-left w-full whitespace-nowrap`}
-			>
+			<Link to="/docs" className="text-left w-full font-semibold hover:bg-lime-300 px-2 py-1 text-gray-900 rounded">
 				Docs
-			</button>
+			</Link>
 		</nav>
 	);
 }

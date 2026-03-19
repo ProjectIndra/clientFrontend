@@ -9,7 +9,7 @@ const PageWrapper = ({ children }) => {
       <Navbar />
 
       {/* Content */}
-      <main className="min-h-[calc(100vh-160px)] pt-[80px]">
+      <main className="min-h-[calc(100vh-160px)] pt-[70px] bg-gray-50">
         {children}
       </main>
 

@@ -29,7 +29,7 @@ const Navbar = () => {
   return (
     <header
       ref={navRef}
-      className={`w-full px-6 md:px-20 py-4 bg-white flex flex-col md:flex-row md:items-center md:justify-between fixed top-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
+      className={`w-full px-6 py-4 md:px-20  bg-white flex flex-col md:flex-row md:items-center md:justify-between fixed top-0 z-50 transition-transform duration-300 border-b border-lime-300 shadow  ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
     >      
       {/* Left section */}
       <div className="flex flex-col md:flex-row md:items-center w-full md:w-auto gap-4 md:gap-8">        

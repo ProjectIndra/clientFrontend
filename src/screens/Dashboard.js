@@ -7,6 +7,7 @@ import {
   updateDashboard,
 } from "../apiServices";
 import { DeleteIcon, EditIcon } from "../utils/icons";
+import Loading from "../components/Loading";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -18,15 +19,19 @@ export const Dashboard = () => {
     name: "",
     description: "",
   });
+  const [loading, setLoading] = useState(false);
 
   // Fetch dashboards from API
   const fetchDashboards = async () => {
     try {
+      setLoading(true);
       const res = await getAllDashboards();
       // API already returns an array
       setDashboards(res || []);
     } catch (err) {
       console.error("Failed to fetch dashboards", err);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -51,23 +56,30 @@ export const Dashboard = () => {
   const handleSave = async () => {
     try {
       if (isUpdate) {
+        setLoading(true);
         await updateDashboard(formData.id, formData.name, formData.description);
       } else {
+        setLoading(true);
         await createDashboard(formData.name, formData.description);
       }
       setShowModal(false);
       fetchDashboards();
     } catch (err) {
       console.error("Error saving dashboard:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
     try {
+      setLoading(true);
       await deleteDashboard(id);
       fetchDashboards();
     } catch (err) {
       console.error("Failed to delete dashboard", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,7 +88,7 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-8  min-h-screen">
 
       <div className="mb-6 flex justify-between items-center">
         <div>
@@ -90,7 +102,9 @@ export const Dashboard = () => {
           Create Dashboard
         </button>
       </div>
-
+      {loading ? (
+        <Loading />
+      ) : null}
       {dashboards.length === 0 ? (
         <p className="text-gray-500">No dashboards yet. Create one!</p>
       ) : (

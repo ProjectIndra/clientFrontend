@@ -184,7 +184,7 @@ const Providers = () => {
 
   return (
     <div className="p-6 font-sans">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <h2 className="text-2xl font-bold text-palette-textPrimary mb-6">
         Providers
       </h2>
       <div className="flex flex-col md:flex-row w-full gap-10">
@@ -221,7 +221,7 @@ const Providers = () => {
             />
           ) : (
             <div className="flex flex-col items-center justify-center h-full">
-              <p className="text-gray-500 text-center">Select a provider to see it's details.</p>
+              <p className="text-palette-textMuted text-center">Select a provider to see it's details.</p>
             </div>
           )}
         </div>

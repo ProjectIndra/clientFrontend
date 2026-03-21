@@ -7,7 +7,7 @@ function Footer() {
         <h2 className="text-2xl md:text-4xl font-semibold">
           Get Started with ComputeKart Today
         </h2>
-        <button className="bg-white text-[#0D1A33] px-6 py-2 mt-6 rounded-full font-semibold">
+        <button className="bg-palette-surface text-[#0D1A33] px-6 py-2 mt-6 rounded-full font-semibold">
           Contact Us
         </button>
       </section>

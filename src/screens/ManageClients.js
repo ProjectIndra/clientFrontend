@@ -108,9 +108,9 @@ export default function ManageClients() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Manage CLIs</h1>
+        <h1 className="text-2xl font-bold text-palette-textPrimary">Manage CLIs</h1>
         {isLoading && (
-          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+          <div className="absolute inset-0 bg-palette-surface bg-opacity-75 flex items-center justify-center z-10">
             <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
           </div>
         )}
@@ -126,24 +126,24 @@ export default function ManageClients() {
         {/* Left: Client List */}
         <div className="space-y-4 h-[500px] overflow-y-auto">
           {isLoading ? (
-            // <p className="text-gray-500">Loading clients...</p>
-            <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+            // <p className="text-palette-textMuted">Loading clients...</p>
+            <div className="absolute inset-0 bg-palette-surface bg-opacity-75 flex items-center justify-center z-10">
               <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
             </div>
           ) : clients.length === 0 ? (
-            <p className="text-gray-500">No clients found.</p>
+            <p className="text-palette-textMuted">No clients found.</p>
           ) : (
             clients?.map((client) => (
               <div
                 key={client.cli_id}
                 className={`p-4 border rounded cursor-pointer ${selectedClient?.cli_id === client.cli_id
                     ? "border-lime-500 bg-lime-50"
-                    : "hover:bg-gray-50"
+                    : "hover:bg-palette-wrapper"
                   }`}
                 onClick={() => handleSelectClient(client)}
               >
-                <h3 className="font-semibold text-gray-800">{client.cli_id}</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-palette-textPrimary">{client.cli_id}</h3>
+                <p className="text-sm text-palette-textSecondary">
                   Status: {client.cli_status ? "🟢 Active" : "🔴 Inactive"}
                 </p>
               </div>
@@ -152,27 +152,27 @@ export default function ManageClients() {
         </div>
 
         {/* Right: Client Details */}
-        <div className="p-4 border rounded bg-white shadow h-[500px]">
+        <div className="p-4 border rounded bg-palette-surface shadow h-[500px]">
           {selectedClient ? (
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-palette-textPrimary">
                 {selectedClient.cli_id}
               </h2>
 
-              <p className="text-gray-700">
+              <p className="text-palette-textSecondary">
                 <span className="font-semibold">Status:</span>{" "}
                 {selectedClient.cli_status ? "🟢 Active" : "🔴 Inactive"}
               </p>
-              <p className="text-gray-700 break-all">
+              <p className="text-palette-textSecondary break-all">
                 <span className="font-semibold">WireGuard Endpoint:</span>{" "}
                 {selectedClient.cli_wireguard_endpoint}
               </p>
-              <p className="text-gray-700 break-all">
+              <p className="text-palette-textSecondary break-all">
                 <span className="font-semibold">Public Key:</span>{" "}
                 {selectedClient.cli_wireguard_public_key}
               </p>
 
-              <div className="space-y-2 text-sm text-gray-600">
+              <div className="space-y-2 text-sm text-palette-textSecondary">
                 <p>
                   <strong>User ID:</strong> {selectedClient.user_id}
                 </p>
@@ -201,7 +201,7 @@ export default function ManageClients() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-full">
-              <p className="text-gray-500 text-center">Select any cli to view it's details</p>
+              <p className="text-palette-textMuted text-center">Select any cli to view it's details</p>
             </div>
           )}
         </div>

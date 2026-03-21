@@ -41,21 +41,21 @@ export default function LockBoxLanding() {
   ];
 
   return (
-    <div className="font-sans text-[#0D0D0D] bg-white w-full overflow-x-hidden">
+    <div className="font-sans text-palette-text0d bg-palette-surface w-full overflow-x-hidden">
       {/* Header Section */}
-      <section className="text-center py-12 bg-[#f8f7fe] px-4 md:px-10">
-        <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-[#0D0D0D]">
+      <section className="text-center py-12 bg-palette-bgf8 px-4 md:px-10">
+        <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-palette-text0d">
           Our Benefit for You
         </span>
         <h2 className="text-2xl md:text-4xl font-semibold mt-4">
           Why You’ll Love This
         </h2>
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6">
-          <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md cursor-pointer">
+          <div className="bg-palette-bgf6 rounded-xl p-6 md:w-1/3 shadow-md cursor-pointer">
             <h3 className="text-xl font-semibold mb-2">
               For Resource Providers
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-palette-textSecondary">
               Monetize your idle machines by securely sharing compute and
               storage resources with our cloud network. Join with minimal setup,
               stay in full control, and earn passive income—while powering a new
@@ -63,11 +63,11 @@ export default function LockBoxLanding() {
             </p>
             {/* <button className="text-blue-500 text-sm mt-3">Learn More</button> */}
           </div>
-          <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md cursor-pointer">
+          <div className="bg-palette-bgf6 rounded-xl p-6 md:w-1/3 shadow-md cursor-pointer">
             <h3 className="text-xl font-semibold mb-2">
               For Resource Consumers
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-palette-textSecondary">
               Leverage a scalable, distributed infrastructure that spans across
               multiple providers and locations. Run workloads seamlessly across
               clusters, migrate between nodes, and utilize the same application
@@ -77,11 +77,11 @@ export default function LockBoxLanding() {
           </div>
         </div>
         {/* <div className="mt-16 flex flex-col items-center">
-          <h2 className="text-2xl md:text-3xl font-semibold text-[#0D0D0D] text-center w-full max-w-[800px] break-words">
+          <h2 className="text-2xl md:text-3xl font-semibold text-palette-text0d text-center w-full max-w-[800px] break-words">
             Start providing services with one bash script...
           </h2>
-          <div className="mt-6 bg-white border border-gray-300 rounded-xl px-4 py-3 max-w-[120vw] md:max-w-[800px] flex items-center justify-between text-left shadow-sm whitespace-nowrap overflow-x-auto">
-            <code className="text-sm text-gray-800 break-all">
+          <div className="mt-6 bg-palette-surface border border-palette-border rounded-xl px-4 py-3 max-w-[120vw] md:max-w-[800px] flex items-center justify-between text-left shadow-sm whitespace-nowrap overflow-x-auto">
+            <code className="text-sm text-palette-textPrimary break-all">
               {bashScript}
             </code>
             <button
@@ -110,7 +110,7 @@ export default function LockBoxLanding() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="none"
-                    className="h-5 w-5 text-gray-600"
+                    className="h-5 w-5 text-palette-textSecondary"
                   >
                     <path
                       fillRule="evenodd"
@@ -123,7 +123,7 @@ export default function LockBoxLanding() {
                       fill="#0F0F0F"
                     />
                   </svg>
-                  <span className="text-sm text-gray-600">Copy</span>
+                  <span className="text-sm text-palette-textSecondary">Copy</span>
                 </>
               )}
             </button>
@@ -132,15 +132,15 @@ export default function LockBoxLanding() {
       </section>
 
       {/* Key Features Section */}
-      <section className="py-12 px-4 md:px-10 bg-white text-center">
-        <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-[#0D0D0D]">
+      <section className="py-12 px-4 md:px-10 bg-palette-surface text-center">
+        <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-palette-text0d">
           Our Key Features
         </span>
         <h2 className="text-2xl md:text-4xl font-semibold mt-4">
           🚀 Discover we enterprises can power and consume compute — seamlessly
         </h2>
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6">
-          <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4 cursor-pointer">
+          <div className="bg-palette-bgf6 text-palette-text0d rounded-xl p-6 md:w-1/4 cursor-pointer">
             <h3 className="text-lg font-bold mb-2">
               🧠 Smart Compute Provisioning
             </h3>
@@ -149,7 +149,7 @@ export default function LockBoxLanding() {
             </p>
             {/* <button className="text-white text-sm mt-3">Learn More</button> */}
           </div>
-          <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4 cursor-pointer">
+          <div className="bg-palette-bgf6 text-palette-text0d rounded-xl p-6 md:w-1/4 cursor-pointer">
             <h3 className="text-lg font-bold mb-2">
               🔁 Roles: Be a Provider or a User
             </h3>
@@ -158,7 +158,7 @@ export default function LockBoxLanding() {
             </p>
             {/* <button className="text-blue-500 text-sm mt-3">Learn More</button> */}
           </div>
-          <div className="bg-[#F6F9FC] text-[#0D0D0D] rounded-xl p-6 md:w-1/4 cursor-pointer">
+          <div className="bg-palette-bgf6 text-palette-text0d rounded-xl p-6 md:w-1/4 cursor-pointer">
             <h3 className="text-lg font-bold mb-2">
               🌍 On-Demand Virtual Machines
             </h3>
@@ -171,27 +171,27 @@ export default function LockBoxLanding() {
       </section>
 
       {/* Device Security Section */}
-      <section className="py-12 px-4 md:px-10 bg-[#f8f7fe] text-center">
-        <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-[#0D0D0D]">
+      <section className="py-12 px-4 md:px-10 bg-palette-bgf8 text-center">
+        <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-palette-text0d">
           Why We Do This
         </span>
         <h2 className="text-2xl md:text-4xl font-semibold mt-4">
           We see potential everywhere.
         </h2>
         <div className="flex flex-col md:flex-row justify-center mt-10 gap-6 items-center">
-          <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
+          <div className="bg-palette-bgf6 rounded-xl p-6 md:w-1/3 shadow-md">
             <h3 className="text-xl font-semibold mb-2">
               Our Mission
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-palette-textSecondary">
                Enable anyone to securely share computing resources with anyone in the world.
             </p>
           </div>
-          <div className="bg-[#F6F9FC] rounded-xl p-6 md:w-1/3 shadow-md">
+          <div className="bg-palette-bgf6 rounded-xl p-6 md:w-1/3 shadow-md">
             <h3 className="text-xl font-semibold mb-2">
               Our Vision
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-palette-textSecondary">
               Enable heavy computing on any device—powered by millions of providers in one trusted cloud.
             </p>
           </div>
@@ -199,9 +199,9 @@ export default function LockBoxLanding() {
       </section>
 
       {/* FAQ Section */}
-      <section className="bg-[#f9f9f9] py-12 px-6 md:px-16">
+      <section className="bg-palette-wrapper py-12 px-6 md:px-16">
         <div className="text-center mb-10">
-          <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-[#0D0D0D]">
+          <span className="text-xs px-3 py-1 rounded-full bg-lime-300 font-medium text-palette-text0d">
             Frequently Asked Question
           </span>
           <h2 className="text-2xl md:text-4xl font-semibold mt-4">
@@ -212,7 +212,7 @@ export default function LockBoxLanding() {
           {faqs?.map((faq, index) => (
             <div
               key={index}
-              className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200 transition-none hover:scale-100"
+              className="bg-palette-surface shadow-md rounded-xl overflow-hidden border border-palette-border transition-none hover:scale-100"
             >
               <button
                 onClick={() => toggleFaq(index)}
@@ -224,7 +224,7 @@ export default function LockBoxLanding() {
                 </span>
               </button>
               {faqOpen === index && (
-                <div className="px-6 pb-4 text-sm text-gray-600">
+                <div className="px-6 pb-4 text-sm text-palette-textSecondary">
                   {faq.answer}
                 </div>
               )}

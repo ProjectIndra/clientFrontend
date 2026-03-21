@@ -16,7 +16,7 @@ function EditProfileModal({
 		onClick={() => onClose(false)}
 	>
 		<div
-			className="bg-white rounded-lg p-6 w-full max-w-md"
+			className="bg-palette-surface rounded-lg p-6 w-full max-w-md"
 			onClick={(e) => e.stopPropagation()}
 		>
 			<h2 className="text-xl font-bold mb-4">
@@ -38,7 +38,7 @@ function EditProfileModal({
 					value={newProfileName}
 					onChange={(e) => setNewProfileName(e.target.value)}
 					disabled={!updateName}
-					className="border border-gray-300 rounded-lg p-2 w-full disabled:bg-gray-100"
+					className="border border-palette-border rounded-lg p-2 w-full disabled:bg-palette-surfaceMuted"
 				/>
 			</div>
 
@@ -54,13 +54,13 @@ function EditProfileModal({
 				</label>
 				<div className="space-y-2">
 					<div>
-						<label className="text-xs text-gray-600 block mb-2">Upload from Device</label>
+						<label className="text-xs text-palette-textSecondary block mb-2">Upload from Device</label>
 						<input
 							type="file"
 							accept="image/*,.svg"
 							onChange={fileUpload}
 							disabled={!updateImage}
-							className="border border-gray-300 rounded-lg p-2 w-full text-sm disabled:bg-gray-100"
+							className="border border-palette-border rounded-lg p-2 w-full text-sm disabled:bg-palette-surfaceMuted"
 						/>
 					</div>
 				</div>
@@ -68,7 +68,7 @@ function EditProfileModal({
 			<div className="flex justify-end gap-3">
 				<button
 					onClick={() => onClose(false)}
-					className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+					className="px-4 py-2 bg-palette-surfaceMuted rounded-lg hover:bg-palette-surfaceMuted"
 				>
 					Cancel
 				</button>

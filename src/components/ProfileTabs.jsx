@@ -7,8 +7,8 @@ function ProfileTabs({ isProvider, setIsProvider, providers, wg }) {
 				<h2
 					className={`text-lg mb-4 cursor-pointer ${
 						isProvider
-							? "text-gray-800 font-semibold "
-							: "text-gray-400 font-regular"
+							? "text-palette-textPrimary font-semibold "
+							: "text-palette-textMuted font-regular"
 					}`}
 					onClick={() => setIsProvider(true)}
 				>
@@ -18,8 +18,8 @@ function ProfileTabs({ isProvider, setIsProvider, providers, wg }) {
 				<h2
 					className={`text-lg mb-4 cursor-pointer ${
 						!isProvider
-							? "text-gray-800 font-semibold"
-							: "text-gray-400 font-regular"
+							? "text-palette-textPrimary font-semibold"
+							: "text-palette-textMuted font-regular"
 					}`}
 					onClick={() => setIsProvider(false)}
 				>
@@ -39,10 +39,10 @@ function ProfileTabs({ isProvider, setIsProvider, providers, wg }) {
 								key={client.cli_id}
 								className={`p-4 border rounded cursor-pointer`}
 							>
-								<h3 className="font-semibold text-gray-800">
+								<h3 className="font-semibold text-palette-textPrimary">
 									{client.cli_id}
 								</h3>
-								<p className="text-sm text-gray-600">
+								<p className="text-sm text-palette-textSecondary">
 									Status:{" "}
 									{client.cli_status
 										? "🟢 Active"

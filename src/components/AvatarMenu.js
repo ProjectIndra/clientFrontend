@@ -19,18 +19,18 @@ function AvatarMenu({ account, initials, togglePopup, activePopup }) {
 			</div>
 
 			{activePopup === "avatar" && (
-				<div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
+				<div className="absolute right-0 mt-2 w-56 bg-palette-surface rounded-lg shadow-lg py-2 z-50">
 					<button
-						className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-lime-100"
+						className="flex items-center w-full px-4 py-2 text-sm text-palette-textSecondary"
 						onClick={() => (window.location.href = "/profile")}
 					>
 						Profile
 					</button>
 
 					<button
-						className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+						className="flex items-center w-full px-4 py-2 text-sm text-red-600"
 						onClick={() => {
-							 AuthHandler.logout();
+							AuthHandler.logout();
 						}}
 					>
 						Logout

@@ -39,7 +39,7 @@ const DocsMainPage = () => {
             name: "Support",
             file: "/mdFiles/support.md"
         },
-        
+
     ];
 
     const [scrollToId, setScrollToId] = useState(null);
@@ -52,7 +52,7 @@ const DocsMainPage = () => {
 
 
     return <div>
-        {/* <div><h2 className="text-2xl font-semibold text-slate-800 mb-6 p-6">Documentation</h2></div> */}
+        {/* <div><h2 className="text-2xl font-semibold text-slate-800 mb-6 text-palette-textPrimary p-6">Documentation</h2></div> */}
         <div className="docs-main-page">
             <Sidebar handleFileChange={handleFileChange} mdFiles={mdFiles} />
             <ShowDocumentation mdFile={mdFile} scrollToId={scrollToId} />

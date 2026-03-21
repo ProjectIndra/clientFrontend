@@ -11,7 +11,7 @@ export const TextInput = ({
   return (
     <div>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-palette-textSecondary mb-1">
           {label}
         </label>
       )}
@@ -38,7 +38,7 @@ export const NumberInput = ({
   return (
     <div>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-palette-textSecondary mb-1">
           {label}
         </label>
       )}
@@ -66,7 +66,7 @@ export const DropdownSelect = ({
   return (
     <div>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-palette-textSecondary mb-1">
           {label}
         </label>
       )}

@@ -14,8 +14,8 @@ const ProviderCard = ({ provider, isActive = false }) => {
   return (
     <div className="w-full flex justify-start cursor-pointer">
       <div
-        className={`w-full flex rounded-xl shadow-md border-2 transition-all duration-300 overflow-hidden
-        ${isActive ? "border-lime-500 bg-lime-100" : "border-gray-300 bg-white hover:bg-lime-100"}`}
+        className={`w-full flex rounded-xl shadow-md border-2 transition-all duration-300 overflow-hidden dark:bg-palette-bgf8
+        ${isActive ? "border-lime-500 bg-lime-100 dark:text-palette-textTertiary dark:bg-palette-surface" : "border-palette-border bg-palette-surface hover:bg-lime-100 dark:hover:bg-palette-bgf8 dark:hover:text-palette-textTertiary"}`}
       >
         {/* Left content */}
         <div className="flex flex-col p-4 flex-1">
@@ -25,7 +25,7 @@ const ProviderCard = ({ provider, isActive = false }) => {
             <div className="flex gap-4">
               <img src="/img/computer.png" alt="icon" className="w-10 h-10" />
               <h3
-                className="text-lg font-semibold text-start truncate"
+                className="text-lg font-semibold text-start text-palette-textPrimary truncate"
                 title={provider?.providerName}
               >
                 {provider?.providerName}
@@ -45,8 +45,8 @@ const ProviderCard = ({ provider, isActive = false }) => {
           <div className="grid grid-cols-2 gap-4 text-sm whitespace-nowrap">
             {details?.map((item, i) => (
               <div key={i} className="flex flex-col">
-                <span className="text-gray-500 font-medium">{item.label}</span>
-                <span className="font-semibold">{item.value}</span>
+                <span className="text-palette-textMuted font-medium">{item.label}</span>
+                <span className="font-semibold text-palette-textPrimary">{item.value}</span>
               </div>
             ))}
           </div>

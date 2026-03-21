@@ -51,25 +51,25 @@ function Profile() {
   };
 
   return (
-    <div className="px-32 bg-white max-w-6xl justify-center">
+    <div className="px-32 bg-palette-surface max-w-6xl justify-center">
       {loading ? (
         <div className="space-y-8">
           {/* Header Section */}
           <div className="flex gap-6">
-            <div className="w-32 h-32 bg-gray-200 rounded-2xl animate-pulse" />
+            <div className="w-32 h-32 bg-palette-surfaceMuted rounded-2xl animate-pulse" />
             <div className="flex-1 space-y-3">
-              <div className="h-6 w-48 bg-gray-200 rounded-md animate-pulse" />
-              <div className="h-4 w-32 bg-gray-200 rounded-md animate-pulse" />
+              <div className="h-6 w-48 bg-palette-surfaceMuted rounded-md animate-pulse" />
+              <div className="h-4 w-32 bg-palette-surfaceMuted rounded-md animate-pulse" />
               <div className="flex gap-3 mt-4">
-                <div className="h-10 w-24 bg-gray-200 rounded-md animate-pulse" />
-                <div className="h-10 w-28 bg-gray-200 rounded-md animate-pulse" />
+                <div className="h-10 w-24 bg-palette-surfaceMuted rounded-md animate-pulse" />
+                <div className="h-10 w-28 bg-palette-surfaceMuted rounded-md animate-pulse" />
               </div>
             </div>
             <div className="flex gap-8">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="space-y-2">
-                  <div className="h-6 w-12 bg-gray-200 rounded-md animate-pulse" />
-                  <div className="h-4 w-14 bg-gray-100 rounded-md animate-pulse" />
+                  <div className="h-6 w-12 bg-palette-surfaceMuted rounded-md animate-pulse" />
+                  <div className="h-4 w-14 bg-palette-surfaceMuted rounded-md animate-pulse" />
                 </div>
               ))}
             </div>
@@ -80,12 +80,12 @@ function Profile() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="bg-gray-100 rounded-xl overflow-hidden shadow-md"
+                className="bg-palette-surfaceMuted rounded-xl overflow-hidden shadow-md"
               >
-                <div className="h-40 bg-gray-200 animate-pulse" />
+                <div className="h-40 bg-palette-surfaceMuted animate-pulse" />
                 <div className="p-4 space-y-2">
-                  <div className="h-4 w-2/3 bg-gray-200 rounded-md animate-pulse" />
-                  <div className="h-3 w-1/3 bg-gray-100 rounded-md animate-pulse" />
+                  <div className="h-4 w-2/3 bg-palette-surfaceMuted rounded-md animate-pulse" />
+                  <div className="h-3 w-1/3 bg-palette-surfaceMuted rounded-md animate-pulse" />
                 </div>
               </div>
             ))}
@@ -94,7 +94,7 @@ function Profile() {
       ) : (
           <>
             <div className="p-6 font-sans mt-16">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-2xl font-bold text-palette-textPrimary mb-6">
                 Profile
               </h2>
           {/* Actual Profile */}
@@ -138,8 +138,8 @@ function Profile() {
 
 const Metric = ({ label, value }) => (
   <div className="text-center">
-    <p className="text-xl font-semibold text-gray-800">{value}</p>
-    <p className="text-sm text-gray-500">{label}</p>
+    <p className="text-xl font-semibold text-palette-textPrimary">{value}</p>
+    <p className="text-sm text-palette-textMuted">{label}</p>
   </div>
 );
 

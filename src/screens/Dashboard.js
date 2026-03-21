@@ -88,12 +88,12 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="p-8  min-h-screen">
+    <div>
 
       <div className="mb-6 flex justify-between items-center">
         <div>
-          <h5 className="text-2xl font-bold text-gray-900">Manage Dashboards</h5>
-          <p className="text-gray-400">Create and manage your dashboards for better insights</p>
+          <h5 className="text-2xl font-bold text-palette-textPrimary">Manage Dashboards</h5>
+          <p className="text-palette-textMuted">Create and manage your dashboards for better insights</p>
         </div>
         <button
           onClick={() => handleOpenModal(false)}
@@ -105,21 +105,22 @@ export const Dashboard = () => {
       {loading ? (
         <Loading />
       ) : null}
+      
       {dashboards.length === 0 ? (
-        <p className="text-gray-500">No dashboards yet. Create one!</p>
+        <p className="text-palette-textMuted">No dashboards yet. Create one!</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {dashboards?.map((dashboard) => (
             <div
               key={dashboard.dashboardId}
               onClick={() => handleOpenDashboard(dashboard.dashboardId)}
-              className="cursor-pointer border border-lime-300 bg-white rounded-lg shadow-sm p-4 flex justify-between items-center hover:shadow-md transition"
+              className="cursor-pointer border border-lime-300 bg-palette-surface rounded-lg shadow-sm p-4 flex justify-between items-center hover:shadow-md transition"
             >
               <div>
-                <span className="font-medium text-gray-800 block">
+                <span className="font-medium text-palette-textPrimary block">
                   {dashboard.dashboardName}
                 </span>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-palette-textMuted mt-1">
                   {dashboard.dashboardDescription || "No description available"}
                 </p>
               </div>
@@ -151,7 +152,7 @@ export const Dashboard = () => {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-palette-surface rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">
               {isUpdate ? "Update Dashboard" : "Create Dashboard"}
             </h2>
@@ -162,7 +163,7 @@ export const Dashboard = () => {
                   type="text"
                   value={formData.id}
                   readOnly
-                  className="border border-gray-300 rounded-lg p-2 w-full bg-gray-100"
+                  className="border border-palette-border rounded-lg p-2 w-full bg-palette-surfaceMuted"
                 />
               </div>
             )}
@@ -174,7 +175,7 @@ export const Dashboard = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="border border-gray-300 rounded-lg p-2 w-full"
+                className="border border-palette-border rounded-lg p-2 w-full"
               />
             </div>
             <div className="mb-3">
@@ -184,13 +185,13 @@ export const Dashboard = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                className="border border-gray-300 rounded-lg p-2 w-full"
+                className="border border-palette-border rounded-lg p-2 w-full"
               />
             </div>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+                className="px-4 py-2 bg-palette-surfaceMuted rounded-lg hover:bg-palette-surfaceMuted"
               >
                 Cancel
               </button>

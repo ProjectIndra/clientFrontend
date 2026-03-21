@@ -4,6 +4,50 @@ html, body {
   padding: 0;
   min-height: 100vh;
 }
+
+:root {
+  --color-bg-app: #ffffff;
+  --color-bg-wrapper: #f9fafb;
+  --color-bg-navbar: #ffffff;
+  --color-bg-surface: #ffffff;
+  --color-bg-surface-muted: #e5e7eb;
+  
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #374151;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #1f2937;
+  
+  --color-border: #d1d5db;
+  
+  --color-bg-0d: #0D0D0D; 
+  --color-bg-f6: #F6F9FC;
+  --color-bg-f8: #f8f7fe;
+  --color-text-0d: #0D0D0D;
+  --color-brand-0a: #0a1d39;
+}
+
+.dark {
+  --color-bg-app: #000000;
+  --color-bg-wrapper: #000000;
+  --color-bg-navbar: #000000;
+  --color-bg-surface: #111827;
+  --color-bg-surface-muted: #374151;
+  
+  --color-text-primary: #ffffff; 
+  --color-text-secondary: #fdfbf7;
+  --color-text-muted: #bae6fd;
+  --color-text-inverse: #111827;
+  --color-text-tertiary: #6b7280;
+  
+  --color-border: #4b5563;
+
+  --color-bg-0d: #0D0D0D;
+  --color-bg-f6: #0a0a0a;
+  --color-bg-f8: #0a0a0a;
+  --color-text-0d: #ffffff;
+  --color-brand-0a: #ffffff;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,7 +55,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: rgb(255, 255, 255);
+  background: var(--color-bg-app);
+  color: var(--color-text-primary)
 }
 
 /* width */
@@ -21,7 +66,7 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f7fee7;
+  /* background: #f7fee7; */
 }
  
 /* Handle */

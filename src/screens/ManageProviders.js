@@ -117,7 +117,18 @@ export default function ManageProviders() {
   }, [fetchProviders]); 
 
   const handleSaveProvider = () => {
-    apiCall("post", "/ui/providers/update_config", formData)
+    const updateProviderConfPayload = {};
+    for (const key in formData) {
+      if (formData[key] !== "") {
+        if (key === "providerAllowedRam" || key === "providerAllowedStorage") {
+          updateProviderConfPayload[key] = String(Number(formData[key]) * 1024);
+        } else {
+          updateProviderConfPayload[key] = formData[key];
+        }
+      }
+    }
+
+    apiCall("post", "/ui/providers/update_config", updateProviderConfPayload)
       .then((data) => {
         setFormData({
           providerName: "",

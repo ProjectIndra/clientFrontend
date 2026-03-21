@@ -106,19 +106,20 @@ function Tunnels() {
     }
   }
 
-  async function deleteTunnel(tunnelId) {
+  async function deleteTunnel(tunnelId,tunnelNo) {
     try {
       if (loading) return;
       setLoading(true);
       await apiCall("POST", "/ui/deleteTunnel", {
         tunnelId: tunnelId,
+        tunnelNo: tunnelNo.toString()
       });
 
       showToast("Tunnel deleted", "success");
 
       refreshTunnels();
     } catch (error) {
-      showToast("Failed to delete tunnel", "error");
+      showToast(error ?? "Failed to delete tunnel", "error");
     }finally {
       setLoading(false)
     }
@@ -232,7 +233,7 @@ function Tunnels() {
 
                       <button
                         disabled={loading}
-                        onClick={() => deleteTunnel(tunnel?.tunnelId)}
+                        onClick={() => deleteTunnel(tunnel?.tunnelId,tunnel?.tunnelNo)}
                         className="text-red-500"
                       >
                       <DeleteIcon className="h-4 w-4" />

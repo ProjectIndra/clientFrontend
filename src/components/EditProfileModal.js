@@ -29,6 +29,7 @@ function EditProfileModal({
 						type="checkbox"
 						checked={updateName}
 						onChange={(e) => setUpdateName(e.target.checked)}
+						className="focus:outline-0 text-lime-500 focus:ring-0"
 					/>
 					Update Profile Name
 				</label>
@@ -38,7 +39,7 @@ function EditProfileModal({
 					value={newProfileName}
 					onChange={(e) => setNewProfileName(e.target.value)}
 					disabled={!updateName}
-					className="border border-palette-border rounded-lg p-2 w-full disabled:bg-palette-surfaceMuted"
+					className="border border-palette-border rounded-lg p-2 w-full disabled:opacity-50 disabled:bg-palette-surfaceMuted bg-palette-surface focus:outline-none focus:ring-1 focus:ring-lime-300 focus:border-lime-300 transition-colors"
 				/>
 			</div>
 
@@ -49,6 +50,8 @@ function EditProfileModal({
 						type="checkbox"
 						checked={updateImage}
 						onChange={(e) => setUpdateImage(e.target.checked)}
+						className="focus:outline-0 text-lime-500 focus:ring-0 bg-palette-surface"
+
 					/>
 					Update Profile Image {"(< 1 MB )"}
 				</label>
@@ -60,7 +63,7 @@ function EditProfileModal({
 							accept="image/*,.svg"
 							onChange={fileUpload}
 							disabled={!updateImage}
-							className="border border-palette-border rounded-lg p-2 w-full text-sm disabled:bg-palette-surfaceMuted"
+							className="border border-palette-border rounded-lg pl-0 p-1 w-full text-sm disabled:opacity-50 disabled:bg-palette-surfaceMuted bg-palette-surface focus:outline-none focus:ring-1 focus:ring-lime-300 focus:border-lime-300 transition-colors file:m-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-lime-500/10 file:text-lime-600 hover:file:bg-lime-500/20 cursor-pointer file:cursor-pointer"
 						/>
 					</div>
 				</div>

@@ -51,11 +51,15 @@ function Profile() {
   };
 
   return (
-    <div className="px-32 bg-palette-surface max-w-6xl justify-center">
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-palette-textPrimary">Profile</h1>
+      </div>
+
       {loading ? (
         <div className="space-y-8">
-          {/* Header Section */}
-          <div className="flex gap-6">
+          {/* Header Section skeleton */}
+          <div className="flex gap-6 p-6 border border-palette-border rounded-xl bg-palette-surface shadow-sm">
             <div className="w-32 h-32 bg-palette-surfaceMuted rounded-2xl animate-pulse" />
             <div className="flex-1 space-y-3">
               <div className="h-6 w-48 bg-palette-surfaceMuted rounded-md animate-pulse" />
@@ -75,14 +79,14 @@ function Profile() {
             </div>
           </div>
 
-          {/* Projects */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Projects skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 border border-palette-border rounded-xl bg-palette-surface shadow-sm">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="bg-palette-surfaceMuted rounded-xl overflow-hidden shadow-md"
+                className="bg-palette-surfaceMuted rounded-xl overflow-hidden shadow-sm"
               >
-                <div className="h-40 bg-palette-surfaceMuted animate-pulse" />
+                <div className="h-40 bg-palette-surfaceMuted animate-pulse border-b border-palette-border" />
                 <div className="p-4 space-y-2">
                   <div className="h-4 w-2/3 bg-palette-surfaceMuted rounded-md animate-pulse" />
                   <div className="h-3 w-1/3 bg-palette-surfaceMuted rounded-md animate-pulse" />
@@ -92,43 +96,42 @@ function Profile() {
           </div>
         </div>
       ) : (
-          <>
-            <div className="p-6 font-sans mt-16">
-              <h2 className="text-2xl font-bold text-palette-textPrimary mb-6">
-                Profile
-              </h2>
+        <div className="space-y-6">
           {/* Actual Profile */}
+          <div className="p-6 border border-palette-border rounded-xl bg-palette-surface shadow-sm">
             <ProfileHeader
               user={user}
               getInitials={getInitials}
               setIsEditDialogOpen={setIsEditDialogOpen}
             />
+          </div>
 
           {/* Project List */}
+          <div className="p-6 border border-palette-border rounded-xl bg-palette-surface shadow-sm">
             <ProfileTabs
               isProvider={isProvider}
               setIsProvider={setIsProvider}
               providers={providers}
               wg={wg}
-              />
-              </div>
+            />
+          </div>
+
           {/* Modal */}
           {isEditDialogOpen && (
-              <EditProfileModal
-                isOpen={isEditDialogOpen}
-                onClose={() => setIsEditDialogOpen(false)}
-                handleSave={handleSave}
-                fileUpload={fileUpload}
-                newProfileName={newProfileName}
-                setNewProfileName={setNewProfileName}
-                updateName={updateName}
-                setUpdateName={setUpdateName}
-                updateImage={updateImage}
-                setUpdateImage={setUpdateImage}
-              />
+            <EditProfileModal
+              isOpen={isEditDialogOpen}
+              onClose={() => setIsEditDialogOpen(false)}
+              handleSave={handleSave}
+              fileUpload={fileUpload}
+              newProfileName={newProfileName}
+              setNewProfileName={setNewProfileName}
+              updateName={updateName}
+              setUpdateName={setUpdateName}
+              updateImage={updateImage}
+              setUpdateImage={setUpdateImage}
+            />
           )}
-
-        </>
+        </div>
       )}
       {/* Toast */}
       {toast.visible && <Toast message={toast.message} type={toast.type} onClose={() => setToast(prev => ({ ...prev, visible: false }))} />}

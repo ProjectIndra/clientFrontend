@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { apiCall } from '../Api';
 import axios from 'axios';
 import JSZip from 'jszip';
-import { apiCall } from '../Api';
+import Toast from '../components/ToastService';
 
 const Buckets = () => {
 	const [path, setPath] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [entries, setEntries] = useState([]);
 	const [selectedItems, setSelectedItems] = useState([]);
+	const [toast, setToast] = useState({ message: "", type: "info", visible: false });
+
+	const closeToast = () => {
+		setToast((prev) => ({ ...prev, visible: false }));
+	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -21,7 +27,7 @@ const Buckets = () => {
 				setSelectedItems([]);
 			})
 			.catch((error) => {
-				alert(error);
+				setToast({ message: error, type: "error", visible: true });
 			});
 	};
 
@@ -51,7 +57,7 @@ const Buckets = () => {
 		if (dirName) {
 			apiCall("POST", "/hdfs/mkdir", { path: path !== '' ? `${path}/${dirName}` : dirName })
 				.then(() => { setLoading(true); fetchDirectory(path); setLoading(false) })
-				.catch((err) => alert(err));
+				.catch((err) => setToast({ message: err, type: "error", visible: true }));
 		}
 	};
 
@@ -98,7 +104,7 @@ const Buckets = () => {
 				fetchDirectory(path);  // Refresh directory contents
 			} catch (err) {
 				console.error("Error during folder zipping/upload:", err);
-				alert("Error while zipping/uploading folder.");
+				setToast({ message: err, type: "error", visible: true });
 			}
 		} else {
 			// Regular file upload logic (as before)
@@ -126,7 +132,7 @@ const Buckets = () => {
 				fetchDirectory(path);  // Refresh directory contents
 			} catch (err) {
 				console.error(err);
-				alert("Error while uploading files.");
+				setToast({ message: err, type: "error", visible: true });
 			}
 		}
 	};
@@ -134,7 +140,7 @@ const Buckets = () => {
 	const handleDelete = () => {
 		apiCall("POST", "/hdfs/delete", { paths: selectedItems })
 			.then(() => { setLoading(true); fetchDirectory(path); setLoading(false) })
-			.catch((err) => alert(err));
+			.catch((err) => setToast({ message: err, type: "error", visible: true }));
 	};
 
 	const handleRename = () => {
@@ -142,7 +148,7 @@ const Buckets = () => {
 		if (newName) {
 			apiCall("POST", "/hdfs/rename", { old_path: selectedItems[0], new_name: newName })
 				.then(() => { setLoading(true); fetchDirectory(path); setLoading(false) })
-				.catch((err) => alert(err));
+				.catch((err) => setToast({ message: err, type: "error", visible: true }));
 		}
 	};
 
@@ -160,6 +166,9 @@ const Buckets = () => {
 				<div className="absolute inset-0 bg-palette-surface bg-opacity-75 flex items-center justify-center z-10">
 					<div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
 				</div>
+			)}
+			{toast.visible && (
+				<Toast message={toast.message} type={toast.type} onClose={closeToast} />
 			)}
 
 			<div className="max-w-7xl mx-auto p-6">

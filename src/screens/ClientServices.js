@@ -188,7 +188,7 @@ const ClientServices = () => {
               emptyMessage="No VMs available"
               rowKey={(vm) => vm.internalVmName}
               onRowClick={handleSelectVM}
-            rowClassName={(vm) => `border-t border-palette-border hover:bg-lime-300 dark:hover:bg-palette-wrapper transition cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? 'bg-lime-100 dark:bg-palette-wrapper' : ''}`}
+            rowClassName={(vm) => `border-t border-palette-border hover:bg-lime-200 dark:hover:bg-palette-wrapper transition cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? 'bg-lime-100 dark:bg-palette-wrapper' : ''}`}
             />
           </div>
 

@@ -163,7 +163,7 @@ export const Dashboard = () => {
                   type="text"
                   value={formData.id}
                   readOnly
-                  className="border border-palette-border rounded-lg p-2 w-full bg-palette-surfaceMuted"
+                  className="border border-palette-border rounded-lg p-2 w-full dark:text-palette-textPrimary bg-palette-surface focus:border-lime-300"
                 />
               </div>
             )}
@@ -175,7 +175,7 @@ export const Dashboard = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="border border-palette-border rounded-lg p-2 w-full"
+                className="border border-palette-border rounded-lg p-2 w-full dark:text-palette-textPrimary bg-palette-surface focus:border-lime-300 focus:outline-none focus:ring-0"
               />
             </div>
             <div className="mb-3">
@@ -185,7 +185,7 @@ export const Dashboard = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                className="border border-palette-border rounded-lg p-2 w-full"
+                className="border border-palette-border rounded-lg p-2 w-full dark:text-palette-textPrimary bg-palette-surface focus:border-lime-300 focus:outline-none focus:ring-0"
               />
             </div>
             <div className="flex justify-end gap-3">

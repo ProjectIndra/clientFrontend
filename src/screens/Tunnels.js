@@ -3,7 +3,7 @@ import { apiCall } from "../Api";
 import { DeleteIcon, EditIcon, CopyIcon } from "../utils/icons";
 import Toast from "../components/ToastService";
 import Table from "../components/Table";
-import Loading from "../components/Loading";
+
 
 function Tunnels() {
   const [tunnels, setTunnels] = useState([]);

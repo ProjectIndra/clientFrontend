@@ -139,11 +139,11 @@ function Profile() {
   );
 }
 
-const Metric = ({ label, value }) => (
-  <div className="text-center">
-    <p className="text-xl font-semibold text-palette-textPrimary">{value}</p>
-    <p className="text-sm text-palette-textMuted">{label}</p>
-  </div>
-);
+// const Metric = ({ label, value }) => (
+//   <div className="text-center">
+//     <p className="text-xl font-semibold text-palette-textPrimary">{value}</p>
+//     <p className="text-sm text-palette-textMuted">{label}</p>
+//   </div>
+// );
 
 export default Profile;

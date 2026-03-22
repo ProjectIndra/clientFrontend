@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { createGraph } from '../apiServices'
-import { TextInput, NumberInput, DropdownSelect } from './FormControls'
+import { useState, useEffect } from 'react'
+import { createGraph, listAllServices } from '../apiServices'
+import { CloseIcon } from '../utils/icons'
 import Toast from './ToastService'
-import { listAllServices } from '../apiServices'
-import {  CloseIcon } from '../utils/icons'
+import { TextInput, NumberInput, DropdownSelect } from './FormControls'
+
 
 const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   const [form, setForm] = useState({

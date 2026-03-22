@@ -3,6 +3,7 @@ import { apiCall } from '../Api';
 import Toast from '../components/ToastService';
 import Table from '../components/Table';
 import ActionConfirmModal from '../components/actionConfirmModal';
+import SearchInput from '../components/SearchInput';
 
 const ClientServices = () => {
   const [selectedVM, setSelectedVM] = useState(null);
@@ -175,15 +176,11 @@ const ClientServices = () => {
 
           {/* Left panel */}
           <div className='flex-1 min-w-[400px]'>
-            <div className='mb-4'>
-              <input
-                type="search"
-                className="w-full border border-palette-border focus:outline-none focus:ring-0 focus:border-lime-500 focus:border-1 rounded-md px-4 py-2 bg-palette-surface text-palette-textTertiary"
-                placeholder="Search by VM Name"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-              />
-            </div>
+            <SearchInput
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Search by VM Name"
+            />
             <Table 
               columns={vmColumns}
               data={activeVms}

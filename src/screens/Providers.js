@@ -4,7 +4,7 @@ import Toast from '../components/ToastService';
 import ActionConfirmModal from '../components/actionConfirmModal';
 import useProviders from "../hooks/useProviders";
 import ProviderList from "../components/ProviderList";
-import ProviderSearch from "../components/ProviderSearch";
+import SearchInput from "../components/SearchInput";
 import VMConfigForm from "../components/VMConfigForm";
 
 const Providers = () => {
@@ -191,9 +191,10 @@ const Providers = () => {
         {/* Left Column: Search and Provider List */}
         <div className="w-full md:w-2/5">
 
-          <ProviderSearch
+          <SearchInput
             value={searchInput}
             onChange={handleSearchInputChange}
+            placeholder="Search by Provider Name"
           />
 
           <ProviderList

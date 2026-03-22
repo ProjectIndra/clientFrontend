@@ -20,51 +20,53 @@ const Table = ({
   onRowClick,
   rowClassName,
 }) => {
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <div className="relative bg-palette-surface border border-palette-border rounded-lg overflow-x-auto text-sm w-full">
-      {isLoading && <Loading />}
-      <table className="w-full text-left min-w-full">
-        <thead className="bg-palette-surfaceMuted text-palette-textSecondary uppercase text-xs font-bold whitespace-nowrap">
-          <tr>
-            {columns.map((col, index) => (
-              <th key={index} className={`px-4 py-3 ${col.width || ''}`}>
-                {col.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-palette-border">
-          {!isLoading && (!data || data.length === 0) ? (
+          
+        <table className="w-full text-left min-w-full">
+          <thead className="bg-palette-surfaceMuted text-palette-textSecondary uppercase text-xs font-bold whitespace-nowrap">
             <tr>
-              <td colSpan={columns.length} className="text-center py-6 text-palette-textMuted italic">
-                {emptyMessage}
-              </td>
+              {columns.map((col, index) => (
+                <th key={index} className={`px-4 py-3 ${col.width || ''}`}>
+                  {col.header}
+                </th>
+              ))}
             </tr>
-          ) : (
-            data?.map((row, index) => {
-              const key = typeof rowKey === 'function' ? rowKey(row, index) : row[rowKey] || index;
-              const rClass = rowClassName 
-                ? rowClassName(row, index) 
-                : "hover:bg-palette-wrapper transition";
-              
-              return (
-                <tr
-                  key={key}
-                  className={rClass}
-                  onClick={onRowClick ? () => onRowClick(row, index) : undefined}
-                >
-                  {columns.map((col, colIdx) => (
-                    <td key={colIdx} className={`px-4 py-3 ${col.cellClassName || ''}`}>
-                      {col.cell ? col.cell(row, index) : row[col.accessor]}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="divide-y divide-palette-border">
+            {!isLoading && (!data || data.length === 0) ? (
+              <tr>
+                <td colSpan={columns.length} className="text-center py-6 text-palette-textMuted italic">
+                  {emptyMessage}
+                </td>
+              </tr>
+            ) : (
+              data?.map((row, index) => {
+                const key = typeof rowKey === 'function' ? rowKey(row, index) : row[rowKey] || index;
+                const rClass = rowClassName
+                  ? rowClassName(row, index)
+                  : "hover:bg-palette-wrapper transition";
+                  
+                return (
+                  <tr
+                    key={key}
+                    className={rClass}
+                    onClick={onRowClick ? () => onRowClick(row, index) : undefined}
+                  >
+                    {columns.map((col, colIdx) => (
+                      <td key={colIdx} className={`px-4 py-3 ${col.cellClassName || ''}`}>
+                        {col.cell ? col.cell(row, index) : row[col.accessor]}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
   );
 };
 

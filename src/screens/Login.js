@@ -74,11 +74,11 @@ function Login() {
         <div className="flex flex-col md:flex-row max-w-6xl w-full rounded-3xl overflow-hidden shadow-lg">
           {/* Left - Login Form */}
           <div className="relative w-full md:w-1/2 bg-pureWhite p-10 flex flex-col justify-center items-center">
-            {isLoading && (
+            {/* {isLoading && (
               <div className="absolute inset-0 bg-palette-surface bg-opacity-75 flex items-center justify-center z-10">
                 <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
               </div>
-            )}
+            )} */}
             <h2 className="text-4xl font-bold text-greenDark mb-6 text-center">
               Login
             </h2>

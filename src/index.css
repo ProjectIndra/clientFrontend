@@ -93,6 +93,3 @@ button:hover{
 @tailwind components;
 @tailwind utilities;
 
-pre{
-  color: black;
-}

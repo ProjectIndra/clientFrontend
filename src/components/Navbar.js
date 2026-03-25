@@ -6,7 +6,7 @@ import NavbarMenu from "./NavbarMenu";
 import useNavbarScroll from "../hooks/useNavbarScroll";
 import { getInitials } from "../utils/userUtils";
 import useClickOutside from "../hooks/useClickOutside";
-import {MenuIcon, CloseIcon} from "../utils/icons";
+import {MenuIcon, CloseIcon, LogoNavbar} from "../utils/icons";
 
 const Navbar = () => {
   const [activePopup, setActivePopup] = useState(null);
@@ -48,10 +48,10 @@ const Navbar = () => {
         {/* Logo + Hamburger */}
         <div className="w-full flex justify-between items-center">
           <Link
-            className="text-2xl md:text-3xl font-bold text-palette-brand0a"
+            className="text-2xl md:text-3xl font-bold"
             to="/home"
           >
-            <img src="/img/logo-Navbar.svg" alt="" className="h-5 md:h-9" />
+            <LogoNavbar size={20} className="h-5 md:h-9 text-palette-brand0a dark:text-palette-textMuted" />
           </Link>
 
           {/* Right side controls (mobile) */}

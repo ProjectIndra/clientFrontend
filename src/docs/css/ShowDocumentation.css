@@ -15,7 +15,7 @@
 .docs-markdown-body h6 {
   color: var(--color-text-primary);
   font-weight: 600;
-  margin-top: 1.8em;
+  /* margin-top: 1.8em; */
   margin-bottom: 0.6em;
 }
 
@@ -100,7 +100,7 @@
 .docs-markdown-body pre {
   background: #1e293b !important;
   color: #e2e8f0;
-  /* padding: 1rem 1.25rem; */
+  padding: 1rem 1.25rem;
   border-radius: 10px;
   overflow-x: auto;
   margin: 1em 0;

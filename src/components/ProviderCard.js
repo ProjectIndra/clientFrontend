@@ -1,3 +1,5 @@
+import { ComputerIcon } from "../utils/icons";
+
 const ProviderCard = ({ provider, isActive = false }) => {
   const details = [
     { label: "Max vCPUs", value: provider?.providerAllowedVcpu && `${provider.providerAllowedVcpu} vCPUs` },
@@ -22,12 +24,16 @@ const ProviderCard = ({ provider, isActive = false }) => {
 
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
-            <div className="flex gap-4">
-              <img src="/img/computer.png" alt="icon" className="w-10 h-10" />
+            <div className="flex gap-4 items-center">
+              {/* <img src="/img/computer.png" alt="icon" className="w-10 h-10" /> */}
+              <ComputerIcon
+                className="w-10 h-10 text-palette-textPrimary"
+              />
               <h3
                 className="text-lg font-semibold text-start text-palette-textPrimary truncate"
                 title={provider?.providerName}
               >
+
                 {provider?.providerName}
               </h3>
             </div>

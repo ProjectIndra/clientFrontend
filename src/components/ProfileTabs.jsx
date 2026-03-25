@@ -1,5 +1,5 @@
 import ProviderCard from "./ProviderCard";
-
+import { Terminal } from "../utils/icons";
 function ProfileTabs({ isProvider, setIsProvider, providers, wg }) {
   return (
 		<div className="flex flex-col space-y-6">
@@ -36,10 +36,14 @@ function ProfileTabs({ isProvider, setIsProvider, providers, wg }) {
 							<div
 								key={client.cli_id}
 								className="p-5 border border-palette-border rounded-xl hover:bg-lime-100 dark:bg-palette-bgf8 dark:hover:bg-palette-surface transition-colors cursor-pointer"
-							>
+						>
+							<div className="flex items-bottom gap-2">
+								<Terminal className="w-8 h-8 text-palette-textPrimary stroke-palette-bgf8" />
 								<h3 className="font-semibold text-lg text-palette-textPrimary mb-2 truncate">
 									{client.cli_id}
 								</h3>
+							</div>
+								
 								<div className="flex items-center gap-2 text-sm font-medium">
 									<span className={`w-2 h-2 rounded-full ${client.cli_status ? 'bg-lime-500' : 'bg-red-500'}`}></span>
 									<span className={client.cli_status ? 'text-lime-600 dark:text-lime-500' : 'text-red-500'}>

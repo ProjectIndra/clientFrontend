@@ -1,61 +1,148 @@
-/* Center and style the markdown content */
-.showdocumentation {
-	box-sizing: border-box;
-	width: 100%;
-	max-width: 100%;
-	margin: 0;
-	padding: 30px 32px;
-	background-color: #fff;
-	color: black;
-	box-shadow: none;
-	overflow-x: auto;
-	height: 100%;
-	min-height: 0;
+/* Theme-aware markdown content styling */
+/* Uses CSS variables from index.css for dark mode support */
+
+.docs-markdown-body {
+  color: var(--color-text-primary);
+  line-height: 1.75;
+  font-size: 1rem;
 }
 
-/* Optional tweaks for better spacing */
-.showdocumentation h1,
-.showdocumentation h2,
-.showdocumentation h3 {
-	border-bottom: 1px solid #eaecef;
-	padding-bottom: 0.3em;
-	/* margin-top: 1.5em; */
+.docs-markdown-body h1,
+.docs-markdown-body h2,
+.docs-markdown-body h3,
+.docs-markdown-body h4,
+.docs-markdown-body h5,
+.docs-markdown-body h6 {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  /* margin-top: 1.8em; */
+  margin-bottom: 0.6em;
 }
 
-/* Improve table readability */
-.showdocumentation table {
-	border-collapse: collapse;
-	width: 100%;
-	overflow-x: auto;
-	display: block;
+.docs-markdown-body h1 {
+  font-size: 2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.showdocumentation th,
-.showdocumentation td {
-	border: 1px solid #dfe2e5;
-	padding: 6px 13px;
+.docs-markdown-body h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.showdocumentation blockquote {
-	color: #6a737d;
-	border-left: 0.25em solid #dfe2e5;
-	padding: 0 1em;
-	margin-left: 0;
-	background-color: #f6f8fa;
+.docs-markdown-body h3 {
+  font-size: 1.25em;
 }
 
-/* Code block padding */
-.showdocumentation pre {
-	background: #f6f8fa;
-	padding: 16px;
-	border-radius: 6px;
-	overflow: auto;
+.docs-markdown-body p {
+  margin-bottom: 1em;
+  color: var(--color-text-secondary);
+}
+
+.docs-markdown-body a {
+  color: #84cc16;
+  text-decoration: none;
+}
+
+.docs-markdown-body a:hover {
+  text-decoration: underline;
+}
+
+.docs-markdown-body ul,
+.docs-markdown-body ol {
+  padding-left: 2em;
+  margin-bottom: 1em;
+  color: var(--color-text-secondary);
+}
+
+.docs-markdown-body li {
+  margin-bottom: 0.4em;
+}
+
+/* Tables */
+.docs-markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+  overflow-x: auto;
+  display: block;
+  margin-bottom: 1em;
+}
+
+.docs-markdown-body th,
+.docs-markdown-body td {
+  border: 1px solid var(--color-border);
+  padding: 8px 14px;
+  text-align: left;
+}
+
+.docs-markdown-body th {
+  background: var(--color-bg-surface-muted);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.docs-markdown-body tr:nth-child(even) {
+  background: var(--color-bg-wrapper);
+}
+
+/* Blockquotes */
+.docs-markdown-body blockquote {
+  color: var(--color-text-muted);
+  border-left: 3px solid #84cc16;
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  background: var(--color-bg-wrapper);
+  border-radius: 0 8px 8px 0;
+}
+
+/* Code blocks */
+.docs-markdown-body pre {
+  background: #1e293b !important;
+  color: #e2e8f0;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 1em 0;
+  border: 1px solid var(--color-border);
+  font-size: 0.875rem;
+}
+
+.docs-markdown-body pre code {
+  background: transparent !important;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  color: inherit;
 }
 
 /* Inline code */
-.showdocumentation code {
-	background-color: rgba(27, 31, 35, 0.05);
-	padding: 0.2em 0.4em;
-	border-radius: 3px;
-	font-size: 85%;
+.docs-markdown-body code {
+  background: var(--color-bg-surface-muted);
+  color: var(--color-text-primary);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 85%;
+  font-family: 'Fira Code', 'SF Mono', 'Cascadia Code', monospace;
+}
+
+/* Images */
+.docs-markdown-body img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 1em 0;
+  border: 1px solid var(--color-border);
+}
+
+/* Horizontal rule */
+.docs-markdown-body hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2em 0;
+}
+
+/* Strong / Bold */
+.docs-markdown-body strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
 }

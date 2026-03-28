@@ -21,7 +21,7 @@ export const GraphView = ({
   width = '100%',
 }) => {
   if (!Array.isArray(series) || series.length === 0) {
-    return <p className="text-gray-400 italic">No graph data available</p>
+    return <p className="text-palette-textMuted italic">No graph data available</p>
   }
 
   // Convert API data → Recharts-friendly
@@ -68,8 +68,8 @@ export const GraphView = ({
     const full = payload[0]?.payload?.fullTimestamp
 
     return (
-      <div className="bg-white p-3 border rounded shadow text-sm">
-        <p className="font-semibold text-gray-700">{full}</p>
+      <div className="bg-palette-surface p-3 border rounded shadow text-sm">
+        <p className="font-semibold text-palette-textSecondary">{full}</p>
         {payload?.map((item, idx) => (
           <p key={idx} style={{ color: item?.color }}>
             {item?.name}: {item?.value}
@@ -84,7 +84,7 @@ export const GraphView = ({
   const colors = ['#0ea5e9', '#84cc16', '#f97316', '#a855f7']
 
   return (
-    <div className="p-4 border border-lime-300 rounded-lg shadow-sm bg-white cursor-pointer">
+    <div className="p-4 border border-lime-300 rounded-lg shadow-sm bg-palette-surface cursor-pointer">
       <ResponsiveContainer width={width} height={height}>
         {graphType === 'area' ? (
           // ------------------------------------

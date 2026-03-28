@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: avireddy23/computekart-frontend:v0.0.24
+          image: hj1243/computekart-frontend:v0.0.25
           ports:
             - containerPort: 80

@@ -44,7 +44,7 @@ function Tunnels() {
       try {
         setLoading(true);
         const response = await apiCall("POST", "/ui/getUserClients");
-        setTunnels( response || []);
+        setTunnels(response || []);
       } catch (error) {
         showToast("Failed to fetch tunnels", "error");
       } finally {
@@ -54,7 +54,7 @@ function Tunnels() {
 
     fetchTunnels();
   }, []);
-  
+
   const refreshTunnels = async () => {
     try {
       setLoading(true);
@@ -81,7 +81,7 @@ function Tunnels() {
       refreshTunnels();
     } catch (error) {
       showToast("Failed to create tunnel", "error");
-    }finally {
+    } finally {
       setLoading(false)
     }
   }
@@ -103,12 +103,12 @@ function Tunnels() {
       refreshTunnels();
     } catch (error) {
       showToast("Failed to update tunnel", "error");
-    }finally {
+    } finally {
       setLoading(false)
     }
   }
 
-  async function deleteTunnel(tunnelId,tunnelNo) {
+  async function deleteTunnel(tunnelId, tunnelNo) {
     try {
       if (loading) return;
       setLoading(true);
@@ -122,7 +122,7 @@ function Tunnels() {
       refreshTunnels();
     } catch (error) {
       showToast(error ?? "Failed to delete tunnel", "error");
-    }finally {
+    } finally {
       setLoading(false)
     }
   }
@@ -198,24 +198,39 @@ function Tunnels() {
             <EditIcon className="h-4 w-4 text-blue-500" />
           </button>
 
-                      <button
-                        disabled={loading}
-                        onClick={() => deleteTunnel(tunnel?.tunnelId,tunnel?.tunnelNo)}
-                        className="text-red-500"
-                      >
-                      <DeleteIcon className="h-4 w-4" />
-                          
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+          <button
+            disabled={loading}
+            onClick={() => deleteTunnel(tunnel?.tunnelId)}
+            className="text-red-500"
+          >
+            <DeleteIcon className="h-4 w-4" />
+          </button>
+        </div>
+      )
+    }
+  ];
 
-      <Table 
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-palette-textPrimary">Tunnels</h1>
+
+        <button
+          onClick={() => {
+            setPopup({
+              visible: true,
+              type: "add",
+              tunnelId: null,
+              tunnelName: "",
+            });
+          }}
+          className="bg-lime-500 hover:bg-lime-600 text-white px-5 py-2 rounded-lg shadow"
+        >
+          Add Client
+        </button>
+      </div>
+      
+      <Table
         columns={columns}
         data={tunnels}
         isLoading={loading}
@@ -246,7 +261,7 @@ function Tunnels() {
 
             <div className="flex justify-end gap-3">
               <button
-                onClick={()=>setPopup({ visible: false, type: null, tunnelId: null, tunnelName: "" })}
+                onClick={() => setPopup({ visible: false, type: null, tunnelId: null, tunnelName: "" })}
                 className="px-4 py-2 bg-palette-surfaceMuted rounded"
               >
                 Cancel
@@ -266,11 +281,10 @@ function Tunnels() {
                   }
                 }}
                 disabled={!popup?.tunnelName.trim() || loading}
-                className={`px-4 py-2 rounded text-white ${
-                  popup?.tunnelName.trim()
+                className={`px-4 py-2 rounded text-white ${popup?.tunnelName.trim()
                     ? "bg-lime-500 hover:bg-lime-600"
                     : "bg-palette-surfaceMuted cursor-not-allowed"
-                }`}
+                  }`}
               >
                 Save
               </button>

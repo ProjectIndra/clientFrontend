@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { apiCall } from '../Api';
 import Toast from '../components/ToastService';
+import Table from '../components/Table';
 import ActionConfirmModal from '../components/actionConfirmModal';
+import SearchInput from '../components/SearchInput';
 
 const ClientServices = () => {
   const [selectedVM, setSelectedVM] = useState(null);
@@ -29,9 +31,7 @@ const ClientServices = () => {
     setToast(prev => ({ ...prev, visible: false }));
   };
 
-  // 1. fetchVMs is now memoized properly. 
-  // We removed selectedVM from dependencies to prevent re-fetching the whole list 
-  // just because a user clicked a radio button.
+
   const fetchVMs = useCallback(async () => {
     try {
       const trimmedSearch = searchInput.trim();
@@ -131,79 +131,70 @@ const ClientServices = () => {
     }
   };
 
+  const activeVms = vms.filter(vm => !vm.vmDeleted);
+
+  const vmColumns = [
+    {
+      header: 'Select',
+      width: 'w-12',
+      cellClassName: 'cursor-pointer',
+      cell: (vm) => (
+        <input
+          type="radio"
+          name="selectedVM"
+          checked={selectedVM?.internalVmName === vm.internalVmName}
+          onChange={() => handleSelectVM(vm)}
+          onClick={(e) => e.stopPropagation()}
+          className="h-4 w-4 checked:bg-lime-600 text-lime-600 cursor-pointer"
+          readOnly
+        />
+      ),
+    },
+    {
+      header: 'Provider Name',
+      cellClassName: 'max-w-[150px] font-mono text-xs truncate',
+      cell: (vm) => <span title={vm.providerId || 'N/A'}>{vm.providerId || 'N/A'}</span>,
+    },
+    {
+      header: 'VM Name',
+      accessor: 'vmName',
+    },
+    {
+      header: 'Active',
+      cell: (vm) => (
+        vm.status === 'active' 
+          ? <span className="text-lime-600">● Active</span> 
+          : <span className="text-palette-textTertiary">● Inactive</span>
+      ),
+    },
+  ];
+
   return (
-    <div className='flex-1 h-full'>
-      <div className='mt-20 p-6 font-sans'>
-        <h2 className='text-2xl font-bold text-gray-900 mb-6'>VM Instances</h2>
+    <div>
+        <h2 className='text-2xl font-bold text-palette-textPrimary mb-6'>VM Instances</h2>
         <div className='flex flex-col lg:flex-row gap-8'>
 
           {/* Left panel */}
           <div className='flex-1 min-w-[400px]'>
-            <div className='mb-4'>
-              <input
-                type="search"
-                className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-4 py-2"
-                placeholder="Search by VM Name"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-              />
-            </div>
-            <div className="relative bg-white border border-gray-200 rounded-lg overflow-hidden text-sm">
-              {isLoadingVmLists && (
-                <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-                  <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
-                </div>
-              )}
-              <table className="w-full text-left text-sm">
-                <thead className="bg-gray-100 text-gray-700 uppercase text-xs font-bold">
-                  <tr>
-                    <th className="px-4 py-3 w-12">Select</th>
-                    <th className="px-4 py-3">Provider Name</th>
-                    <th className="px-4 py-3">VM Name</th>
-                    <th className="px-4 py-3">Active</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {!isLoadingVmCrud && vms.filter(vm => !vm.vmDeleted).length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="text-center text-gray-500 py-10 italic">
-                        No VMs available
-                      </td>
-                    </tr>
-                  ) : (
-                    vms?.map((vm, index) => !vm?.vmDeleted &&
-                      (
-                        <tr
-                          key={index}
-                        className={`border-t border-gray-100 hover:bg-lime-100 cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? 'bg-lime-100' : ''
-                            }`}
-                          onClick={() => handleSelectVM(vm)}
-                        >
-                          <td className="px-4 py-3">
-                            <input
-                              type="radio"
-                              name="selectedVM"
-                              checked={selectedVM?.internalVmName === vm.internalVmName}
-                              onChange={() => handleSelectVM(vm)}
-                              onClick={(e) => e.stopPropagation()}
-                              className="h-4 w-4 checked:bg-lime-300 text-green-500 cursor-pointer"
-                              readOnly
-                            />
-                          </td>
-                        <td className="px-4 py-3 max-w-[150px] font-mono text-xs truncate" title={vm.providerId || 'N/A'}>{vm.providerId || 'N/A'}</td>
-                          <td className="px-4 py-3">{vm.vmName}</td>
-                          <td className="px-4 py-3">{vm.status === 'active' ? <span className="text-green-600">● Active</span> : <span className="text-gray-400">○ Inactive</span>}</td>
-                        </tr>
-                      )
-                    ))}
-                </tbody>
-              </table>
-            </div>
+            <SearchInput
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Search by VM Name"
+            />
+            <Table 
+              columns={vmColumns}
+              data={activeVms}
+              isLoading={isLoadingVmLists}
+              emptyMessage="No VMs available"
+              rowKey={(vm) => vm.internalVmName}
+              onRowClick={handleSelectVM}
+            rowClassName={(vm) => `border-t border-palette-border hover:bg-lime-200 dark:hover:bg-palette-wrapper transition cursor-pointer ${selectedVM?.internalVmName === vm.internalVmName ? 'bg-lime-100 dark:bg-palette-wrapper' : ''}`}
+            />
           </div>
 
           {/* Right panel */}
-          <div className='flex-1 min-w-[350px] bg-white p-6 border border-gray-200 rounded-lg shadow-sm h-fit sticky top-24'>
-            <h2 className='text-lg font-semibold text-gray-800 mb-4 border-b pb-2'>VM Details</h2>
+          <div className='flex-1 min-w-[250px] max-w-[450px] bg-palette-surface p-6 border border-palette-border rounded-lg shadow-sm h-fit sticky top-24'>
+            <h2 className='text-lg font-semibold text-palette-textPrimary text-center mb-4 border-b border-palette-textPrimary dark:border-lime-300 pb-2'>VM Details</h2>
             {isLoadingVmCrud && (
               <div className="flex justify-center my-4">
                 <div className="w-6 h-6 border-2 border-lime-500 border-t-transparent animate-spin rounded-full"></div>
@@ -214,25 +205,27 @@ const ClientServices = () => {
                 <div className='grid grid-cols-2 gap-y-3 mb-6 text-sm'>
                   {selectedVM?.vcpus && (
                     <>
-                      <span className='font-medium text-gray-700'>vCPUs:</span>
+                      <span className='font-medium text-palette-textSecondary'>vCPUs:</span>
                       <span className='font-medium text-right'>{selectedVM?.vcpus} vCPUs</span>
                     </>)}
                   {selectedVM?.ram && (
                     <>
-                      <span className='font-medium text-gray-700'>RAM:</span>
+                      <span className='font-medium text-palette-textSecondary'>RAM:</span>
                       <span className='font-medium text-right'>{String(Number(selectedVM?.ram) / 1024)} GB</span>
                     </>)}
                   {selectedVM?.storage && (
                     <>
-                      <span className='font-medium text-gray-700'>Storage: </span>
+                      <span className='font-medium text-palette-textSecondary'>Storage: </span>
                       <span className='font-medium text-right'>{String(Number(selectedVM?.storage) / 1024)} GB</span>
                     </>)}
+              </div>
+              { selectedVM?.wireguard_ip && selectedVM?.wireguard_public_key && selectedVM?.wireguard_endpoint && (
+                <div className='bg-palette-wrapper p-3 rounded-md mb-6 space-y-2 text-xs font-mono break-all'>
+                  <p><span className='font-medium text-palette-textSecondary block mb-1 uppercase text-[10px]'>Wireguard IP: </span>{selectedVM.wireguard_ip}</p>
+                  <p><span className='font-medium text-palette-textSecondary block mb-1 uppercase text-[10px]'>Wireguard Pubkey: </span>{selectedVM.wireguard_public_key}</p>
+                  <p><span className='font-medium text-palette-textSecondary block mb-1 uppercase text-[10px]'>Wireguard Endpoint: </span>{selectedVM.wireguard_endpoint}</p>
                 </div>
-                <div className='bg-gray-50 p-3 rounded-md mb-6 space-y-2 text-xs font-mono break-all'>
-                  {selectedVM?.wireguard_public_key && <p><span className='font-bold text-gray-700 block mb-1 uppercase text-[10px]'>Wireguard IP: </span>{selectedVM.wireguard_ip}</p>}
-                  {selectedVM?.wireguard_public_key && <p><span className='font-medium text-gray-700 block mb-1 uppercase text-[10px]'>Wireguard Pubkey: </span>{selectedVM.wireguard_public_key}</p>}
-                  {selectedVM?.wireguard_endpoint && <p><span className='font-medium text-gray-700 block mb-1 uppercase text-[10px]'>Wireguard Endpoint: </span>{selectedVM.wireguard_endpoint}</p>}
-                </div>
+              )}
                 <div className='vm-btns flex flex-row gap-3 w-full'>
                   <button
                     className='flex-1 px-4 py-2 bg-lime-600 text-white rounded-md text-sm hover:bg-lime-700 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -242,7 +235,7 @@ const ClientServices = () => {
                     Start VM
                   </button>
                   <button
-                    className='flex-1 px-4 py-2 bg-yellow-600 text-white rounded-md text-sm hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='flex-1 px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed'
                     onClick={() => confirmAction("stop")}
                     disabled={selectedVM.status === "inactive"}
                   >
@@ -258,12 +251,11 @@ const ClientServices = () => {
                 </div>
               </div>
             ) : (
-              <p className='text-gray-500 italic text-center'>Select a VM to see its details</p>
+              <p className='text-palette-textMuted italic text-center'>Select a VM to see its details</p>
             )}
           </div>
 
         </div>
-      </div>
 
       {/* Toast */}
       {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}

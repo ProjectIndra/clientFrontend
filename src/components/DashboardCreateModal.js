@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { createGraph } from '../apiServices'
-import { TextInput, NumberInput, DropdownSelect } from './FormControls'
+import { useState, useEffect } from 'react'
+import { createGraph, listAllServices } from '../apiServices'
+import { CloseIcon } from '../utils/icons'
 import Toast from './ToastService'
-import { listAllServices } from '../apiServices'
-import {  CloseIcon } from '../utils/icons'
+import { TextInput, NumberInput, DropdownSelect } from './FormControls'
+
 
 const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
   const [form, setForm] = useState({
@@ -386,7 +386,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow w-[400px] max-w-full max-h-[500px] overflow-y-auto"
+        className="bg-palette-surface p-6 rounded shadow w-[400px] max-w-full max-h-[500px] overflow-y-auto"
       >
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Create Graph</h3>
@@ -394,7 +394,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="text-gray-500 hover:text-gray-700 p-1 rounded"
+            className="text-palette-textMuted hover:text-palette-textSecondary p-1 rounded"
           >
             <CloseIcon />
           </button>
@@ -614,7 +614,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           <button
             type="button"
             onClick={handleCancel}
-            className="px-4 py-2 bg-gray-200 rounded"
+            className="px-4 py-2 bg-palette-surfaceMuted rounded"
           >
             Cancel
           </button>

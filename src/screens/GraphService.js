@@ -5,9 +5,9 @@ export const GraphService = () => {
   const [graphType, setGraphType] = useState("line");
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-8 bg-palette-surface min-h-screen">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Graph Service</h1>
+        <h1 className="text-3xl font-bold text-palette-textPrimary">Graph Service</h1>
 
         {/* Toggle Button */}
         <button

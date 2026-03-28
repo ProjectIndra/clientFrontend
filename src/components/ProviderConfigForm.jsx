@@ -32,8 +32,8 @@ function ProviderConfigForm({
 	];
 
 	return (
-		<div className="bg-white rounded-lg shadow p-6">
-			<h3 className="text-lg font-medium text-slate-800 mb-4">
+		<div className="bg-palette-surface rounded-lg shadow p-6">
+			<h3 className="text-lg font-medium mb-4 text-palette-textPrimary">
 				Setup / Update Provider
 			</h3>
 
@@ -43,12 +43,12 @@ function ProviderConfigForm({
 					placeholder="Update Provider Name"
 					value={formData.providerName}
 					onChange={handleChange}
-					className="w-full p-2 border rounded-md focus:ring-2 focus:ring-lime-300"
+					className="w-full p-2 border-palette-border rounded-md focus:ring-0 focus:border-lime-500 focus:border-1 bg-palette-surface text-palette-textTertiary"
 				/>
 
 				{fields.map((field) => (
 					<div key={field.name}>
-						<label className="block text-sm font-medium text-gray-700">
+						<label className="block text-sm font-medium text-palette-textSecondary">
 							{field.label}
 						</label>
 
@@ -56,7 +56,7 @@ function ProviderConfigForm({
 							name={field.name}
 							value={formData[field.name]}
 							onChange={handleChange}
-							className="w-full p-2 border rounded-md focus:ring-2 focus:ring-lime-300"
+							className="w-full p-2 border-palette-border rounded-md focus:ring-0 focus:border-lime-500 focus:border-1 bg-palette-surface text-palette-textTertiary"
 						>
 							<option value="">Select</option>
 

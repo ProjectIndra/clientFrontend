@@ -135,11 +135,11 @@ export const DashboardView = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen overflow-y-auto">
+    <div className="p-6 bg-palette-wrapper min-h-screen overflow-y-auto">
       <div className="mb-6 flex justify-between items-center">
         <div>
-          <h5 className="text-2xl font-bold text-gray-900">Manage Graphs</h5>
-          <p className="text-gray-400">
+          <h5 className="text-2xl font-bold text-palette-textPrimary">Manage Graphs</h5>
+          <p className="text-palette-textMuted">
             Create and manage your graphs for better insights
           </p>
         </div>
@@ -152,7 +152,7 @@ export const DashboardView = () => {
       </div>
 
       {graphs.length === 0 && !isDashboardLoading && (
-        <p className="text-gray-500">No graphs available for this dashboard.</p>
+        <p className="text-palette-textMuted">No graphs available for this dashboard.</p>
       )}
 
       {isDashboardLoading && (
@@ -177,7 +177,7 @@ export const DashboardView = () => {
           return (
             <div
               key={g.graphId}
-              className="bg-white p-4 rounded-lg shadow cursor-pointer hover:shadow-md transition relative"
+              className="bg-palette-surface p-4 rounded-lg shadow cursor-pointer hover:shadow-md transition relative"
             >
               {/* Delete button */}
               <button
@@ -197,7 +197,7 @@ export const DashboardView = () => {
                 <h2 className="text-lg font-semibold mb-2 cursor-pointer">
                   {g.graphName}
                 </h2>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-palette-textSecondary mb-4">
                   {g.graphType || 'Unknown type'} • Time range: {startReadable} - {endReadable}
                 </p>
 
@@ -205,10 +205,10 @@ export const DashboardView = () => {
                 {g.pointsLoading ? (
                   // ---------------- LOADING ----------------
                   <div className="relative">
-                    <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+                    <div className="absolute inset-0 bg-palette-surface bg-opacity-75 flex items-center justify-center z-10">
                       <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
                     </div>
-                    <div className="text-gray-400 italic">
+                    <div className="text-palette-textMuted italic">
                       Loading graph data...
                     </div>
                   </div>
@@ -224,7 +224,7 @@ export const DashboardView = () => {
                       g.series.every(
                         (s) => Array.isArray(s.data) && s.data.length === 0
                       ) && (
-                        <p className="text-gray-400 italic">
+                        <p className="text-palette-textMuted italic">
                           No results for this time range. Adjust the time filter
                           to view results.
                         </p>

@@ -61,7 +61,7 @@ export default function ManageProviders() {
         providerName: provider?.providerName || "",
       }));
 
-      fetchActiveUsers(provider?.providerId);      return provider;
+      fetchActiveUsers(provider?.providerId); return provider;
     });
   };
 
@@ -114,7 +114,7 @@ export default function ManageProviders() {
     };
 
     fetchData();
-  }, [fetchProviders]); 
+  }, [fetchProviders]);
 
   const handleSaveProvider = () => {
     const updateProviderConfPayload = {};
@@ -209,11 +209,11 @@ export default function ManageProviders() {
   return (
     <div className="relative mx-auto p-6">
       {isVerificationTokenLoading && (
-          <Loading />
+        <Loading />
       )}
 
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-semibold text-slate-800 mb-6">
+        <h2 className="text-2xl font-semibold mb-6 text-palette-textPrimary">
           Manage Providers
         </h2>
         <div className="flex gap-4">
@@ -234,8 +234,8 @@ export default function ManageProviders() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* LEFT side - Provider List */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium text-slate-800 mb-4">Providers</h3>
+        <div className="bg-palette-surface rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium mb-4 text-palette-textPrimary">Providers</h3>
 
           <ProviderList
             providers={providers}

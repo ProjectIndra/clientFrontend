@@ -3,8 +3,8 @@ import { getInitials } from "../utils/userUtils";
 
 function ProviderClientList({ clients = [], isLoading }) {
 	return (
-		<div className="bg-white rounded-lg shadow p-6">
-			<h3 className="text-lg font-medium text-slate-800 mb-4">
+		<div className="bg-palette-surface rounded-lg shadow p-6">
+			<h3 className="text-lg font-medium mb-4 text-palette-textPrimary">
 				Active Usage by Clients
 			</h3>
 
@@ -12,7 +12,7 @@ function ProviderClientList({ clients = [], isLoading }) {
 				{isLoading && <Loading />}
 
 				{!isLoading && clients.length === 0 && (
-					<p className="text-gray-500 text-sm text-center">
+					<p className="text-palette-textMuted text-sm text-center">
 						No client is using your providers.
 					</p>
 				)}
@@ -24,7 +24,7 @@ function ProviderClientList({ clients = [], isLoading }) {
 						return (
 							<div
 								key={id}
-								className="flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50 transition"
+								className="flex items-center gap-4 p-4 border rounded-lg hover:bg-palette-wrapper transition border-palette-border"
 							>
 								{/* Avatar */}
 								{client?.profileImage ? (
@@ -41,16 +41,16 @@ function ProviderClientList({ clients = [], isLoading }) {
 
 								{/* Client Info */}
 								<div className="flex flex-col text-sm">
-									<span className="font-semibold text-gray-800">
+									<span className="font-semibold text-palette-textPrimary">
 										{client.username}
 									</span>
 
-									<span className="text-gray-600">
+									<span className="text-palette-textSecondary">
 										{client.email}
 									</span>
 
 									{client.profileName && (
-										<span className="text-gray-500">
+										<span className="text-palette-textMuted">
 											{client.profileName}
 										</span>
 									)}

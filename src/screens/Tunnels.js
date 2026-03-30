@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { apiCall } from "../Api";
 import { DeleteIcon, EditIcon, CopyIcon } from "../utils/icons";
 import Toast from "../components/ToastService";
+import Table from "../components/Table";
+
 
 function Tunnels() {
   const [tunnels, setTunnels] = useState([]);
@@ -42,7 +44,7 @@ function Tunnels() {
       try {
         setLoading(true);
         const response = await apiCall("POST", "/ui/getUserClients");
-        setTunnels( response || []);
+        setTunnels(response || []);
       } catch (error) {
         showToast("Failed to fetch tunnels", "error");
       } finally {
@@ -52,7 +54,7 @@ function Tunnels() {
 
     fetchTunnels();
   }, []);
-  
+
   const refreshTunnels = async () => {
     try {
       setLoading(true);
@@ -79,7 +81,7 @@ function Tunnels() {
       refreshTunnels();
     } catch (error) {
       showToast("Failed to create tunnel", "error");
-    }finally {
+    } finally {
       setLoading(false)
     }
   }
@@ -101,12 +103,12 @@ function Tunnels() {
       refreshTunnels();
     } catch (error) {
       showToast("Failed to update tunnel", "error");
-    }finally {
+    } finally {
       setLoading(false)
     }
   }
 
-  async function deleteTunnel(tunnelId,tunnelNo) {
+  async function deleteTunnel(tunnelId, tunnelNo) {
     try {
       if (loading) return;
       setLoading(true);
@@ -120,15 +122,98 @@ function Tunnels() {
       refreshTunnels();
     } catch (error) {
       showToast(error ?? "Failed to delete tunnel", "error");
-    }finally {
+    } finally {
       setLoading(false)
     }
   }
 
+  const columns = [
+    {
+      header: 'Tunnel No',
+      accessor: 'tunnelNo',
+      cellClassName: 'font-medium',
+    },
+    {
+      header: 'Tunnel Name',
+      cell: (tunnel) => tunnel?.tunnelName || "-"
+    },
+    {
+      header: 'Token',
+      cell: (tunnel) => (
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-sm truncate max-w-[260px]">
+            {tunnel?.tunnelToken}
+          </span>
+          <button
+            aria-label="Copy token"
+            onClick={() => copyToClipboard(tunnel?.tunnelToken)}
+            className="text-xs px-2 py-1"
+          >
+            <CopyIcon className="h-4 w-4 text-palette-textSecondary" />
+          </button>
+        </div>
+      )
+    },
+    {
+      header: 'URL',
+      cell: (tunnel) => {
+        const url = `https://${tunnel?.tunnelNo}-${tunnel?.username}.computekart.com`;
+        return (
+          <div className="flex items-center gap-3">
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              {url}
+            </a>
+            <button
+              aria-label="Copy url"
+              onClick={() => copyToClipboard(url)}
+              className="text-xs px-2 py-1"
+            >
+              <CopyIcon className="h-4 w-4 text-palette-textSecondary" />
+            </button>
+          </div>
+        );
+      }
+    },
+    {
+      header: 'Actions',
+      cell: (tunnel) => (
+        <div className="flex gap-2">
+          <button
+            disabled={loading}
+            onClick={() => {
+              setPopup({
+                visible: true,
+                type: "edit",
+                tunnelId: tunnel?.tunnelId,
+                tunnelName: tunnel?.tunnelName || "",
+              });
+            }}
+            className="text-blue-500"
+          >
+            <EditIcon className="h-4 w-4 text-blue-500" />
+          </button>
+
+          <button
+            disabled={loading}
+            onClick={() => deleteTunnel(tunnel?.tunnelId)}
+            className="text-red-500"
+          >
+            <DeleteIcon className="h-4 w-4" />
+          </button>
+        </div>
+      )
+    }
+  ];
+
   return (
-    <div className="p-8 mt-16">
+    <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Tunnels</h1>
+        <h1 className="text-2xl font-bold text-palette-textPrimary">Tunnels</h1>
 
         <button
           onClick={() => {
@@ -144,109 +229,14 @@ function Tunnels() {
           Add Client
         </button>
       </div>
-
-      <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-        <table className="min-w-full">
-          <thead className="bg-gray-50 text-gray-700 text-sm">
-            <tr>
-              <th className="px-4 py-3 text-left">Tunnel No</th>
-              <th className="px-4 py-3 text-left">Tunnel Name</th>
-              <th className="px-4 py-3 text-left">Token</th>
-              <th className="px-4 py-3 text-left">URL</th>
-              <th className="px-4 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {!loading && tunnels.length === 0 && (
-              <tr>
-                <td colSpan="5" className="text-center py-6 text-gray-500">
-                  No tunnels found
-                </td>
-              </tr>
-            )}
-            {tunnels.map((tunnel) => {
-              const url = `https://${tunnel?.tunnelNo}-${tunnel?.username}.computekart.com`;
-
-              return (
-                <tr
-                  key={tunnel?.tunnelNo}
-                  className="border-t hover:bg-gray-50 transition"
-                >
-                  <td className="px-4 py-3 font-medium">{tunnel?.tunnelNo}</td>
-
-                  <td className="px-4 py-3">{tunnel?.tunnelName || "-"}</td>
-
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-sm truncate max-w-[260px]">
-                        {tunnel?.tunnelToken}
-                      </span>
-
-                      <button
-                        aria-label="Copy token"
-                        onClick={() => copyToClipboard(tunnel?.tunnelToken)}
-                        className="text-xs px-2 py-1"
-                      >
-                        <CopyIcon className="h-4 w-4 text-gray-600" />
-                      </button>
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        {url}
-                      </a>
-
-                      <button
-                        aria-label="Copy token"
-                        onClick={() => copyToClipboard(url)}
-                        className="text-xs px-2 py-1 "
-                      >
-                        <CopyIcon className="h-4 w-4 text-gray-600" />
-                      </button>
-                    </div>
-                  </td>
-
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <button
-                        disabled={loading}
-                        onClick={() => {
-                          setPopup({
-                            visible: true,
-                            type: "edit",
-                            tunnelId: tunnel?.tunnelId,
-                            tunnelName: tunnel?.tunnelName || "",
-                          });
-                        }}
-                        className="text-blue-500"
-                      >
-                        <EditIcon className="h-4 w-4 text-blue-500" />
-                      </button>
-
-                      <button
-                        disabled={loading}
-                        onClick={() => deleteTunnel(tunnel?.tunnelId,tunnel?.tunnelNo)}
-                        className="text-red-500"
-                      >
-                      <DeleteIcon className="h-4 w-4" />
-                          
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      
+      <Table
+        columns={columns}
+        data={tunnels}
+        isLoading={loading}
+        emptyMessage="No tunnels found"
+        rowKey="tunnelNo"
+      />
 
       {toast.visible && (
         <Toast message={toast.message} type={toast.type} onClose={closeToast} />
@@ -254,7 +244,7 @@ function Tunnels() {
 
       {popup?.visible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-lg p-6 w-96 shadow">
+          <div className="bg-palette-surface rounded-lg p-6 w-96 shadow">
             <h2 className="text-lg font-bold mb-4">
               {popup?.type === "add" ? "Add Tunnel" : "Edit Tunnel"}
             </h2>
@@ -271,8 +261,8 @@ function Tunnels() {
 
             <div className="flex justify-end gap-3">
               <button
-                onClick={()=>setPopup({ visible: false, type: null, tunnelId: null, tunnelName: "" })}
-                className="px-4 py-2 bg-gray-200 rounded"
+                onClick={() => setPopup({ visible: false, type: null, tunnelId: null, tunnelName: "" })}
+                className="px-4 py-2 bg-palette-surfaceMuted rounded"
               >
                 Cancel
               </button>
@@ -291,11 +281,10 @@ function Tunnels() {
                   }
                 }}
                 disabled={!popup?.tunnelName.trim() || loading}
-                className={`px-4 py-2 rounded text-white ${
-                  popup?.tunnelName.trim()
+                className={`px-4 py-2 rounded text-white ${popup?.tunnelName.trim()
                     ? "bg-lime-500 hover:bg-lime-600"
-                    : "bg-gray-300 cursor-not-allowed"
-                }`}
+                    : "bg-palette-surfaceMuted cursor-not-allowed"
+                  }`}
               >
                 Save
               </button>

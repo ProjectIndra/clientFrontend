@@ -43,7 +43,7 @@ function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-1 md:mt-2 mb-4 md:mb-6">
             <button
               onClick={handleGetStartedClick}
-              className="bg-lime-300 font-semibold text-[#0D0D0D] px-6 sm:px-7 md:px-8 py-2.5 md:py-3 rounded-md hover:opacity-90 transition text-sm sm:text-base shadow-md"
+              className="bg-lime-300 font-semibold text-palette-text0d px-6 sm:px-7 md:px-8 py-2.5 md:py-3 rounded-md hover:opacity-90 transition text-sm sm:text-base shadow-md"
             >
               Get Started
             </button>

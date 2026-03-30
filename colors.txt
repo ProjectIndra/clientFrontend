@@ -1,0 +1,841 @@
+--- Color Extraction Report ---
+File: src\components\actionConfirmModal.js | Line: 19
+   Colors: text-gray-800
+---
+File: src\components\actionConfirmModal.js | Line: 23
+   Colors: border-gray-300
+---
+File: src\components\actionConfirmModal.js | Line: 24
+   Colors: text-gray-800
+---
+File: src\components\actionConfirmModal.js | Line: 29
+   Colors: bg-lime-300
+---
+File: src\components\actionConfirmModal.js | Line: 33
+   Colors: text-green-600
+---
+File: src\components\actionConfirmModal.js | Line: 34
+   Colors: text-green-600
+---
+File: src\components\actionConfirmModal.js | Line: 38
+   Colors: text-gray-600
+---
+File: src\components\actionConfirmModal.js | Line: 39
+   Colors: text-gray-600
+---
+File: src\components\actionConfirmModal.js | Line: 49
+   Colors: bg-lime-500, bg-lime-600
+---
+File: src\components\actionConfirmModal.js | Line: 58
+   Colors: bg-gray-300, text-gray-700, bg-lime-300, bg-red-100
+---
+File: src\components\AvatarMenu.js | Line: 7
+   Colors: #004d3c
+---
+File: src\components\AvatarMenu.js | Line: 14
+   Colors: border-lime-300
+---
+File: src\components\AvatarMenu.js | Line: 24
+   Colors: text-gray-700, bg-lime-100
+---
+File: src\components\AvatarMenu.js | Line: 31
+   Colors: text-red-600, bg-red-50
+---
+File: src\components\CustomSearch.js | Line: 8
+   Colors: border-gray-300, ring-lime-300
+---
+File: src\components\CustomSearch.js | Line: 14
+   Colors: #0D0D0D, bg-lime-300
+---
+File: src\components\DashboardCreateModal.js | Line: 397
+   Colors: text-gray-500, text-gray-700
+---
+File: src\components\DashboardCreateModal.js | Line: 403
+   Colors: text-red-600
+---
+File: src\components\DashboardCreateModal.js | Line: 441
+   Colors: text-lime-600
+---
+File: src\components\DashboardCreateModal.js | Line: 455
+   Colors: text-red-600
+---
+File: src\components\DashboardCreateModal.js | Line: 617
+   Colors: bg-gray-200
+---
+File: src\components\DashboardCreateModal.js | Line: 624
+   Colors: bg-lime-500
+---
+File: src\components\EditProfileModal.js | Line: 41
+   Colors: border-gray-300, bg-gray-100
+---
+File: src\components\EditProfileModal.js | Line: 57
+   Colors: text-gray-600
+---
+File: src\components\EditProfileModal.js | Line: 63
+   Colors: border-gray-300, bg-gray-100
+---
+File: src\components\EditProfileModal.js | Line: 71
+   Colors: bg-gray-200, bg-gray-300
+---
+File: src\components\EditProfileModal.js | Line: 77
+   Colors: bg-lime-400, bg-lime-500
+---
+File: src\components\Footer.js | Line: 6
+   Colors: #0D1A33
+---
+File: src\components\Footer.js | Line: 10
+   Colors: #0D1A33
+---
+File: src\components\Footer.js | Line: 16
+   Colors: #0D1A33
+---
+File: src\components\FormControls.js | Line: 14
+   Colors: text-gray-700
+---
+File: src\components\FormControls.js | Line: 41
+   Colors: text-gray-700
+---
+File: src\components\FormControls.js | Line: 69
+   Colors: text-gray-700
+---
+File: src\components\GraphView.js | Line: 24
+   Colors: text-gray-400
+---
+File: src\components\GraphView.js | Line: 72
+   Colors: text-gray-700
+---
+File: src\components\GraphView.js | Line: 84
+   Colors: #0ea5e9, #84cc16, #f97316, #a855f7
+---
+File: src\components\GraphView.js | Line: 87
+   Colors: border-lime-300
+---
+File: src\components\GraphView.js | Line: 97
+   Colors: #e5e7eb
+---
+File: src\components\GraphView.js | Line: 100
+   Colors: #6b7280
+---
+File: src\components\GraphView.js | Line: 102
+   Colors: #6b7280
+---
+File: src\components\GraphView.js | Line: 128
+   Colors: #9ca3af
+---
+File: src\components\GraphView.js | Line: 133
+   Colors: #374151
+---
+File: src\components\GraphView.js | Line: 147
+   Colors: #e5e7eb
+---
+File: src\components\GraphView.js | Line: 148
+   Colors: #6b7280
+---
+File: src\components\GraphView.js | Line: 149
+   Colors: #6b7280
+---
+File: src\components\GraphView.js | Line: 168
+   Colors: #9ca3af
+---
+File: src\components\GraphView.js | Line: 173
+   Colors: #374151
+---
+File: src\components\HomeComponent.js | Line: 44
+   Colors: #0D0D0D
+---
+File: src\components\HomeComponent.js | Line: 46
+   Colors: #f8f7fe
+---
+File: src\components\HomeComponent.js | Line: 47
+   Colors: #0D0D0D, bg-lime-300
+---
+File: src\components\HomeComponent.js | Line: 54
+   Colors: #F6F9FC
+---
+File: src\components\HomeComponent.js | Line: 58
+   Colors: text-gray-600
+---
+File: src\components\HomeComponent.js | Line: 64
+   Colors: text-blue-500
+---
+File: src\components\HomeComponent.js | Line: 66
+   Colors: #F6F9FC
+---
+File: src\components\HomeComponent.js | Line: 70
+   Colors: text-gray-600
+---
+File: src\components\HomeComponent.js | Line: 76
+   Colors: text-blue-500
+---
+File: src\components\HomeComponent.js | Line: 80
+   Colors: #0D0D0D
+---
+File: src\components\HomeComponent.js | Line: 83
+   Colors: border-gray-300
+---
+File: src\components\HomeComponent.js | Line: 84
+   Colors: text-gray-800
+---
+File: src\components\HomeComponent.js | Line: 89
+   Colors: bg-lime-300
+---
+File: src\components\HomeComponent.js | Line: 95
+   Colors: text-green-500
+---
+File: src\components\HomeComponent.js | Line: 105
+   Colors: text-green-600
+---
+File: src\components\HomeComponent.js | Line: 113
+   Colors: text-gray-600
+---
+File: src\components\HomeComponent.js | Line: 119
+   Colors: #0F0F0F
+---
+File: src\components\HomeComponent.js | Line: 123
+   Colors: #0F0F0F
+---
+File: src\components\HomeComponent.js | Line: 126
+   Colors: text-gray-600
+---
+File: src\components\HomeComponent.js | Line: 136
+   Colors: #0D0D0D, bg-lime-300
+---
+File: src\components\HomeComponent.js | Line: 143
+   Colors: #F6F9FC, #0D0D0D
+---
+File: src\components\HomeComponent.js | Line: 152
+   Colors: #F6F9FC, #0D0D0D
+---
+File: src\components\HomeComponent.js | Line: 159
+   Colors: text-blue-500
+---
+File: src\components\HomeComponent.js | Line: 161
+   Colors: #F6F9FC, #0D0D0D
+---
+File: src\components\HomeComponent.js | Line: 168
+   Colors: text-blue-500
+---
+File: src\components\HomeComponent.js | Line: 174
+   Colors: #f8f7fe
+---
+File: src\components\HomeComponent.js | Line: 175
+   Colors: #0D0D0D, bg-lime-300
+---
+File: src\components\HomeComponent.js | Line: 182
+   Colors: #F6F9FC
+---
+File: src\components\HomeComponent.js | Line: 186
+   Colors: text-gray-600
+---
+File: src\components\HomeComponent.js | Line: 190
+   Colors: #F6F9FC
+---
+File: src\components\HomeComponent.js | Line: 194
+   Colors: text-gray-600
+---
+File: src\components\HomeComponent.js | Line: 202
+   Colors: #f9f9f9
+---
+File: src\components\HomeComponent.js | Line: 204
+   Colors: #0D0D0D, bg-lime-300
+---
+File: src\components\HomeComponent.js | Line: 215
+   Colors: border-gray-200
+---
+File: src\components\HomeComponent.js | Line: 227
+   Colors: text-gray-600
+---
+File: src\components\largeGraphModal.js | Line: 93
+   Colors: bg-gray-300, text-gray-500, text-gray-700
+---
+File: src\components\largeGraphModal.js | Line: 103
+   Colors: bg-lime-400
+---
+File: src\components\largeGraphModal.js | Line: 111
+   Colors: text-gray-600
+---
+File: src\components\largeGraphModal.js | Line: 112
+   Colors: text-gray-600
+---
+File: src\components\largeGraphModal.js | Line: 117
+   Colors: bg-gray-50
+---
+File: src\components\largeGraphModal.js | Line: 127
+   Colors: text-gray-600
+---
+File: src\components\largeGraphModal.js | Line: 135
+   Colors: text-gray-600
+---
+File: src\components\largeGraphModal.js | Line: 150
+   Colors: text-gray-600
+---
+File: src\components\largeGraphModal.js | Line: 158
+   Colors: text-gray-600
+---
+File: src\components\largeGraphModal.js | Line: 176
+   Colors: bg-lime-400, bg-lime-500
+---
+File: src\components\Loading.jsx | Line: 5
+   Colors: border-lime-400
+---
+File: src\components\Navbar.js | Line: 32
+   Colors: border-lime-300
+---
+File: src\components\Navbar.js | Line: 39
+   Colors: #0a1d39
+---
+File: src\components\Navbar.js | Line: 55
+   Colors: #0a1d39
+---
+File: src\components\Navbar.js | Line: 83
+   Colors: #f9fbfa, border-gray-200
+---
+File: src\components\Navbar.js | Line: 88
+   Colors: text-gray-500
+---
+File: src\components\NavbarMenu.jsx | Line: 12
+   Colors: bg-lime-300, text-gray-900
+---
+File: src\components\NavbarMenu.jsx | Line: 23
+   Colors: bg-lime-300, text-gray-900
+---
+File: src\components\NavbarMenu.jsx | Line: 30
+   Colors: bg-lime-300
+---
+File: src\components\NavbarMenu.jsx | Line: 36
+   Colors: bg-lime-300
+---
+File: src\components\NavbarMenu.jsx | Line: 42
+   Colors: bg-lime-300
+---
+File: src\components\NavbarMenu.jsx | Line: 48
+   Colors: bg-lime-300
+---
+File: src\components\NavbarMenu.jsx | Line: 62
+   Colors: bg-lime-300, text-gray-900
+---
+File: src\components\NavbarMenu.jsx | Line: 67
+   Colors: bg-lime-300
+---
+File: src\components\NavbarMenu.jsx | Line: 71
+   Colors: bg-lime-300
+---
+File: src\components\NavbarMenu.jsx | Line: 77
+   Colors: bg-lime-300
+---
+File: src\components\NavbarMenu.jsx | Line: 87
+   Colors: bg-lime-300, text-gray-900
+---
+File: src\components\PageWrapper.js | Line: 12
+   Colors: bg-gray-50
+---
+File: src\components\ProfileHeader.jsx | Line: 14
+   Colors: bg-teal-800
+---
+File: src\components\ProfileHeader.jsx | Line: 23
+   Colors: text-gray-800
+---
+File: src\components\ProfileHeader.jsx | Line: 26
+   Colors: bg-lime-200, text-lime-800
+---
+File: src\components\ProfileHeader.jsx | Line: 30
+   Colors: text-gray-500
+---
+File: src\components\ProfileHeader.jsx | Line: 35
+   Colors: text-gray-500, text-gray-700
+---
+File: src\components\ProfileTabs.jsx | Line: 10
+   Colors: text-gray-800
+---
+File: src\components\ProfileTabs.jsx | Line: 11
+   Colors: text-gray-400
+---
+File: src\components\ProfileTabs.jsx | Line: 21
+   Colors: text-gray-800
+---
+File: src\components\ProfileTabs.jsx | Line: 22
+   Colors: text-gray-400
+---
+File: src\components\ProfileTabs.jsx | Line: 42
+   Colors: text-gray-800
+---
+File: src\components\ProfileTabs.jsx | Line: 45
+   Colors: text-gray-600
+---
+File: src\components\ProviderCard.js | Line: 18
+   Colors: border-lime-500, bg-lime-100, border-gray-300
+---
+File: src\components\ProviderCard.js | Line: 48
+   Colors: text-gray-500
+---
+File: src\components\ProviderCard.js | Line: 57
+   Colors: bg-lime-300, bg-red-300
+---
+File: src\components\ProviderClientList.jsx | Line: 7
+   Colors: text-slate-800
+---
+File: src\components\ProviderClientList.jsx | Line: 15
+   Colors: text-gray-500
+---
+File: src\components\ProviderClientList.jsx | Line: 27
+   Colors: bg-gray-50
+---
+File: src\components\ProviderClientList.jsx | Line: 37
+   Colors: bg-teal-800
+---
+File: src\components\ProviderClientList.jsx | Line: 44
+   Colors: text-gray-800
+---
+File: src\components\ProviderClientList.jsx | Line: 48
+   Colors: text-gray-600
+---
+File: src\components\ProviderClientList.jsx | Line: 53
+   Colors: text-gray-500
+---
+File: src\components\ProviderConfigForm.jsx | Line: 36
+   Colors: text-slate-800
+---
+File: src\components\ProviderConfigForm.jsx | Line: 46
+   Colors: ring-lime-300
+---
+File: src\components\ProviderConfigForm.jsx | Line: 51
+   Colors: text-gray-700
+---
+File: src\components\ProviderConfigForm.jsx | Line: 59
+   Colors: ring-lime-300
+---
+File: src\components\ProviderConfigForm.jsx | Line: 73
+   Colors: bg-lime-500, bg-lime-600
+---
+File: src\components\ProviderList.jsx | Line: 9
+   Colors: text-gray-500
+---
+File: src\components\ProviderSearch.js | Line: 7
+   Colors: border-gray-300, border-lime-300
+---
+File: src\components\ToastService.js | Line: 37
+   Colors: bg-lime-600
+---
+File: src\components\ToastService.js | Line: 38
+   Colors: bg-red-600
+---
+File: src\components\ToastService.js | Line: 39
+   Colors: bg-blue-600
+---
+File: src\components\VMConfigForm.jsx | Line: 8
+   Colors: bg-lime-300
+---
+File: src\components\VMConfigForm.jsx | Line: 16
+   Colors: border-gray-300, border-lime-300
+---
+File: src\components\VMConfigForm.jsx | Line: 29
+   Colors: border-gray-300, border-lime-300
+---
+File: src\components\VMConfigForm.jsx | Line: 47
+   Colors: border-gray-300, border-lime-300
+---
+File: src\components\VMConfigForm.jsx | Line: 65
+   Colors: border-gray-300, border-lime-300
+---
+File: src\components\VMConfigForm.jsx | Line: 84
+   Colors: border-gray-300, border-lime-300
+---
+File: src\components\VMConfigForm.jsx | Line: 96
+   Colors: bg-lime-300
+---
+File: src\components\VMConfigForm.jsx | Line: 102
+   Colors: bg-lime-300
+---
+File: src\components\VMConfigForm.jsx | Line: 111
+   Colors: border-gray-300, border-lime-300
+---
+File: src\docs\components\docsMainPage.js | Line: 55
+   Colors: text-slate-800
+---
+File: src\screens\Buckets.js | Line: 158
+   Colors: bg-gray-50
+---
+File: src\screens\Buckets.js | Line: 161
+   Colors: border-lime-400
+---
+File: src\screens\Buckets.js | Line: 166
+   Colors: text-slate-800
+---
+File: src\screens\Buckets.js | Line: 172
+   Colors: text-gray-600, bg-gray-100, bg-gray-200
+---
+File: src\screens\Buckets.js | Line: 178
+   Colors: bg-gray-50, ring-lime-300
+---
+File: src\screens\Buckets.js | Line: 189
+   Colors: text-gray-700, bg-gray-100, bg-gray-200
+---
+File: src\screens\Buckets.js | Line: 194
+   Colors: text-gray-700, bg-gray-100, bg-gray-200
+---
+File: src\screens\Buckets.js | Line: 204
+   Colors: text-gray-700, bg-gray-100, bg-gray-200
+---
+File: src\screens\Buckets.js | Line: 221
+   Colors: bg-gray-100, text-gray-400
+---
+File: src\screens\Buckets.js | Line: 222
+   Colors: bg-red-50, text-red-600, bg-red-100
+---
+File: src\screens\Buckets.js | Line: 233
+   Colors: bg-gray-100, text-gray-400
+---
+File: src\screens\Buckets.js | Line: 234
+   Colors: bg-gray-100, text-gray-700, bg-gray-200
+---
+File: src\screens\Buckets.js | Line: 244
+   Colors: bg-gray-50
+---
+File: src\screens\Buckets.js | Line: 255
+   Colors: bg-gray-50
+---
+File: src\screens\Buckets.js | Line: 262
+   Colors: border-gray-300, text-lime-500, ring-lime-400
+---
+File: src\screens\Buckets.js | Line: 274
+   Colors: text-blue-600
+---
+File: src\screens\Buckets.js | Line: 275
+   Colors: text-gray-700
+---
+File: src\screens\Buckets.js | Line: 282
+   Colors: text-gray-500
+---
+File: src\screens\Buckets.js | Line: 283
+   Colors: text-gray-500
+---
+File: src\screens\Buckets.js | Line: 284
+   Colors: text-gray-500
+---
+File: src\screens\ClientServices.js | Line: 137
+   Colors: text-gray-900
+---
+File: src\screens\ClientServices.js | Line: 145
+   Colors: border-gray-300, border-lime-300
+---
+File: src\screens\ClientServices.js | Line: 151
+   Colors: border-gray-200
+---
+File: src\screens\ClientServices.js | Line: 154
+   Colors: border-lime-400
+---
+File: src\screens\ClientServices.js | Line: 158
+   Colors: bg-gray-100, text-gray-700
+---
+File: src\screens\ClientServices.js | Line: 169
+   Colors: text-gray-500
+---
+File: src\screens\ClientServices.js | Line: 178
+   Colors: border-gray-100, bg-lime-100
+---
+File: src\screens\ClientServices.js | Line: 189
+   Colors: bg-lime-300, text-green-500
+---
+File: src\screens\ClientServices.js | Line: 195
+   Colors: text-green-600, text-gray-400
+---
+File: src\screens\ClientServices.js | Line: 205
+   Colors: border-gray-200
+---
+File: src\screens\ClientServices.js | Line: 206
+   Colors: text-gray-800
+---
+File: src\screens\ClientServices.js | Line: 209
+   Colors: border-lime-500
+---
+File: src\screens\ClientServices.js | Line: 217
+   Colors: text-gray-700
+---
+File: src\screens\ClientServices.js | Line: 222
+   Colors: text-gray-700
+---
+File: src\screens\ClientServices.js | Line: 227
+   Colors: text-gray-700
+---
+File: src\screens\ClientServices.js | Line: 231
+   Colors: bg-gray-50
+---
+File: src\screens\ClientServices.js | Line: 232
+   Colors: text-gray-700
+---
+File: src\screens\ClientServices.js | Line: 233
+   Colors: text-gray-700
+---
+File: src\screens\ClientServices.js | Line: 234
+   Colors: text-gray-700
+---
+File: src\screens\ClientServices.js | Line: 238
+   Colors: bg-lime-600, bg-lime-700
+---
+File: src\screens\ClientServices.js | Line: 245
+   Colors: bg-yellow-600, bg-yellow-700
+---
+File: src\screens\ClientServices.js | Line: 252
+   Colors: bg-red-600, bg-red-700
+---
+File: src\screens\ClientServices.js | Line: 261
+   Colors: text-gray-500
+---
+File: src\screens\Dashboard.js | Line: 95
+   Colors: text-gray-900
+---
+File: src\screens\Dashboard.js | Line: 96
+   Colors: text-gray-400
+---
+File: src\screens\Dashboard.js | Line: 100
+   Colors: bg-lime-400, bg-lime-500
+---
+File: src\screens\Dashboard.js | Line: 109
+   Colors: text-gray-500
+---
+File: src\screens\Dashboard.js | Line: 116
+   Colors: border-lime-300
+---
+File: src\screens\Dashboard.js | Line: 119
+   Colors: text-gray-800
+---
+File: src\screens\Dashboard.js | Line: 122
+   Colors: text-gray-500
+---
+File: src\screens\Dashboard.js | Line: 132
+   Colors: text-blue-500, text-blue-700
+---
+File: src\screens\Dashboard.js | Line: 134
+   Colors: text-blue-500
+---
+File: src\screens\Dashboard.js | Line: 141
+   Colors: text-red-500, text-red-700
+---
+File: src\screens\Dashboard.js | Line: 143
+   Colors: text-red-500
+---
+File: src\screens\Dashboard.js | Line: 165
+   Colors: border-gray-300, bg-gray-100
+---
+File: src\screens\Dashboard.js | Line: 177
+   Colors: border-gray-300
+---
+File: src\screens\Dashboard.js | Line: 187
+   Colors: border-gray-300
+---
+File: src\screens\Dashboard.js | Line: 193
+   Colors: bg-gray-200, bg-gray-300
+---
+File: src\screens\Dashboard.js | Line: 199
+   Colors: bg-lime-400, bg-lime-500
+---
+File: src\screens\DashboardView.js | Line: 138
+   Colors: bg-gray-50
+---
+File: src\screens\DashboardView.js | Line: 141
+   Colors: text-gray-900
+---
+File: src\screens\DashboardView.js | Line: 142
+   Colors: text-gray-400
+---
+File: src\screens\DashboardView.js | Line: 148
+   Colors: bg-lime-400, bg-lime-500
+---
+File: src\screens\DashboardView.js | Line: 155
+   Colors: text-gray-500
+---
+File: src\screens\DashboardView.js | Line: 191
+   Colors: bg-red-50, bg-red-100
+---
+File: src\screens\DashboardView.js | Line: 193
+   Colors: text-red-500
+---
+File: src\screens\DashboardView.js | Line: 200
+   Colors: text-gray-600
+---
+File: src\screens\DashboardView.js | Line: 209
+   Colors: border-lime-400
+---
+File: src\screens\DashboardView.js | Line: 211
+   Colors: text-gray-400
+---
+File: src\screens\DashboardView.js | Line: 217
+   Colors: text-red-600
+---
+File: src\screens\DashboardView.js | Line: 227
+   Colors: text-gray-400
+---
+File: src\screens\GraphService.js | Line: 10
+   Colors: text-gray-900
+---
+File: src\screens\GraphService.js | Line: 17
+   Colors: bg-lime-400, bg-lime-500
+---
+File: src\screens\Home.js | Line: 38
+   Colors: text-gray-200
+---
+File: src\screens\Home.js | Line: 46
+   Colors: #0D0D0D, bg-lime-300
+---
+File: src\screens\Login.js | Line: 79
+   Colors: border-lime-400
+---
+File: src\screens\ManageClients.js | Line: 111
+   Colors: text-gray-900
+---
+File: src\screens\ManageClients.js | Line: 114
+   Colors: border-lime-400
+---
+File: src\screens\ManageClients.js | Line: 119
+   Colors: bg-lime-500, bg-lime-600
+---
+File: src\screens\ManageClients.js | Line: 129
+   Colors: text-gray-500
+---
+File: src\screens\ManageClients.js | Line: 131
+   Colors: border-lime-400
+---
+File: src\screens\ManageClients.js | Line: 134
+   Colors: text-gray-500
+---
+File: src\screens\ManageClients.js | Line: 140
+   Colors: border-lime-500, bg-lime-50
+---
+File: src\screens\ManageClients.js | Line: 141
+   Colors: bg-gray-50
+---
+File: src\screens\ManageClients.js | Line: 145
+   Colors: text-gray-800
+---
+File: src\screens\ManageClients.js | Line: 146
+   Colors: text-gray-600
+---
+File: src\screens\ManageClients.js | Line: 158
+   Colors: text-gray-800
+---
+File: src\screens\ManageClients.js | Line: 162
+   Colors: text-gray-700
+---
+File: src\screens\ManageClients.js | Line: 166
+   Colors: text-gray-700
+---
+File: src\screens\ManageClients.js | Line: 170
+   Colors: text-gray-700
+---
+File: src\screens\ManageClients.js | Line: 175
+   Colors: text-gray-600
+---
+File: src\screens\ManageClients.js | Line: 196
+   Colors: bg-red-500, bg-red-600
+---
+File: src\screens\ManageClients.js | Line: 204
+   Colors: text-gray-500
+---
+File: src\screens\ManageProviders.js | Line: 205
+   Colors: text-slate-800
+---
+File: src\screens\ManageProviders.js | Line: 210
+   Colors: bg-lime-500, bg-lime-600
+---
+File: src\screens\ManageProviders.js | Line: 216
+   Colors: bg-red-500, bg-red-600
+---
+File: src\screens\ManageProviders.js | Line: 227
+   Colors: text-slate-800
+---
+File: src\screens\Profile.js | Line: 59
+   Colors: bg-gray-200
+---
+File: src\screens\Profile.js | Line: 61
+   Colors: bg-gray-200
+---
+File: src\screens\Profile.js | Line: 62
+   Colors: bg-gray-200
+---
+File: src\screens\Profile.js | Line: 64
+   Colors: bg-gray-200
+---
+File: src\screens\Profile.js | Line: 65
+   Colors: bg-gray-200
+---
+File: src\screens\Profile.js | Line: 71
+   Colors: bg-gray-200
+---
+File: src\screens\Profile.js | Line: 72
+   Colors: bg-gray-100
+---
+File: src\screens\Profile.js | Line: 83
+   Colors: bg-gray-100
+---
+File: src\screens\Profile.js | Line: 85
+   Colors: bg-gray-200
+---
+File: src\screens\Profile.js | Line: 87
+   Colors: bg-gray-200
+---
+File: src\screens\Profile.js | Line: 88
+   Colors: bg-gray-100
+---
+File: src\screens\Profile.js | Line: 97
+   Colors: text-gray-900
+---
+File: src\screens\Profile.js | Line: 141
+   Colors: text-gray-800
+---
+File: src\screens\Profile.js | Line: 142
+   Colors: text-gray-500
+---
+File: src\screens\Providers.js | Line: 187
+   Colors: text-gray-900
+---
+File: src\screens\Providers.js | Line: 224
+   Colors: text-gray-500
+---
+File: src\screens\Register.js | Line: 81
+   Colors: border-lime-400
+---
+File: src\screens\Tunnels.js | Line: 130
+   Colors: text-gray-900
+---
+File: src\screens\Tunnels.js | Line: 141
+   Colors: bg-lime-500, bg-lime-600
+---
+File: src\screens\Tunnels.js | Line: 147
+   Colors: border-gray-200
+---
+File: src\screens\Tunnels.js | Line: 149
+   Colors: bg-gray-50, text-gray-700
+---
+File: src\screens\Tunnels.js | Line: 162
+   Colors: text-gray-500
+---
+File: src\screens\Tunnels.js | Line: 173
+   Colors: bg-gray-50
+---
+File: src\screens\Tunnels.js | Line: 190
+   Colors: text-gray-600
+---
+File: src\screens\Tunnels.js | Line: 201
+   Colors: text-blue-600
+---
+File: src\screens\Tunnels.js | Line: 211
+   Colors: text-gray-600
+---
+File: src\screens\Tunnels.js | Line: 228
+   Colors: text-blue-500
+---
+File: src\screens\Tunnels.js | Line: 230
+   Colors: text-blue-500
+---
+File: src\screens\Tunnels.js | Line: 236
+   Colors: text-red-500
+---
+File: src\screens\Tunnels.js | Line: 274
+   Colors: bg-gray-200
+---
+File: src\screens\Tunnels.js | Line: 295
+   Colors: bg-lime-500, bg-lime-600
+---
+File: src\screens\Tunnels.js | Line: 296
+   Colors: bg-gray-300
+---

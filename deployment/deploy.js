@@ -1,5 +1,8 @@
 const { execSync } = require('child_process');
+const path = require('path');
 
+// Ensure we run from the project root directory
+process.chdir(path.join(__dirname, '..'));
 // There is no need of committing your changes in the deployment yaml file as it is already being tracked by git. 
 // Just make sure to update the image tag in the `deployment\kube\frntnd-deployment.yaml` file before running this script.
 

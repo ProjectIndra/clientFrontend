@@ -3,12 +3,12 @@ import { getInitials } from "../utils/userUtils";
 
 function ProviderClientList({ clients = [], isLoading }) {
 	return (
-		<div className="bg-palette-surface rounded-lg shadow p-6">
-			<h3 className="text-lg font-medium mb-4 text-palette-textPrimary">
+		<div className="bg-palette-surface rounded-lg shadow p-6 flex flex-col h-full">
+			<h3 className="text-lg font-medium mb-4 text-palette-textPrimary shrink-0">
 				Active Usage by Clients
 			</h3>
 
-			<div className="relative grid grid-cols-1 gap-4 max-h-[500px] overflow-y-auto">
+			<div className="relative flex flex-col gap-4 overflow-y-auto flex-1">
 				{isLoading && <Loading />}
 
 				{!isLoading && clients.length === 0 && (

@@ -94,7 +94,7 @@ export const GraphView = ({
             data={parsedData}
             margin={{ top: 20, right: 20, left: -10, bottom: 10 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#95bb4e65" />
 
             {/* FIX: Use time string directly as X-axis, no formatter */}
             <XAxis dataKey="timestamp" stroke="#6b7280" />
@@ -144,7 +144,10 @@ export const GraphView = ({
             data={parsedData}
             margin={{ top: 20, right: 20, left: -10, bottom: 10 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#95bb4e65"
+            />
             <XAxis dataKey="timestamp" stroke="#6b7280" />
             <YAxis stroke="#6b7280" />
             <Tooltip content={<CustomTooltip />} />

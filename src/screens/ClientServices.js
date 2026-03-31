@@ -153,7 +153,7 @@ const ClientServices = () => {
     {
       header: 'Provider Name',
       cellClassName: 'max-w-[150px] font-mono text-xs truncate',
-      cell: (vm) => <span title={vm.providerId || 'N/A'}>{vm.providerId || 'N/A'}</span>,
+      cell: (vm) => <span title={vm.providerName || vm.providerId || 'N/A'}>{vm.providerName || vm.providerId || 'N/A'}</span>,
     },
     {
       header: 'VM Name',

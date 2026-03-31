@@ -6,6 +6,9 @@ import ProviderList from "../components/ProviderList";
 import ActionConfirmModal from "../components/actionConfirmModal";
 import ProviderConfigForm from "../components/ProviderConfigForm";
 import ProviderClientList from "../components/ProviderClientList";
+import { getGraphPoints } from '../apiServices';
+import { GraphView } from '../components/GraphView';
+import { LargeGraphModal } from '../components/largeGraphModal';
 
 export default function ManageProviders() {
   const [providers, setProviders] = useState([]);
@@ -23,6 +26,8 @@ export default function ManageProviders() {
   const [isLoadingFirst, setIsLoadingProviders] = useState(false);
   const [isLoadingClients, setIsLoadingClients] = useState(false);
   const [isVerificationTokenLoading, setIsVerificationTokenLoading] = useState(false);
+  const [selectedGraph, setSelectedGraph] = useState(null);
+  const [providerGraphs, setProviderGraphs] = useState([]);
 
   const vcpus = ["1 vCPU", "2 vCPUs", "4 vCPUs", "8 vCPUs", "16 vCPUs", "32 vCPUs", "64 vCPUs"];
   const rams = ["2 GB", "4 GB", "8 GB", "16 GB", "32 GB", "64 GB"];
@@ -116,6 +121,109 @@ export default function ManageProviders() {
     fetchData();
   }, [fetchProviders]);
 
+  useEffect(() => {
+    if (selectedProvider?.providerId) {
+      const currentTime = Math.floor(Date.now() / 1000);
+      const startTime = currentTime - 30 * 60; // 30 mins ago
+
+      const payload = {
+        graphId: 'dummy-graph-id',
+        dashboardId: 'dummy-dashboard-id',
+        graphName: 'Provider Metrics',
+        graphType: 'time_series',
+        // defaultTimeRange: `${startTime}|${currentTime}`,
+        defaultTimeRange: '1772562600|1774809000',
+        refreshIntervalSeconds: 30,
+        settings: '{}',
+        series: [
+          {
+            seriesId: '3d54006d-3c9c-481b-afd2-753678ccff65',
+            graphId: '70347d3b-0ffa-478a-8134-867b0274e2be',
+            metricId: '58e6f7e4-a803-49ef-83ea-b3c86aac71b6',
+            metricName: 'vm_ram_allocated',
+            entityType: 'vm',
+            aggregation: 'sum',
+            filters: {
+              provider_id: selectedProvider.providerId,
+            },
+            groupBy: [],
+            yAxisPosition: 'left',
+            data: [],
+          },
+          {
+            seriesId: '3d54006d-3c9c-481b-afd2-753678ccff65',
+            graphId: '70347d3b-0ffa-478a-8134-867b0274e2be',
+            metricId: '58e6f7e4-a803-49ef-83ea-b3c86aac71b6',
+            metricName: 'vm_cpu_allocated',
+            entityType: 'vm',
+            aggregation: 'sum',
+            filters: {
+              provider_id: selectedProvider.providerId,
+            },
+            groupBy: [],
+            yAxisPosition: 'left',
+            data: [],
+          },
+          {
+            seriesId: '3d54006d-3c9c-481b-afd2-753678ccff65',
+            graphId: '70347d3b-0ffa-478a-8134-867b0274e2be',
+            metricId: '58e6f7e4-a803-49ef-83ea-b3c86aac71b6',
+            metricName: 'vm_ram_used',
+            entityType: 'vm',
+            aggregation: 'sum',
+            filters: {
+              provider_id: selectedProvider.providerId,
+            },
+            groupBy: [],
+            yAxisPosition: 'left',
+            data: [],
+          },
+          {
+            seriesId: '3d54006d-3c9c-481b-afd2-753678ccff65',
+            graphId: '70347d3b-0ffa-478a-8134-867b0274e2be',
+            metricId: '58e6f7e4-a803-49ef-83ea-b3c86aac71b6',
+            metricName: 'vm_cpu_used',
+            entityType: 'vm',
+            aggregation: 'sum',
+            filters: {
+              provider_id: selectedProvider.providerId,
+            },
+            groupBy: [],
+            yAxisPosition: 'left',
+            data: [],
+          },
+        ],
+      }
+
+      const g = { ...payload, pointsLoading: true, pointsError: null };
+      setProviderGraphs([g]);
+
+      getGraphPoints(payload)
+        .then(data => {
+            setProviderGraphs(prev => prev.map(pg => 
+               pg.graphId === g.graphId ? {
+                ...pg,
+                series: data.series || pg.series,
+                settings: data.settings || pg.settings,
+                pointsLoading: false,
+                pointsError: null
+               } : pg
+            ));
+        })
+        .catch(err => {
+            setProviderGraphs(prev => prev.map(pg =>
+                pg.graphId === g.graphId ? {
+                    ...pg,
+                    pointsLoading: false,
+                    pointsError: err?.message || 'Failed to fetch points'
+                } : pg
+            ));
+        });
+    } else {
+      setProviderGraphs([]);
+    }
+  }, [selectedProvider?.providerId]);
+
   const handleSaveProvider = () => {
     const updateProviderConfPayload = {};
     for (const key in formData) {
@@ -208,9 +316,7 @@ export default function ManageProviders() {
 
   return (
     <div className="relative mx-auto p-6">
-      {isVerificationTokenLoading && (
-        <Loading />
-      )}
+      {isVerificationTokenLoading && <Loading />}
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-semibold mb-6 text-palette-textPrimary">
@@ -232,10 +338,14 @@ export default function ManageProviders() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-co
+
+ls-1 md:grid-cols-3 gap-6">
         {/* LEFT side - Provider List */}
         <div className="bg-palette-surface rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium mb-4 text-palette-textPrimary">Providers</h3>
+          <h3 className="text-lg font-medium mb-4 text-palette-textPrimary">
+            Providers
+          </h3>
 
           <ProviderList
             providers={providers}
@@ -260,22 +370,100 @@ export default function ManageProviders() {
 
         {/* RIGHT side - Active Users */}
         {selectedProvider && (
-          <ProviderClientList
-            clients={activeUsers}
-            isLoading={isLoadingClients}
-          />
+          <div className="flex flex-col gap-4 h-[calc(100vh-200px)] min-h-[600px]">
+            <div className="flex-[6] min-h-0 bg-palette-surface px-4 py-2 rounded-lg shadow overflow-auto">
+              {providerGraphs.length > 0 && (() => {
+                const g = providerGraphs[0];
+                const parsedSettings = g.settings
+                  ? (() => {
+                      try {
+                        return JSON.parse(g.settings)
+                      } catch {
+                        return {}
+                      }
+                    })()
+                  : {}
+
+                return (
+                  <div onClick={() => setSelectedGraph(g)} className="cursor-pointer">
+                    <h2 className="text-lg font-semibold mb-2">
+                      {g.graphName}
+                    </h2>
+
+                    {g.pointsLoading ? (
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-palette-surface bg-opacity-75 flex items-center justify-center z-10">
+                          <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+                        </div>
+                        <div className="text-palette-textMuted italic">
+                          Loading graph data...
+                        </div>
+                      </div>
+                    ) : g.pointsError ? (
+                      <div className="text-sm text-red-600">{g.pointsError}</div>
+                    ) : (
+                      <>
+                        {Array.isArray(g.series) &&
+                          g.series.length > 0 &&
+                          g.series.every(
+                            (s) => Array.isArray(s.data) && s.data.length === 0
+                          ) && (
+                            <p className="text-palette-textMuted italic">
+                              Last 30 minutes of data .Click to adjust time range.
+                            </p>
+                          )}
+
+                        <GraphView
+                          type={g.graphType}
+                          series={g.series}
+                          settings={parsedSettings}
+                          height={250}
+                          width={'100%'}
+                        />
+                      </>
+                    )}
+                  </div>
+                )
+              })()}
+            </div>
+            <div className="flex-[4] min-h-0">
+              <ProviderClientList
+                clients={activeUsers}
+                isLoading={isLoadingClients}
+              />
+            </div>
+          </div>
         )}
       </div>
 
       {/* Toast */}
-      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+      {toast.visible && (
+        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      )}
+
+      {/* Large Graph Modal */}
+      {selectedGraph && (
+        <LargeGraphModal
+          graph={selectedGraph}
+          setGraphs={setProviderGraphs}
+          onClose={() => setSelectedGraph(null)}
+        />
+      )}
 
       {/* Action Confirmation Modal */}
       <ActionConfirmModal
         visible={actionConfirm.visible}
         type={actionConfirm.type}
-        onConfirm={() => { }}
-        onCancel={() => setActionConfirm({ type: null, visible: false, command: null, message: null, token: null })}
+        onConfirm={() => {}}
+        onCancel={() =>
+          setActionConfirm({
+            type: null,
+            visible: false,
+            command: null,
+            message: null,
+            token: null,
+          })
+        }
         message={actionConfirm.message}
         copyToken={true}
         command={actionConfirm.command}
@@ -286,5 +474,5 @@ export default function ManageProviders() {
         cancelButtonName={actionConfirm.cancelButtonName}
       />
     </div>
-  );
+  )
 }

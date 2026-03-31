@@ -28,7 +28,7 @@ export const apiCall = async (method, endpoint, data = null) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		console.log(error.response?.data?.error);
 		throw error.response?.data?.error || "Request failed. Please try again.";
 	}

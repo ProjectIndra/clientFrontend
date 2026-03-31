@@ -84,13 +84,13 @@ export const LargeGraphModal = ({ graph, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl p-4 w-[85vw] max-h-[95vh] overflow-y-auto overflow-x-hidden relative">
+      <div className="bg-palette-surface rounded-lg shadow-xl p-4 w-[85vw] max-h-[95vh] overflow-y-auto overflow-x-hidden relative">
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-3 right-3 hover:bg-gray-300 p-2 rounded-full text-gray-500 hover:text-gray-700 transition"
+          className="absolute top-3 right-3 hover:bg-palette-surfaceMuted p-2 rounded-full text-palette-textMuted hover:text-palette-textSecondary transition"
         >
           {/* close icon */}
           <CloseIcon />
@@ -108,13 +108,13 @@ export const LargeGraphModal = ({ graph, onClose }) => {
         <h2 className="text-xl font-semibold mb-2">
           {selectedGraphData.graphName}
         </h2>
-        {/* <p className="text-sm text-gray-600 mb-4">• {selectedGraphData.graphType}</p> */}
-        <p className="text-sm text-gray-600 mb-4">
+        {/* <p className="text-sm text-palette-textSecondary mb-4">• {selectedGraphData.graphType}</p> */}
+        <p className="text-sm text-palette-textSecondary mb-4">
           <b>• Time range :</b> {startReadable} - {endReadable}
         </p>
 
         {/* ------------------ FILTER BAR ------------------ */}
-        <div className="mb-5 p-4 border rounded-lg bg-gray-50">
+        <div className="mb-5 p-4 border rounded-lg bg-palette-wrapper">
           <div className="flex items-start justify-between">
             {/* LEFT SIDE FILTERS */}
             <div className="flex gap-8">
@@ -124,7 +124,7 @@ export const LargeGraphModal = ({ graph, onClose }) => {
                   <p>Start Timestamp</p>
                 </div>
 
-                {/* <label className="text-sm text-gray-600 mb-1">Date</label> */}
+                {/* <label className="text-sm text-palette-textSecondary mb-1">Date</label> */}
                 <input
                   type="date"
                   value={startDate}
@@ -132,7 +132,7 @@ export const LargeGraphModal = ({ graph, onClose }) => {
                   className="p-2 border rounded w-32 h-8"
                 />
 
-                {/* <label className="text-sm text-gray-600 mt-2 mb-1">Time</label> */}
+                {/* <label className="text-sm text-palette-textSecondary mt-2 mb-1">Time</label> */}
                 <input
                   type="time"
                   value={startTime}
@@ -147,7 +147,7 @@ export const LargeGraphModal = ({ graph, onClose }) => {
                   <p>End Timestamp</p>
                 </div>
 
-                {/* <label className="text-sm text-gray-600 mb-1">Date</label> */}
+                {/* <label className="text-sm text-palette-textSecondary mb-1">Date</label> */}
                 <input
                   type="date"
                   value={endDate}
@@ -155,7 +155,7 @@ export const LargeGraphModal = ({ graph, onClose }) => {
                   className="p-2 border rounded w-32 h-8"
                 />
 
-                {/* <label className="text-sm text-gray-600 mt-2 mb-1">Time</label> */}
+                {/* <label className="text-sm text-palette-textSecondary mt-2 mb-1">Time</label> */}
                 <input
                   type="time"
                   value={endTime}

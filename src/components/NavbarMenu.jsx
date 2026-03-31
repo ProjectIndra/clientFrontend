@@ -4,108 +4,97 @@ function NavbarMenu({ mobileMenuOpen, activePopup, togglePopup, showNavbar }) {
 		<nav
 			className={`${
 				mobileMenuOpen ? "flex" : "hidden"
-			} md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-10 text-sm mt-4 md:mt-0 ml-12`}
+			} md:flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-10 text-xl mt-4 md:mt-0 ml-12`}
 		>
 			{/* Analytics */}
 			<div className="relative group">
-				<button
-					onMouseOver={() => togglePopup("analytics")}
-					className={`${
-						activePopup === "analytics"
-							? "text-[#0a1d39] font-semibold"
-							: "text-[#475569]"
-					} hover:text-[#0a1d39] text-left w-full`}
-					onClick={() => (window.location.href = "/dashboard")}
+				<Link
+					className="text-left w-full font-semibold hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 text-palette-textPrimary rounded"
+					to="/dashboard"
 				>
 					Analytics
-				</button>
+				</Link>
 			</div>
 			{/* Services */}
-			<div className="relative group">
-				<button
-					onMouseOver={() => togglePopup("services")}
-					className={`${
-						activePopup === "services"
-							? "text-[#0a1d39] font-semibold"
-							: "text-[#475569]"
-					} hover:text-[#0a1d39] text-left w-full`}
+			<div 
+				className="relative group"
+				onMouseEnter={() => togglePopup("services")}
+				onMouseLeave={() => togglePopup(null)}
+			>
+				<Link
+					className="text-left w-full font-semibold hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 text-palette-textPrimary rounded"
 				>
 					Services
-				</button>
+				</Link>
 				{activePopup === "services" && showNavbar && (
-					<div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
-						<Link
-							className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
-							to="/client/services"
-						>
-							Virtual Machines
-						</Link>
-						<Link
-							className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
-							to="/providersList"
-						>
-							Providers
-						</Link>
-						{/* <Link
-							className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
-							to="/buckets"
+					<div className="absolute top-full left-0 pt-2 w-56 z-50">
+						<div className="p-2 bg-palette-surface rounded-lg shadow-md flex flex-col">
+							<Link
+								className="text-lg hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 rounded text-palette-textPrimary"
+								to="/client/services"
 							>
-							Storage
-							</Link> */}
-						<Link
-							className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
-							to="/tunnels"
-						>
-							Tunnels
-						</Link>
+								Virtual Machines
+							</Link>
+							<Link
+								className="text-lg hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 rounded text-palette-textPrimary"
+								to="/providersList"
+							>
+								Providers
+							</Link>
+							{/* <Link
+								className="text-lg hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 rounded text-palette-textPrimary"
+								to="/buckets"
+								>
+								Storage
+								</Link> */}
+							<Link
+								className="text-lg hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 rounded text-palette-textPrimary"
+								to="/tunnels"
+							>
+								Tunnels
+							</Link>
+						</div>
 					</div>
 				)}
 			</div>
 
 			{/* Manage */}
-			<div className="relative group">
-				<button
-					onMouseOver={() => togglePopup("manage")}
-					className={`${
-						activePopup === "manage"
-							? "text-[#0a1d39] font-semibold"
-							: "text-[#475569]"
-					} hover:text-[#0a1d39] text-left w-full`}
-				>
-					Manage
-				</button>
+			<div 
+				className="relative group"
+				onMouseEnter={() => togglePopup("manage")}
+				onMouseLeave={() => togglePopup(null)}
+			>
+				<Link
+					className="text-left w-full font-semibold hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 text-palette-textPrimary rounded"
+				>Manage
+				</Link>
 				{activePopup === "manage" && showNavbar && (
-					<div className="absolute top-full left-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-md z-50 flex flex-col">
-						{/* <Link className="text-sm hover:bg-lime-300 px-2 py-1 rounded" to="/docs">
-						Setup
-						</Link> */}
-						<Link
-							className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
-							to="/manage/providers"
-						>
-							Manage Providers
-						</Link>
-						<Link
-							className="text-sm hover:bg-lime-300 px-2 py-1 rounded"
-							to="/manage/clients"
-						>
-							Manage CLIs
-						</Link>
+					<div className="absolute top-full left-0 pt-2 w-56 z-50">
+						<div className="p-2 bg-palette-surface rounded-lg shadow-md flex flex-col">
+							{/* <Link className="text-xl hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 rounded" to="/docs">
+							Setup
+							</Link> */}
+							<Link
+								className="text-lg hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 rounded text-palette-textPrimary"
+								to="/manage/providers"
+							>
+								Manage Providers
+							</Link>
+							<Link
+								className="text-lg hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 rounded text-palette-textPrimary"
+								to="/manage/clients"
+							>
+								Manage CLIs
+							</Link>
+						</div>
 					</div>
 				)}
 			</div>
 
 			{/* Documentation */}
-			<button
-				onClick={() => (window.location.href = "/docs")}
-				className={`${
-					activePopup === "docs"
-						? "text-[#0a1d39] font-semibold"
-						: "text-[#475569]"
-				} hover:text-[#0a1d39] text-left w-full whitespace-nowrap`}
-			>
+			<Link to="/docs" className="text-left w-full font-semibold hover:bg-lime-300 dark:hover:text-palette-textInverse px-2 py-1 text-palette-textPrimary rounded">
 				Docs
-			</button>
+			</Link>
 		</nav>
 	);
 }

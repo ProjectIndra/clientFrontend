@@ -1,9 +1,14 @@
-import React from "react";
 import { useEffect, useState, useCallback } from "react";
 import { apiCall } from "../Api";
-import ProviderCard from "../components/ProviderCard";
-import ActionConfirmModal from "../components/actionConfirmModal";
 import Toast from '../components/ToastService';
+import Loading from "../components/Loading";
+import ProviderList from "../components/ProviderList";
+import ActionConfirmModal from "../components/actionConfirmModal";
+import ProviderConfigForm from "../components/ProviderConfigForm";
+import ProviderClientList from "../components/ProviderClientList";
+import { getGraphPoints } from '../apiServices';
+import { GraphView } from '../components/GraphView';
+import { LargeGraphModal } from '../components/largeGraphModal';
 
 export default function ManageProviders() {
   const [providers, setProviders] = useState([]);
@@ -20,8 +25,9 @@ export default function ManageProviders() {
   });
   const [isLoadingFirst, setIsLoadingProviders] = useState(false);
   const [isLoadingClients, setIsLoadingClients] = useState(false);
-  const [isVerificationTokenLoading, setIsVerificationTokenLoading] =
-    useState(false);
+  const [isVerificationTokenLoading, setIsVerificationTokenLoading] = useState(false);
+  const [selectedGraph, setSelectedGraph] = useState(null);
+  const [providerGraphs, setProviderGraphs] = useState([]);
 
   const vcpus = ["1 vCPU", "2 vCPUs", "4 vCPUs", "8 vCPUs", "16 vCPUs", "32 vCPUs", "64 vCPUs"];
   const rams = ["2 GB", "4 GB", "8 GB", "16 GB", "32 GB", "64 GB"];
@@ -42,34 +48,34 @@ export default function ManageProviders() {
   });
 
   const [toast, setToast] = useState({ message: "", type: "info", visible: false });
-
   const showToast = (message, type = "info") => {
     setToast({ message, type, visible: true });
   };
-
   const closeToast = () => {
     setToast(prev => ({ ...prev, visible: false }));
   };
 
 
   const handleProviderSelect = (provider) => {
-    if (selectedProvider?.providerId === provider?.providerId) {
-      setSelectedProvider(null); // Deselect if the same provider is clicked again
-    } else {
-      setSelectedProvider(provider); // Select the clicked provider
-      setFormData((prev) => ({
-        ...prev,
-        providerId: provider?.providerId?.toString(),
+    setSelectedProvider((prev) => {
+      if (prev?.providerId === provider?.providerId) return null;
+
+      setFormData((f) => ({
+        ...f,
+        providerId: provider?.providerId,
+        providerName: provider?.providerName || "",
       }));
-    }
+
+      fetchActiveUsers(provider?.providerId); return provider;
+    });
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const fetchProviders = useCallback(async () => {
@@ -78,7 +84,7 @@ export default function ManageProviders() {
       const data = await apiCall("get", "/ui/providers/userProviderDetails");
       if (data.all_providers && Array.isArray(data.all_providers)) {
         setProviders(data.all_providers);
-        setSelectedProvider(data.all_providers[0]);
+        // setSelectedProvider(data.all_providers[0]);
       } else {
         throw new Error("Response not suitable.");
       }
@@ -88,38 +94,150 @@ export default function ManageProviders() {
     } finally {
       setIsLoadingProviders(false);
     }
-  }, []); // Memoized fetchProviders
+  }, []);
 
-  const fetchActiveUsers = useCallback(async () => {
+  const fetchActiveUsers = useCallback(async (providerId) => {
     setIsLoadingClients(true);
     try {
-      const data = await apiCall("get", "/ui/providers/providerClientDetails");
+      const data = await apiCall("post", "/ui/providers/providerClientDetails", { providerId });
+      setIsLoadingClients(true);
       if (data.client_details && Array.isArray(data.client_details)) {
         setActiveUsers(data.client_details);
       } else {
         throw new Error("Response not suitable.");
       }
     } catch (error) {
-      console.error(error);
       showToast("Failed to load active users", "error");
     } finally {
       setIsLoadingClients(false);
     }
-  }, []); // Memoized fetchActiveUsers
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       await fetchProviders();
-      await fetchActiveUsers();
     };
 
     fetchData();
-  }, [fetchProviders, fetchActiveUsers]); // Added dependencies to the useEffect array
+  }, [fetchProviders]);
+
+  useEffect(() => {
+    if (selectedProvider?.providerId) {
+      const currentTime = Math.floor(Date.now() / 1000);
+      const startTime = currentTime - 30 * 60; // 30 mins ago
+
+      const payload = {
+        graphId: 'dummy-graph-id',
+        dashboardId: 'dummy-dashboard-id',
+        graphName: 'Provider Metrics',
+        graphType: 'time_series',
+        // defaultTimeRange: `${startTime}|${currentTime}`,
+        defaultTimeRange: '1772562600|1774809000',
+        refreshIntervalSeconds: 30,
+        settings: '{}',
+        series: [
+          {
+            seriesId: '3d54006d-3c9c-481b-afd2-753678ccff65',
+            graphId: '70347d3b-0ffa-478a-8134-867b0274e2be',
+            metricId: '58e6f7e4-a803-49ef-83ea-b3c86aac71b6',
+            metricName: 'vm_ram_allocated',
+            entityType: 'vm',
+            aggregation: 'sum',
+            filters: {
+              provider_id: selectedProvider.providerId,
+            },
+            groupBy: [],
+            yAxisPosition: 'left',
+            data: [],
+          },
+          {
+            seriesId: '3d54006d-3c9c-481b-afd2-753678ccff65',
+            graphId: '70347d3b-0ffa-478a-8134-867b0274e2be',
+            metricId: '58e6f7e4-a803-49ef-83ea-b3c86aac71b6',
+            metricName: 'vm_cpu_allocated',
+            entityType: 'vm',
+            aggregation: 'sum',
+            filters: {
+              provider_id: selectedProvider.providerId,
+            },
+            groupBy: [],
+            yAxisPosition: 'left',
+            data: [],
+          },
+          {
+            seriesId: '3d54006d-3c9c-481b-afd2-753678ccff65',
+            graphId: '70347d3b-0ffa-478a-8134-867b0274e2be',
+            metricId: '58e6f7e4-a803-49ef-83ea-b3c86aac71b6',
+            metricName: 'vm_ram_used',
+            entityType: 'vm',
+            aggregation: 'sum',
+            filters: {
+              provider_id: selectedProvider.providerId,
+            },
+            groupBy: [],
+            yAxisPosition: 'left',
+            data: [],
+          },
+          {
+            seriesId: '3d54006d-3c9c-481b-afd2-753678ccff65',
+            graphId: '70347d3b-0ffa-478a-8134-867b0274e2be',
+            metricId: '58e6f7e4-a803-49ef-83ea-b3c86aac71b6',
+            metricName: 'vm_cpu_used',
+            entityType: 'vm',
+            aggregation: 'sum',
+            filters: {
+              provider_id: selectedProvider.providerId,
+            },
+            groupBy: [],
+            yAxisPosition: 'left',
+            data: [],
+          },
+        ],
+      }
+
+      const g = { ...payload, pointsLoading: true, pointsError: null };
+      setProviderGraphs([g]);
+
+      getGraphPoints(payload)
+        .then(data => {
+            setProviderGraphs(prev => prev.map(pg => 
+               pg.graphId === g.graphId ? {
+                ...pg,
+                series: data.series || pg.series,
+                settings: data.settings || pg.settings,
+                pointsLoading: false,
+                pointsError: null
+               } : pg
+            ));
+        })
+        .catch(err => {
+            setProviderGraphs(prev => prev.map(pg =>
+                pg.graphId === g.graphId ? {
+                    ...pg,
+                    pointsLoading: false,
+                    pointsError: err?.message || 'Failed to fetch points'
+                } : pg
+            ));
+        });
+    } else {
+      setProviderGraphs([]);
+    }
+  }, [selectedProvider?.providerId]);
 
   const handleSaveProvider = () => {
-    apiCall("post", "/ui/providers/update_config", formData)
+    const updateProviderConfPayload = {};
+    for (const key in formData) {
+      if (formData[key] !== "") {
+        if (key === "providerAllowedRam" || key === "providerAllowedStorage") {
+          updateProviderConfPayload[key] = String(Number(formData[key]) * 1024);
+        } else {
+          updateProviderConfPayload[key] = formData[key];
+        }
+      }
+    }
+
+    apiCall("post", "/ui/providers/update_config", updateProviderConfPayload)
       .then((data) => {
-        console.log(data);
         setFormData({
           providerName: "",
           providerId: "",
@@ -134,10 +252,10 @@ export default function ManageProviders() {
         fetchProviders();
       })
       .catch((error) => {
-        console.log(error);
-        showToast("Error creating provider: " + error.message, "error");
+        showToast("Error Saving provider: " + error.message, "error");
       });
   };
+
   const handleAddNewProvider = async () => {
     try {
       setIsVerificationTokenLoading(true)
@@ -195,30 +313,13 @@ export default function ManageProviders() {
     }
   };
 
-  const handleClickOutside = (e) => {
-    if (!e.target.closest(".provider-card") && !e.target.closest(".update-form")) {
-      setSelectedProvider(null);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
 
   return (
     <div className="relative mx-auto p-6">
-      {
-        isVerificationTokenLoading && (
-          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-            <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
-          </div>
-        )}
+      {isVerificationTokenLoading && <Loading />}
 
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-semibold text-slate-800 mb-6">
+        <h2 className="text-2xl font-semibold mb-6 text-palette-textPrimary">
           Manage Providers
         </h2>
         <div className="flex gap-4">
@@ -237,227 +338,132 @@ export default function ManageProviders() {
         </div>
       </div>
 
+      <div className="grid grid-co
 
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+ls-1 md:grid-cols-3 gap-6">
         {/* LEFT side - Provider List */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium text-slate-800 mb-4">Providers</h3>
-          <div className="relative space-y-4 h-[500px] overflow-y-auto px-3 py-0">
-            {isLoadingFirst && (
-              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
-              </div>
-            )}
-            {providers?.length === 0 ? (
-              <p className="text-gray-500 text-sm">You haven't created any provider yet.</p>
-            ) : (
-              providers?.map((provider, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => handleProviderSelect(provider)}
-                  className={`provider-card ${provider?.providerId === selectedProvider?.providerId ? "border-lime-500 border-xl rounded-lg " : ""}`}
-                >
-                  <ProviderCard
-                    provider={provider}
-                    isActive={
-                      provider?.providerId === selectedProvider?.providerId
-                    }
-                  />
-                </div>
-              ))
-            )}
-          </div>
+        <div className="bg-palette-surface rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium mb-4 text-palette-textPrimary">
+            Providers
+          </h3>
+
+          <ProviderList
+            providers={providers}
+            selectedProvider={selectedProvider}
+            handleProviderSelect={handleProviderSelect}
+            isLoading={isLoadingFirst}
+          />
         </div>
 
         {/* MIDDLE side - Form */}
+        <ProviderConfigForm
+          selectedProvider={selectedProvider}
+          formData={formData}
+          handleChange={handleChange}
+          handleSaveProvider={handleSaveProvider}
+          vcpus={vcpus}
+          rams={rams}
+          storage={storage}
+          networks={networks}
+          vms={vms}
+        />
+
+        {/* RIGHT side - Active Users */}
         {selectedProvider && (
-          <div className="bg-white rounded-lg shadow p-6 update-form">
-            <h3 className="text-lg font-medium text-slate-800 mb-4">
-              Setup / Update Provider
-            </h3>
-            <div className="space-y-4">
-              <input
-                name="providerName"
-                placeholder="Update Provider Name"
-                value={formData.providerName}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
+          <div className="flex flex-col gap-4 h-[calc(100vh-200px)] min-h-[600px]">
+            <div className="flex-[6] min-h-0 bg-palette-surface px-4 py-2 rounded-lg shadow overflow-auto">
+              {providerGraphs.length > 0 && (() => {
+                const g = providerGraphs[0];
+                const parsedSettings = g.settings
+                  ? (() => {
+                      try {
+                        return JSON.parse(g.settings)
+                      } catch {
+                        return {}
+                      }
+                    })()
+                  : {}
+
+                return (
+                  <div onClick={() => setSelectedGraph(g)} className="cursor-pointer">
+                    <h2 className="text-lg font-semibold mb-2">
+                      {g.graphName}
+                    </h2>
+
+                    {g.pointsLoading ? (
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-palette-surface bg-opacity-75 flex items-center justify-center z-10">
+                          <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
+                        </div>
+                        <div className="text-palette-textMuted italic">
+                          Loading graph data...
+                        </div>
+                      </div>
+                    ) : g.pointsError ? (
+                      <div className="text-sm text-red-600">{g.pointsError}</div>
+                    ) : (
+                      <>
+                        {Array.isArray(g.series) &&
+                          g.series.length > 0 &&
+                          g.series.every(
+                            (s) => Array.isArray(s.data) && s.data.length === 0
+                          ) && (
+                            <p className="text-palette-textMuted italic">
+                              Last 30 minutes of data .Click to adjust time range.
+                            </p>
+                          )}
+
+                        <GraphView
+                          type={g.graphType}
+                          series={g.series}
+                          settings={parsedSettings}
+                          height={250}
+                          width={'100%'}
+                        />
+                      </>
+                    )}
+                  </div>
+                )
+              })()}
+            </div>
+            <div className="flex-[4] min-h-0">
+              <ProviderClientList
+                clients={activeUsers}
+                isLoading={isLoadingClients}
               />
-
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Select max vCPUs
-                  </label>
-                  <select
-                    name="providerAllowedVcpu"
-                    value={formData.providerAllowedVcpu}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
-                  >
-                    <option value="">Select</option>
-                    {vcpus?.map((cpu, idx) => (
-                      <option key={idx} value={cpu.split(' ')[0]}>
-                        {cpu}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Select max RAM
-                  </label>
-                  <select
-                    name="providerAllowedRam"
-                    value={formData.providerAllowedRam}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
-                  >
-                    <option value="">Select</option>
-                    {rams?.map((ram, idx) => (
-                      <option key={idx} value={ram.split(' ')[0]}>
-                        {ram}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Select Storage
-                  </label>
-                  <select
-                    name="providerAllowedStorage"
-                    value={formData.providerAllowedStorage}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
-                  >
-                    <option value="">Select</option>
-                    {storage?.map((disk, idx) => (
-                      <option key={idx} value={disk.split(' ')[0]}>
-                        {disk}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Select max Networks
-                  </label>
-                  <select
-                    name="providerAllowedNetworks"
-                    value={formData.providerAllowedNetworks}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
-                  >
-                    <option value="">Select</option>
-                    {networks?.map((network, idx) => (
-                      <option key={idx} value={network.split(' ')[0]}>
-                        {network}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Select max VMs
-                  </label>
-                  <select
-                    name="providerAllowedVms"
-                    value={formData.providerAllowedVms}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-300"
-                  >
-                    <option value="">Select</option>
-                    {vms?.map((vm, idx) => (
-                      <option key={idx} value={vm.split(' ')[0]}>
-                        {vm}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="pt-4">
-                <button
-                  className="px-4 py-2 bg-lime-500 hover:bg-lime-600 text-white rounded-md transition-colors"
-                  onClick={handleSaveProvider}
-                >
-                  Save Provider
-                </button>
-              </div>
             </div>
           </div>
         )}
-
-        {/* RIGHT side - Active Users */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium text-slate-800 mb-4">
-            Active Usage by Clients
-          </h3>
-          <div className="relative space-y-4 h-[500px] overflow-y-auto">
-            {isLoadingClients && (
-              <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
-                <div className="w-10 h-10 border-4 border-lime-400 border-t-lime-200 rounded-full animate-spin"></div>
-              </div>
-            )}
-            {
-              activeUsers?.length === 0 ? (
-                <p className="text-gray-500 text-sm">No client is using your providers.</p>
-              ) : (
-                activeUsers?.map((user, idx) => {
-                  const initials = user?.username
-                    ? user.username.slice(0, 2).toUpperCase()
-                    : "N/A";
-                  return (
-                    <div
-                      key={idx}
-                      className="flex items-start p-4 border rounded-lg"
-                    >
-                      {user.profile_image ? (
-                        <img
-                          src={user.profile_image}
-                          alt="profile"
-                          className="w-10 h-10 rounded-full mr-4"
-                        />
-                      ) : (
-                        <div className="w-10 h-10 bg-teal-800 text-white flex items-center justify-center rounded-full font-bold shrink-0 cursor-pointer mr-4">
-                          {initials}
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-sm">
-                          <span className="font-medium">Username:</span>{" "}
-                          {user.username}
-                        </p>
-                        <p className="text-sm">
-                          <span className="font-medium">Email:</span> {user.email}
-                        </p>
-                        <p className="text-sm">
-                          <span className="font-medium">Name:</span>{" "}
-                          {user.profile_name}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                }
-                ))}
-          </div>
-        </div>
       </div>
+
       {/* Toast */}
-      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+      {toast.visible && (
+        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      )}
+
+      {/* Large Graph Modal */}
+      {selectedGraph && (
+        <LargeGraphModal
+          graph={selectedGraph}
+          setGraphs={setProviderGraphs}
+          onClose={() => setSelectedGraph(null)}
+        />
+      )}
 
       {/* Action Confirmation Modal */}
       <ActionConfirmModal
         visible={actionConfirm.visible}
         type={actionConfirm.type}
-        onConfirm={() => { }}
-        onCancel={() => setActionConfirm({ type: null, visible: false, command: null, message: null, token: null })}
+        onConfirm={() => {}}
+        onCancel={() =>
+          setActionConfirm({
+            type: null,
+            visible: false,
+            command: null,
+            message: null,
+            token: null,
+          })
+        }
         message={actionConfirm.message}
         copyToken={true}
         command={actionConfirm.command}
@@ -468,5 +474,5 @@ export default function ManageProviders() {
         cancelButtonName={actionConfirm.cancelButtonName}
       />
     </div>
-  );
+  )
 }

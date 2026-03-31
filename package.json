@@ -1,6 +1,6 @@
 {
-  "name": "ideapool",
-  "version": "0.1.0",
+  "name": "computekart.com",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
@@ -9,22 +9,16 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.2",
     "dayjs": "^1.11.19",
-    "dotenv": "^16.4.7",
     "github-markdown-css": "^5.8.1",
     "highlight.js": "^11.11.1",
     "js-cookie": "^3.0.5",
     "jszip": "^3.10.1",
-    "lucide-react": "^0.539.0",
     "marked": "^15.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hot-toast": "^2.6.0",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
-    "react-social-icons": "^6.16.0",
-    "recharts": "^3.1.2",
-    "socket.io-client": "^4.7.5",
-    "web-vitals": "^2.1.4"
+    "recharts": "^3.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

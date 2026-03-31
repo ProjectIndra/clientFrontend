@@ -5,15 +5,12 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 				<h3 className="text-xl font-semibold">
 					{selectedProvider.providerName}
 				</h3>
-				{/* <button className="bg-lime-300 text-black font-medium rounded px-4 py-1 hover:brightness-110">
-                  Specs Sheet
-                </button> */}
 			</div>
-			<div className="bg-white rounded-lg shadow-md p-6 space-y-4">
+			<div className="bg-palette-surface rounded-lg shadow-md p-6 space-y-4">
 				<input
 					name="vm_name"
 					placeholder="VM Name (not necessary for query request)"
-					className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
+					className="w-full border border-palette-border focus:outline-none focus:ring-0 focus:border-lime-500 focus:border-1 rounded-md px-3 py-2 text-palette-textTertiary bg-palette-surface"
 					value={formData.vm_name}
 					onChange={handleChange}
 				/>
@@ -26,7 +23,7 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 							name="vcpus"
 							value={formData.vcpus}
 							onChange={handleChange}
-							className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
+							className="border border-palette-border focus:outline-none focus:ring-0 focus:border-lime-500 focus:border-1 rounded-md px-3 py-2 bg-palette-surface text-palette-textTertiary"
 						>
 							<option value="">Select</option>
 							{vcpus?.map((cpu, idx) => (
@@ -44,7 +41,7 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 							name="ram"
 							value={formData.ram}
 							onChange={handleChange}
-							className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
+							className="border border-palette-border focus:outline-none focus:ring-0 focus:border-lime-500 focus:border-1 rounded-md px-3 py-2 bg-palette-surface text-palette-textTertiary"
 						>
 							<option value="">Select</option>
 							{rams?.map((ram, idx) => (
@@ -62,7 +59,7 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 							name="storage"
 							value={formData.storage}
 							onChange={handleChange}
-							className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
+							className="border border-palette-border focus:outline-none focus:ring-0 focus:border-lime-500 focus:border-1 rounded-md px-3 py-2 bg-palette-surface text-palette-textTertiary"
 						>
 							<option value="">Select</option>
 							{storageOptions?.map((storage, idx) => (
@@ -81,7 +78,7 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 						name="vm_image"
 						value={formData.vm_image}
 						onChange={handleChange}
-						className="border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
+						className="border border-palette-border focus:outline-none focus:ring-0 focus:border-lime-500 focus:border-1 rounded-md px-3 py-2 bg-palette-surface text-palette-textTertiary"
 					>
 						<option value="">Select</option>
 						{images?.map((image, idx) => (
@@ -108,7 +105,7 @@ function VMConfigForm({ selectedProvider, formData, handleChange, handleSubmitQu
 				<input
 					name="remarks"
 					placeholder="Remarks? (not necessary for query request)"
-					className="w-full border border-gray-300 focus:outline-none focus:ring-0 focus:border-lime-300 focus:border-2 rounded-md px-3 py-2"
+					className="w-full border border-palette-border focus:outline-none focus:ring-0 focus:border-lime-500 focus:border-1 rounded-md px-3 py-2 bg-palette-surface text-palette-textTertiary"
 					value={formData.remarks}
 					onChange={handleChange}
 				/>

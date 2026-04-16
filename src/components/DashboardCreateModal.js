@@ -460,7 +460,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           </div>
 
           {form?.series?.map((s, idx) => (
-            <div key={idx} className="border rounded p-3 mb-3">
+            <div key={idx} className="border border-palette-border rounded p-3 mb-3">
               <div className="flex justify-between items-center mb-2">
                 <div className="text-sm font-medium">Series {idx + 1}</div>
                 {form?.series?.length > 1 && (

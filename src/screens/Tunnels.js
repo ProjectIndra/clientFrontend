@@ -256,7 +256,7 @@ function Tunnels() {
                 setPopup((prev) => ({ ...prev, tunnelName: e.target.value }))
               }
               placeholder="Tunnel Name"
-              className="w-full border rounded p-2 mb-4"
+              className="w-full border border-palette-border rounded p-2 mb-4 bg-palette-surface dark:text-palette-textPrimary focus:border-lime-300 focus:outline-none focus:ring-0"
             />
 
             <div className="flex justify-end gap-3">

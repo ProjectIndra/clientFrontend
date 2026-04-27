@@ -34,7 +34,6 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
     type: 'info',
     visible: false,
   })
-  const [entityType, setEntityType] = useState('vm')
 
   const [entityOptions, setEntityOptions] = useState({
     hisVms: [],
@@ -285,7 +284,19 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
       series: form?.series?.map((s) => ({
         metricId: '',
         metricName: s?.metricName,
-        entityType: s?.filters?.provider_id !=='all_providers' && s?.filters?.entity_name !== "provider_all_vms" ?"vm":s?.entityType,
+        entityType:
+          (s?.filters?.provider_id !== 'all_providers' &&
+            s?.filters?.entity_name !== 'provider_all_vms'
+          ) ||
+          (s?.filters?.provider_id === 'all_providers' &&
+            (s?.metricName === 'vm_cpu_used' ||
+              s?.metricName === 'vm_cpu_allocated' ||
+              s?.metricName === 'vm_ram_used' ||
+              s?.metricName === 'vm_ram_allocated'
+            )
+          )
+            ? 'vm'
+            : s?.entityType,
         aggregation: s?.aggregation,
         filters: {
           provider_id: s?.filters?.provider_id ==='all_providers'
@@ -305,7 +316,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
         yAxisPosition: s?.yAxisPosition,
       })),
     }
-    console.log('Submitting graph payload:', payload)
+        
     try {
       setLoading(true)
       const res = await createGraph(payload)
@@ -363,15 +374,19 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
     ],
     vm: [
       { label: 'CPU Used', value: 'vm_cpu_used' },
-      { label: 'RAM Allocated', value: 'vm_ram_allocated' },
       { label: 'CPU Allocated', value: 'vm_cpu_allocated' },
       { label: 'RAM Used', value: 'vm_ram_used' },
+      { label: 'RAM Allocated', value: 'vm_ram_allocated' },
       { label: 'State', value: 'vm_state' },
     ],
     provider: [
       { label: 'Active VMs', value: 'active_vms' },
       { label: 'Inactive VMs', value: 'inactive_vms' },
       { label: 'Provider Heartbeat', value: 'provider_heartbeat' },
+      { label: 'CPU Used', value: 'vm_cpu_used' },
+      { label: 'CPU Allocated', value: 'vm_cpu_allocated' },
+      { label: 'RAM Used', value: 'vm_ram_used' },
+      { label: 'RAM Allocated', value: 'vm_ram_allocated' },
     ],
   }
 
@@ -445,7 +460,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
           </div>
 
           {form?.series?.map((s, idx) => (
-            <div key={idx} className="border rounded p-3 mb-3">
+            <div key={idx} className="border border-palette-border rounded p-3 mb-3">
               <div className="flex justify-between items-center mb-2">
                 <div className="text-sm font-medium">Series {idx + 1}</div>
                 {form?.series?.length > 1 && (
@@ -475,7 +490,6 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                       updateSeriesFilter(idx, 'provider_id', providerIds)
                       updateSeriesFilter(idx, 'entity_name', 'all_vms')
                       updateSeriesField(idx, 'entity_name', '')
-                      setEntityType('vm')
                     } else if (v === 'provider') {
                       const providerIds = entityOptions.hisProviders?.map(
                         (p) => p.value
@@ -483,12 +497,10 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                       updateSeriesField(idx, 'filters', {})
                       updateSeriesFilter(idx, 'provider_id', "all_providers")
                       updateSeriesField(idx, 'metricName', '')
-                      setEntityType('provider')
                     } else {
                       updateSeriesFilter(idx, 'provider_id', '')
                       updateSeriesFilter(idx, 'entity_name', '')
                       updateSeriesField(idx, 'metricName', '')
-                      setEntityType(v)
                     }
                   }}
                   options={entityTypeOptions}
@@ -522,7 +534,6 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                       if (val === 'all_providers') {
                         updateSeriesFilter(idx, 'provider_id', 'all_providers')
                         updateSeriesField(idx, 'aggregation', 'sum')
-                        setEntityType('provider')
                         return
                       }
                       updateSeriesFilter(idx, 'entity_name', 'provider_all_vms') // special value to indicate all vms of the selected provider
@@ -572,10 +583,8 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                           if (val === 'provider_all_vms') {
                             updateSeriesFilter(idx, 'entity_name', 'provider_all_vms') // special value to indicate all vms of the selected provider
                             updateSeriesField(idx, 'aggregation', 'sum')
-                            setEntityType('provider')
                             return
                           }
-                          setEntityType('vm')
                           updateSeriesField(idx, 'aggregation', 'avg')
                           updateSeriesFilter(idx, 'entity_name', val)
                         }}
@@ -594,7 +603,7 @@ const DashboardCreateModal = ({ visible, onClose, dashboardId, onCreated }) => {
                   onChange={(v) => updateSeriesField(idx, 'metricName', v)}
                   options={[
                     { label: '', value: '' },
-                    ...(metric_name_entity_type_mapping[entityType] || []),
+                    ...(metric_name_entity_type_mapping[s?.entityType] || []),
                   ]}
                 />
 

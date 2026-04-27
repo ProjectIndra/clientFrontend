@@ -19,7 +19,7 @@ export const TextInput = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={`border px-3 py-2 rounded w-full ${className}`}
+        className={`border border-palette-border px-3 py-2 rounded w-full bg-palette-surface dark:text-palette-textPrimary focus:border-lime-300 focus:outline-none focus:ring-0 ${className}`}
       />
     </div>
   )
@@ -46,7 +46,7 @@ export const NumberInput = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className={`border px-3 py-2 rounded w-full ${className}`}
+        className={`border border-palette-border px-3 py-2 rounded w-full bg-palette-surface dark:text-palette-textPrimary focus:border-lime-300 focus:outline-none focus:ring-0 ${className}`}
       />
     </div>
   )
@@ -72,7 +72,7 @@ export const DropdownSelect = ({
         name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`border px-3 py-2 rounded w-full ${className}`}
+        className={`border border-palette-border px-3 py-2 rounded w-full bg-palette-surface dark:text-palette-textPrimary focus:border-lime-300 focus:outline-none focus:ring-0 ${className}`}
         disabled={loading}
       >
         {loading ? (

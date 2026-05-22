@@ -4,6 +4,8 @@ import { useState } from "react";
 import { validators } from "../utils/validators";
 import Toast from "../components/ToastService";
 import {AuthHandler} from "../utils/authHandler";
+import { GoogleLogin } from '@react-oauth/google';
+import { googleAuth } from "../apiServices";
 
 function Login() {
   const [error, setError] = useState(null);
@@ -15,6 +17,33 @@ function Login() {
 
   const closeToast = () => {
     setToast(prev => ({ ...prev, visible: false }));
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const idToken = credentialResponse.credential;
+
+      const payload = JSON.parse(atob(idToken.split('.')[1]));
+
+      const res = await googleAuth({
+        token: idToken,
+        name: payload.name,
+        picture: payload.picture
+      });
+
+      AuthHandler.login(res.token);
+      showToast("Google login successful!", "success");
+
+    } catch (err) {
+      const message = err || "Google Login failed";
+      setError(message);
+      showToast(message, "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handlesubmit = async (e) => {
@@ -106,6 +135,21 @@ function Login() {
               >
                 Submit
               </button>
+
+              <div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mr-3 after:flex-1 after:border-t after:border-gray-300 after:ml-3">
+                <span className="text-gray-400 text-sm">or</span>
+              </div>
+              
+              <div className="flex justify-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => {
+                    setError("Google Login Failed");
+                    showToast("Google Login Failed", "error");
+                  }}
+                />
+              </div>
+
             </form>
             <div className="text-errorRed text-[14px] font-normal min-h-[20px] mt-2">
               {error}

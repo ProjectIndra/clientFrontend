@@ -23,7 +23,7 @@ try {
   execSync(`docker push ${docker_username}/computekart-frontend:${version}`, {
     stdio: 'inherit',
   })
-  execSync('git add .', { stdio: 'inherit' })
+  execSync(`git add ${"deployment\\kube\\frntnd-deployment.yaml"}`, { stdio: 'inherit' })
   execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' })
   execSync('git push', { stdio: 'inherit' })
   console.log('Deployment complete!')

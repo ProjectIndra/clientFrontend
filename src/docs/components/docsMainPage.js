@@ -8,6 +8,7 @@ const DocsMainPage = () => {
         { name: "About the project", file: "/mdFiles/abtProject.md" },
         { name: "Providers", file: "/mdFiles/providers.md" },
         { name: "Being a Client", file: "/mdFiles/being_a_client.md" },
+        { name: "Analytics", file: "/mdFiles/analytics.md" },
         { name: "API Reference", file: "/mdFiles/api_reference.md" },
         { name: "CKart CLI Installation", file: "/mdFiles/USER_INSTALLATION.md" },
         { name: "CKart CLI Commands", file: "/mdFiles/USER_COMMANDS.md" },

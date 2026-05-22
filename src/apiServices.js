@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { normalizeTimeRange } from './helper'
+import { apiCall } from "./Api"
 
 const MONITORING_SERVER = process.env.REACT_APP_MONITORING_SERVER
 
@@ -80,3 +81,7 @@ export const listAllServices = async () => {
   const { data } = await api.post('dashboard/getServiceDetailsForUser')
   return data
 }
+
+export const googleAuth = async (data) => {
+  return await apiCall("post", "/google-auth", data);
+};
